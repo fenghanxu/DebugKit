@@ -17,22 +17,28 @@ class FHXLogCell: UITableViewCell {
         return line
     }()
     
-//    lazy var levelLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "error"
-//        label.textColor = .white
-//        label.font = UIFont.systemFont(ofSize: 14)
-//        label.backgroundColor = .red
-//        label.textAlignment = .center
-//        label.layer.cornerRadius = 4.0
-//        label.clipsToBounds = true
-//        return label
-//    }()
+    lazy var levelLabel: UILabel = {
+        let label = UILabel()
+        label.text = "error"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.backgroundColor = .red
+        label.textAlignment = .center
+        label.layer.cornerRadius = 4.0
+        label.clipsToBounds = true
+        return label
+    }()
     
-    lazy var contentLabel: UILabel = {
+    lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    
+    lazy var contentLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
         return label
     }()
 
@@ -66,18 +72,27 @@ class FHXLogCell: UITableViewCell {
             make.bottom.equalToSuperview()
         }
         
-//        contentView.addSubview(levelLabel)
-//        levelLabel.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(10)
-//            make.left.equalToSuperview().offset(10)
-//            make.width.equalTo(36)
-//            make.height.equalTo(22)
-//        }
+        contentView.addSubview(levelLabel)
+        levelLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.left.equalToSuperview().offset(10)
+            make.width.equalTo(50)
+            make.height.equalTo(22)
+        }
+        
+        contentView.addSubview(messageLabel)
+        messageLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(levelLabel)
+            make.left.equalTo(levelLabel.snp.right).offset(10)
+            make.right.equalToSuperview().offset(-10)
+        }
         
         contentView.addSubview(contentLabel)
         contentLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.left.right.equalToSuperview().inset(10)
+            make.top.equalTo(levelLabel.snp.bottom).offset(10)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview().inset(10)
         }
         
     }
