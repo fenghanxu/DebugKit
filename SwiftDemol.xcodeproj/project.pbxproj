@@ -11,7 +11,6 @@
 		2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */; };
 		2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */; };
 		2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */; };
-		2D7DA8FF2FD173ED00E83F11 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FE2FD173ED00E83F11 /* System.swift */; };
 		3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DCE284F408C00D585B4 /* AppDelegate.swift */; };
 		3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DD0284F408C00D585B4 /* SceneDelegate.swift */; };
 		3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DD2284F408C00D585B4 /* ViewController.swift */; };
@@ -26,7 +25,6 @@
 		2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogStore.swift; sourceTree = "<group>"; };
 		2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
 		2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
-		2D7DA8FE2FD173ED00E83F11 /* System.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		3F795DCB284F408C00D585B4 /* SwiftDemol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftDemol.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F795DCE284F408C00D585B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F795DD0284F408C00D585B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -76,7 +74,6 @@
 				3F795DCE284F408C00D585B4 /* AppDelegate.swift */,
 				3F795DD0284F408C00D585B4 /* SceneDelegate.swift */,
 				3F795DD2284F408C00D585B4 /* ViewController.swift */,
-				2D7DA8FE2FD173ED00E83F11 /* System.swift */,
 				2D7DA8F62FD129E600E83F11 /* FHXLog.swift */,
 				2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */,
 				2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */,
@@ -229,7 +226,6 @@
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
 				2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */,
 				2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */,
-				2D7DA8FF2FD173ED00E83F11 /* System.swift in Sources */,
 				2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */,
 				3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */,
 				2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */,

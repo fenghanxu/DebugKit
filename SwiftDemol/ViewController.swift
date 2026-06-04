@@ -15,31 +15,37 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        //配置
-        System.shared.isEnabled = true
-        System.shared.maxCount = 1000
+        // 2. 开关控制（SPLogs 优点）
+        FHXLog.shared.isEnabled = false
         
-        System.shared.log("登录成功", level: .info)
+        //3. 日志等级过滤（新增能力）
+        FHXLog.shared.logLevel = .warning
         
-        let errors = System.shared
-            .filter(.error)//过滤
-            .export()//导出
+        //4. 限制数量（SPLogs升级版）
+        FHXLog.shared.maxCount = 500
+        
+        //5. 获取全部日志 tableview数据获取
+        //let logs = FHXDebugKit.shared.allLogs()
+        
+        // 6. 清空日志
+        // FHXDebugKit.shared.clear()
         
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()+0.5) {
             DispatchQueue.main.async {
-                FHXLog.info("登录成功")
+                // 1. 基础日志
+                FHXLog.shared.info("登录成功")
             }
         }
         
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()+0.5) {
             DispatchQueue.main.async {
-                FHXLog.error("支付失败")
+                FHXLog.shared.error("支付失败")
             }
         }
         
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()+0.5) {
             DispatchQueue.main.async {
-                FHXLog.debug("用户点击按钮")
+                FHXLog.shared.debug("用户点击按钮")
             }
         }
 

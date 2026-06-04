@@ -48,7 +48,7 @@ class FHXLogViewController: UIViewController {
     }
     
     private func loadData() {
-        data = FHXLog.allLogs()
+        data = FHXLog.shared.allLogs()
         tableView.reloadData()
     }
 
