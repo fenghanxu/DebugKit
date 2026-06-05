@@ -76,7 +76,7 @@ class FHXLogCell: UITableViewCell {
         levelLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(10)
-            make.width.equalTo(50)
+            make.width.equalTo(60)
             make.height.equalTo(22)
         }
         

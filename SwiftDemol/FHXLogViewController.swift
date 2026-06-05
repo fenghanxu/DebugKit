@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class FHXLogViewController: UIViewController {
 
@@ -29,6 +30,13 @@ class FHXLogViewController: UIViewController {
         return tableView
     }()
     
+    lazy private var navigatonView : FHXNavigationView = {
+        let navigationView = FHXNavigationView()
+        return navigationView
+    }()
+    
+    private var heightConstraint: Constraint?
+    
     private var data: [FHXLogModel] = []
     
     override func viewDidLoad() {
@@ -40,10 +48,37 @@ class FHXLogViewController: UIViewController {
         loadData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+
+        navigatonView.snp.updateConstraints({ make in
+            make.left.top.right.equalToSuperview()
+            make.height.equalTo(view.safeAreaInsets.top + 44)
+        })
+    }
+
+    
     private func setupUI() {
+        view.addSubview(navigatonView)
+        navigatonView.snp.makeConstraints { make in
+            make.left.top.right.equalToSuperview()
+            make.height.equalTo(44)
+        }
+        
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.left.top.right.bottom.equalToSuperview()
+            make.top.equalTo(navigatonView.snp.bottom)
+            make.left.right.bottom.equalToSuperview()
         }
     }
     

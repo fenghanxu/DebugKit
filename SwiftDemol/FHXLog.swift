@@ -8,18 +8,18 @@
 import Foundation
 
 // 日志等级：
-enum FHXLogLevel: Int {
-    case debug = 0
-    case info
-    case warning
-    case error
+enum FHXLogType: Int {
+    case debug = 0 // 日志
+    case network   // 网络
+    case error     // 错误
+    case crash     // 崩溃
 }
 
 struct FHXLogModel {
     // 日志内容
     let message: String
     // 日志等级
-    let level: FHXLogLevel
+    let level: FHXLogType
     // 触发时间
     let time: Date
     //文件名称
@@ -48,17 +48,34 @@ class FHXLog {
     var maxCount: Int = 1000
 
     /// 输出等级控制
-    var logLevel: FHXLogLevel = .debug
+    var logLevel: FHXLogType = .debug
 
     // MARK: - MARK: logging core
+    
+    func log(
+        _ message: Any,
+        _ level: FHXLogType = .debug,
+        file: String = #file,
+        function: String = #function,
+        line: Int = #line
+    ) {
 
-    func info(
+        saveLog(
+            String(describing: message),
+            level: level,
+            file: file,
+            function: function,
+            line: line
+        )
+    }
+
+    func network(
         _ message: String,
         file: String = #file,
         function: String = #function,
         line: Int = #line
     ) {
-        log(message, level: .info, file: file, function: function, line: line)
+        saveLog(message, level: .network, file: file, function: function, line: line)
     }
 
     func debug(
@@ -67,7 +84,7 @@ class FHXLog {
         function: String = #function,
         line: Int = #line
     ) {
-        log(message, level: .debug, file: file, function: function, line: line)
+        saveLog(message, level: .debug, file: file, function: function, line: line)
     }
 
     func warning(
@@ -76,7 +93,7 @@ class FHXLog {
         function: String = #function,
         line: Int = #line
     ) {
-        log(message, level: .warning, file: file, function: function, line: line)
+        saveLog(message, level: .crash, file: file, function: function, line: line)
     }
 
     func error(
@@ -85,7 +102,7 @@ class FHXLog {
         function: String = #function,
         line: Int = #line
     ) {
-        log(message, level: .error, file: file, function: function, line: line)
+        saveLog(message, level: .error, file: file, function: function, line: line)
     }
 
 }
@@ -103,19 +120,16 @@ extension FHXLog {
 
 private extension FHXLog {
 
-    func log(
+    func saveLog(
         _ message: String,
-        level: FHXLogLevel,
+        level: FHXLogType,
         file: String,
         function: String,
         line: Int
     ) {
 
-        // ❌ 总开关
+        // 开关
         guard isEnabled else { return }
-
-        // ❌ 等级过滤（SPLogs 没有，但我们加）
-        guard level.rawValue >= logLevel.rawValue else { return }
 
         let fileName = URL(fileURLWithPath: file)
             .deletingPathExtension()
