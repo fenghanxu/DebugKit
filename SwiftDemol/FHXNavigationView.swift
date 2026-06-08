@@ -7,12 +7,32 @@
 
 import UIKit
 
+protocol FHXNavigationViewDelegate:NSObjectProtocol {
+    func fhxNavigationView(view:FHXNavigationView, success value:String)
+}
+
 class FHXNavigationView: UIView {
+    
+    weak var delegate:FHXNavigationViewDelegate?
     
     lazy private var backgroundView:UIView = {
         var view = UIView()
         view.backgroundColor = .white
         return view
+    }()
+    
+    lazy private var cancelButton:UIButton = {
+        let button = UIButton()
+        let bundle = Bundle.main.url(forResource: "file", withExtension: "bundle")
+        let sdkBundle = Bundle(url: bundle!)
+        let image = UIImage(
+            named: "nav_back",
+            in: sdkBundle,
+            compatibleWith: nil
+        )
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
+        return button
     }()
 
     override init(frame: CGRect) {
@@ -37,10 +57,17 @@ class FHXNavigationView: UIView {
             make.bottom.equalToSuperview()
         }
         
+        backgroundView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(5)
+            make.width.height.equalTo(44)
+        }
+        
+    }
+    
+    @objc private func cancelButtonClick() {
+        delegate?.fhxNavigationView(view: self, success: "success")
     }
 
 }
-
-
-
-

@@ -32,6 +32,7 @@ class FHXLogViewController: UIViewController {
     
     lazy private var navigatonView : FHXNavigationView = {
         let navigationView = FHXNavigationView()
+        navigationView.delegate = self
         return navigationView
     }()
     
@@ -46,6 +47,7 @@ class FHXLogViewController: UIViewController {
         
         setupUI()
         loadData()
+        addNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,8 +68,11 @@ class FHXLogViewController: UIViewController {
             make.height.equalTo(view.safeAreaInsets.top + 44)
         })
     }
-
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     private func setupUI() {
         view.addSubview(navigatonView)
         navigatonView.snp.makeConstraints { make in
@@ -86,6 +91,62 @@ class FHXLogViewController: UIViewController {
         data = FHXLog.shared.allLogs()
         tableView.reloadData()
     }
+    
+    private func addNotification() {
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(logDidAppend(_:)),
+            name: .fhxLogDidAppend,
+            object: nil
+        )
+    }
+    
+    @objc
+    private func logDidAppend(_ notification: Notification) {
+
+        guard let model = notification.object as? FHXLogModel else {
+            return
+        }
+
+        data.append(model)
+
+        let indexPath = IndexPath(
+            row: data.count - 1,
+            section: 0
+        )
+
+        tableView.performBatchUpdates({
+
+            tableView.insertRows(
+                at: [indexPath],
+                with: .none
+            )
+
+        }, completion: { _ in
+
+            self.scrollToBottom()
+
+        })
+    }
+    
+    private func scrollToBottom() {
+
+        guard data.count > 0 else {
+            return
+        }
+
+        let indexPath = IndexPath(
+            row: data.count - 1,
+            section: 0
+        )
+
+        tableView.scrollToRow(
+            at: indexPath,
+            at: .bottom,
+            animated: true
+        )
+    }
 
 }
 
@@ -94,10 +155,6 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
-
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 70
-//    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:FHXLogCell = FHXLogCell.cell(with: tableView)
@@ -129,8 +186,48 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             string: "\(data[indexPath.row].message)",
             attributes: attributes
         )
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        cell.timeLabel.text = formatter.string(from: data[indexPath.row].time)
     
         return cell
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+
+        let model = data[indexPath.row]
+
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil
+        ) { _ in
+
+            let copyAction = UIAction(
+                title: "复制日志",
+                image: UIImage(systemName: "doc.on.doc")
+            ) { _ in
+
+                let text =
+                "\(model.file)." +
+                "\(model.function):" +
+                "[\(model.line)]\n" +
+                "\(model.message)"
+
+                UIPasteboard.general.string = text
+
+                print("复制成功")
+            }
+
+            return UIMenu(
+                title: "",
+                children: [copyAction]
+            )
+        }
     }
 
 }
@@ -149,5 +246,11 @@ extension UIColor {
     /// UIColor.hex(0xFFFFFF)
     static func hex(_ hex: UInt32, alpha: CGFloat = 1.0) -> UIColor {
         UIColor(hex: hex, alpha: alpha)
+    }
+}
+
+extension FHXLogViewController:FHXNavigationViewDelegate{
+    func fhxNavigationView(view:FHXNavigationView, success value:String) {
+        navigationController?.popViewController(animated: true)
     }
 }
