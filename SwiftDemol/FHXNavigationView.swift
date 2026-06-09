@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FHXNavigationViewDelegate:NSObjectProtocol {
-    func fhxNavigationView(view:FHXNavigationView, success value:String)
+    func fhxNavigationView(view:FHXNavigationView, buttonClick buttonName:String)
 }
 
 class FHXNavigationView: UIView {
@@ -33,6 +33,21 @@ class FHXNavigationView: UIView {
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
         return button
+    }()
+    
+    lazy private var logButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("日志", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.addTarget(self, action: #selector(logButtonClick), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy private var searchBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
     }()
 
     override init(frame: CGRect) {
@@ -64,10 +79,48 @@ class FHXNavigationView: UIView {
             make.width.height.equalTo(44)
         }
         
-    }
-    
-    @objc private func cancelButtonClick() {
-        delegate?.fhxNavigationView(view: self, success: "success")
+        backgroundView.addSubview(logButton)
+        logButton.snp.makeConstraints { make in
+            make.width.height.equalTo(44)
+            make.centerY.equalToSuperview()
+            make.left.equalTo(cancelButton.snp.right).offset(10)
+        }
+        
+        backgroundView.addSubview(searchBgView)
+        searchBgView.snp.makeConstraints { make in
+            make.left.equalTo(cancelButton.snp.right).offset(10)
+            make.centerY.equalTo(cancelButton)
+            make.height.equalTo(44)
+            make.right.equalToSuperview()
+        }
+        
     }
 
+
+}
+
+// MARK: - button click
+extension FHXNavigationView {
+    @objc private func cancelButtonClick() {
+//        delegate?.fhxNavigationView(view: self, buttonClick: "cancel")
+        
+        cancelButton.isSelected.toggle()
+        
+        if cancelButton.isSelected {
+            UIView.animate(withDuration: 0.25) { [weak self] in
+                guard let self = self else { return }
+                self.searchBgView.alpha = 0.0
+            }
+        } else {
+            UIView.animate(withDuration: 0.25) { [weak self] in
+                guard let self = self else { return }
+                self.searchBgView.alpha = 1.0
+            }
+        }
+       
+    }
+    
+    @objc private func logButtonClick() {
+        delegate?.fhxNavigationView(view: self, buttonClick: "log")
+    }
 }

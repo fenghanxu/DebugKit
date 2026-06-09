@@ -36,9 +36,24 @@ class FHXLogViewController: UIViewController {
         return navigationView
     }()
     
-    private var heightConstraint: Constraint?
-    
+    /// 所有日志
+    private var allData: [FHXLogModel] = []
+
+    /// 当前显示日志
     private var data: [FHXLogModel] = []
+
+    /// 当前筛选
+    private var currentFilter: FHXLogFilter = .all
+    
+    private enum FHXLogFilter {
+        case all
+        case debug
+        case network
+        case error
+        case crash
+    }
+    
+    private var tag: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,7 +103,32 @@ class FHXLogViewController: UIViewController {
     }
     
     private func loadData() {
-        data = FHXLog.shared.allLogs()
+        allData = FHXLog.shared.allLogs()
+        applyFilter()
+    }
+    
+    private func applyFilter() {
+        switch currentFilter {
+            case .all:
+                data = allData
+            case .debug:
+                data = allData.filter {
+                    $0.level == .debug
+                }
+            case .network:
+                data = allData.filter {
+                    $0.level == .network
+                }
+            case .error:
+                data = allData.filter {
+                    $0.level == .error
+                }
+            case .crash:
+                data = allData.filter {
+                    $0.level == .crash
+                }
+        }
+
         tableView.reloadData()
     }
     
@@ -110,6 +150,8 @@ class FHXLogViewController: UIViewController {
         }
 
         data.append(model)
+        
+        applyFilter()
 
         let indexPath = IndexPath(
             row: data.count - 1,
@@ -250,7 +292,30 @@ extension UIColor {
 }
 
 extension FHXLogViewController:FHXNavigationViewDelegate{
-    func fhxNavigationView(view:FHXNavigationView, success value:String) {
-        navigationController?.popViewController(animated: true)
+
+    func fhxNavigationView(view:FHXNavigationView, buttonClick buttonName:String) {
+        if buttonName == "cancel" {
+            navigationController?.popViewController(animated: true)
+        } else if buttonName == "log" {
+            tag += 1
+            
+            if tag == 4 {
+                tag = 0
+            }
+
+            if tag == 0 {
+                currentFilter = .all
+            } else if tag == 1 {
+                currentFilter = .debug
+            } else if tag == 2 {
+                currentFilter = .network
+            } else if tag == 3 {
+                currentFilter = .error
+            } else if tag == 4 {
+                currentFilter = .crash
+            }
+
+            applyFilter()
+        }
     }
 }
