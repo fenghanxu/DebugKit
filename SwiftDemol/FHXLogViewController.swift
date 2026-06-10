@@ -9,6 +9,14 @@ import UIKit
 import SnapKit
 
 class FHXLogViewController: UIViewController {
+    
+    var winApp: UIWindow?
+    
+    var screenWidth: CGFloat?
+    
+    var screenHeight: CGFloat?
+    
+    var totalTopHeight: CGFloat?
 
     lazy private var tableView: UITableView = {
         var tableView = UITableView()
@@ -297,25 +305,40 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
         if buttonName == "cancel" {
             navigationController?.popViewController(animated: true)
         } else if buttonName == "log" {
-            tag += 1
+//            tag += 1
+//            
+//            if tag == 4 {
+//                tag = 0
+//            }
+//
+//            if tag == 0 {
+//                currentFilter = .all
+//            } else if tag == 1 {
+//                currentFilter = .debug
+//            } else if tag == 2 {
+//                currentFilter = .network
+//            } else if tag == 3 {
+//                currentFilter = .error
+//            } else if tag == 4 {
+//                currentFilter = .crash
+//            }
+//
+//            applyFilter()
             
-            if tag == 4 {
-                tag = 0
+            
+            guard let keyWindowAppPartial = self.winApp,
+                  let screenWidthPartial = self.screenWidth,
+                  let screenHeightPartial = self.screenHeight,
+                  let totalTopHeightPartial = self.totalTopHeight
+            else {
+                return
             }
-
-            if tag == 0 {
-                currentFilter = .all
-            } else if tag == 1 {
-                currentFilter = .debug
-            } else if tag == 2 {
-                currentFilter = .network
-            } else if tag == 3 {
-                currentFilter = .error
-            } else if tag == 4 {
-                currentFilter = .crash
+            
+            FHXToolView.showCurrentView(vc: self, winApp: keyWindowAppPartial, screenWidth: screenWidthPartial, screenHeight: screenHeightPartial, totalTopHeight: totalTopHeightPartial) { tag in
+                
             }
-
-            applyFilter()
+            
+            
         }
     }
 }

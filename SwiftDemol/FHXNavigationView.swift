@@ -44,11 +44,11 @@ class FHXNavigationView: UIView {
         return button
     }()
     
-    lazy private var searchBgView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        return view
-    }()
+//    lazy private var searchBgView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .red
+//        return view
+//    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -86,13 +86,13 @@ class FHXNavigationView: UIView {
             make.left.equalTo(cancelButton.snp.right).offset(10)
         }
         
-        backgroundView.addSubview(searchBgView)
-        searchBgView.snp.makeConstraints { make in
-            make.left.equalTo(cancelButton.snp.right).offset(10)
-            make.centerY.equalTo(cancelButton)
-            make.height.equalTo(44)
-            make.right.equalToSuperview()
-        }
+//        backgroundView.addSubview(searchBgView)
+//        searchBgView.snp.makeConstraints { make in
+//            make.left.equalTo(cancelButton.snp.right).offset(10)
+//            make.centerY.equalTo(cancelButton)
+//            make.height.equalTo(44)
+//            make.right.equalToSuperview()
+//        }
         
     }
 
@@ -109,12 +109,12 @@ extension FHXNavigationView {
         if cancelButton.isSelected {
             UIView.animate(withDuration: 0.25) { [weak self] in
                 guard let self = self else { return }
-                self.searchBgView.alpha = 0.0
+//                self.searchBgView.alpha = 0.0
             }
         } else {
             UIView.animate(withDuration: 0.25) { [weak self] in
                 guard let self = self else { return }
-                self.searchBgView.alpha = 1.0
+//                self.searchBgView.alpha = 1.0
             }
         }
        
