@@ -32,12 +32,28 @@ class FHXLogViewController: UIViewController {
     
     lazy private var navigatonView : FHXNavigationView = {
         let navigationView = FHXNavigationView()
+        navigationView.delegate = self
         return navigationView
     }()
     
-    private var heightConstraint: Constraint?
-    
+    /// 所有日志
+    private var allData: [FHXLogModel] = []
+
+    /// 当前显示日志
     private var data: [FHXLogModel] = []
+
+    /// 当前筛选
+    private var currentFilter: FHXLogFilter = .all
+    
+    private enum FHXLogFilter {
+        case all
+        case debug
+        case network
+        case error
+        case crash
+    }
+    
+    private var tag: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +62,7 @@ class FHXLogViewController: UIViewController {
         
         setupUI()
         loadData()
+        addNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,8 +83,11 @@ class FHXLogViewController: UIViewController {
             make.height.equalTo(view.safeAreaInsets.top + 44)
         })
     }
-
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     private func setupUI() {
         view.addSubview(navigatonView)
         navigatonView.snp.makeConstraints { make in
@@ -83,8 +103,91 @@ class FHXLogViewController: UIViewController {
     }
     
     private func loadData() {
-        data = FHXLog.shared.allLogs()
+        allData = FHXLog.shared.allLogs()
+        applyFilter()
+    }
+    
+    private func applyFilter() {
+        switch currentFilter {
+            case .all:
+                data = allData
+            case .debug:
+                data = allData.filter {
+                    $0.level == .debug
+                }
+            case .network:
+                data = allData.filter {
+                    $0.level == .network
+                }
+            case .error:
+                data = allData.filter {
+                    $0.level == .error
+                }
+            case .crash:
+                data = allData.filter {
+                    $0.level == .crash
+                }
+        }
+
         tableView.reloadData()
+    }
+    
+    private func addNotification() {
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(logDidAppend(_:)),
+            name: .fhxLogDidAppend,
+            object: nil
+        )
+    }
+    
+    @objc
+    private func logDidAppend(_ notification: Notification) {
+
+        guard let model = notification.object as? FHXLogModel else {
+            return
+        }
+
+        data.append(model)
+        
+        applyFilter()
+
+        let indexPath = IndexPath(
+            row: data.count - 1,
+            section: 0
+        )
+
+        tableView.performBatchUpdates({
+
+            tableView.insertRows(
+                at: [indexPath],
+                with: .none
+            )
+
+        }, completion: { _ in
+
+            self.scrollToBottom()
+
+        })
+    }
+    
+    private func scrollToBottom() {
+
+        guard data.count > 0 else {
+            return
+        }
+
+        let indexPath = IndexPath(
+            row: data.count - 1,
+            section: 0
+        )
+
+        tableView.scrollToRow(
+            at: indexPath,
+            at: .bottom,
+            animated: true
+        )
     }
 
 }
@@ -94,10 +197,6 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
-
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 70
-//    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:FHXLogCell = FHXLogCell.cell(with: tableView)
@@ -129,8 +228,48 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             string: "\(data[indexPath.row].message)",
             attributes: attributes
         )
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        cell.timeLabel.text = formatter.string(from: data[indexPath.row].time)
     
         return cell
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+
+        let model = data[indexPath.row]
+
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil
+        ) { _ in
+
+            let copyAction = UIAction(
+                title: "复制日志",
+                image: UIImage(systemName: "doc.on.doc")
+            ) { _ in
+
+                let text =
+                "\(model.file)." +
+                "\(model.function):" +
+                "[\(model.line)]\n" +
+                "\(model.message)"
+
+                UIPasteboard.general.string = text
+
+                print("复制成功")
+            }
+
+            return UIMenu(
+                title: "",
+                children: [copyAction]
+            )
+        }
     }
 
 }
@@ -149,5 +288,34 @@ extension UIColor {
     /// UIColor.hex(0xFFFFFF)
     static func hex(_ hex: UInt32, alpha: CGFloat = 1.0) -> UIColor {
         UIColor(hex: hex, alpha: alpha)
+    }
+}
+
+extension FHXLogViewController:FHXNavigationViewDelegate{
+
+    func fhxNavigationView(view:FHXNavigationView, buttonClick buttonName:String) {
+        if buttonName == "cancel" {
+            navigationController?.popViewController(animated: true)
+        } else if buttonName == "log" {
+            tag += 1
+            
+            if tag == 4 {
+                tag = 0
+            }
+
+            if tag == 0 {
+                currentFilter = .all
+            } else if tag == 1 {
+                currentFilter = .debug
+            } else if tag == 2 {
+                currentFilter = .network
+            } else if tag == 3 {
+                currentFilter = .error
+            } else if tag == 4 {
+                currentFilter = .crash
+            }
+
+            applyFilter()
+        }
     }
 }

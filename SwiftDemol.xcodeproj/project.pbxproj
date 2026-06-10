@@ -19,6 +19,8 @@
 		3F795DD8284F408D00D585B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD7284F408D00D585B4 /* Assets.xcassets */; };
 		3F795DDB284F408D00D585B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD9284F408D00D585B4 /* LaunchScreen.storyboard */; };
 		49AE62EC9825619C4DA5B8DD /* Pods_SwiftDemol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */; };
+		88E55E812FD6E548000C065D /* file.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 88E55E802FD6E548000C065D /* file.bundle */; };
+		88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		3F795DD7284F408D00D585B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F795DDA284F408D00D585B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F795DDC284F408D00D585B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88E55E802FD6E548000C065D /* file.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = file.bundle; sourceTree = "<group>"; };
+		88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogNotification.swift; sourceTree = "<group>"; };
 		D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftDemol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4E88744082327E7CB68A8E6 /* Pods-SwiftDemol.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftDemol.release.xcconfig"; path = "Target Support Files/Pods-SwiftDemol/Pods-SwiftDemol.release.xcconfig"; sourceTree = "<group>"; };
 		DC0004C1C6A6C906BE0C0574 /* Pods-SwiftDemol.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftDemol.debug.xcconfig"; path = "Target Support Files/Pods-SwiftDemol/Pods-SwiftDemol.debug.xcconfig"; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 				2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */,
 				2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */,
 				2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */,
+				88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */,
+				88E55E802FD6E548000C065D /* file.bundle */,
 				3F795DD4284F408C00D585B4 /* Main.storyboard */,
 				3F795DD7284F408D00D585B4 /* Assets.xcassets */,
 				3F795DD9284F408D00D585B4 /* LaunchScreen.storyboard */,
@@ -169,6 +175,7 @@
 				3F795DDB284F408D00D585B4 /* LaunchScreen.storyboard in Resources */,
 				3F795DD8284F408D00D585B4 /* Assets.xcassets in Resources */,
 				3F795DD6284F408C00D585B4 /* Main.storyboard in Resources */,
+				88E55E812FD6E548000C065D /* file.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +234,7 @@
 			files = (
 				3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */,
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
+				88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */,
 				2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */,
 				2D757BE72FD2797E001FEA94 /* FHXNavigationView.swift in Sources */,
 				2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */,

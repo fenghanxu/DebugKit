@@ -33,6 +33,14 @@ class FHXLogCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 14)
+        label.textAlignment = .left
+        return label
+    }()
+    
+    lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -80,16 +88,22 @@ class FHXLogCell: UITableViewCell {
             make.height.equalTo(22)
         }
         
-        contentView.addSubview(messageLabel)
-        messageLabel.snp.makeConstraints { make in
+        contentView.addSubview(timeLabel)
+        timeLabel.snp.makeConstraints { make in
             make.centerY.equalTo(levelLabel)
             make.left.equalTo(levelLabel.snp.right).offset(10)
             make.right.equalToSuperview().offset(-10)
         }
         
+        contentView.addSubview(messageLabel)
+        messageLabel.snp.makeConstraints { make in
+            make.top.equalTo(levelLabel.snp.bottom).offset(5)
+            make.left.right.equalToSuperview().inset(10)
+        }
+        
         contentView.addSubview(contentLabel)
         contentLabel.snp.makeConstraints { make in
-            make.top.equalTo(levelLabel.snp.bottom).offset(10)
+            make.top.equalTo(messageLabel.snp.bottom).offset(5)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().inset(10)
             make.bottom.equalToSuperview().inset(10)

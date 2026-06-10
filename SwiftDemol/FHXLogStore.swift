@@ -20,6 +20,14 @@ final class FHXLogStore {
             if self.logs.count > maxCount {
                 self.logs.removeFirst()
             }
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .fhxLogDidAppend,
+                    object: log
+                )
+            }
+            
         }
     }
 
