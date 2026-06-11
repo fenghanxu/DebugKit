@@ -102,22 +102,7 @@ class FHXNavigationView: UIView {
 // MARK: - button click
 extension FHXNavigationView {
     @objc private func cancelButtonClick() {
-//        delegate?.fhxNavigationView(view: self, buttonClick: "cancel")
-        
-        cancelButton.isSelected.toggle()
-        
-        if cancelButton.isSelected {
-            UIView.animate(withDuration: 0.25) { [weak self] in
-                guard let self = self else { return }
-//                self.searchBgView.alpha = 0.0
-            }
-        } else {
-            UIView.animate(withDuration: 0.25) { [weak self] in
-                guard let self = self else { return }
-//                self.searchBgView.alpha = 1.0
-            }
-        }
-       
+        delegate?.fhxNavigationView(view: self, buttonClick: cancelButton)
     }
     
     @objc private func logButtonClick() {
