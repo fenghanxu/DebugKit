@@ -9,15 +9,39 @@ import UIKit
 import SnapKit
 
 class FHXToolView: UIView {
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        
+    // MARK: - Show
+    static func showCurrentView(
+        vc: UIViewController,
+        winApp: UIWindow,
+        screenWidth: CGFloat,
+        screenHeight: CGFloat,
+        totalTopHeight: CGFloat,
+        menuList: [String],
+        subMenuList: [String],
+        valueBlock:((String)->())?
+    ) {
+        let selfView = FHXToolView(
+            winApp: winApp,
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            totalTopHeight: totalTopHeight,
+            menuList: menuList,
+            subMenuList: subMenuList
+        )
+        selfView.valueBlock = valueBlock
+        vc.view.addSubview(selfView)
+        selfView.showMenuView()
     }
     
-    init(winApp: UIWindow,
+    init(
+        winApp: UIWindow,
          screenWidth: CGFloat,
          screenHeight: CGFloat,
-         totalTopHeight: CGFloat) {
+         totalTopHeight: CGFloat,
+         menuList: [String],
+         subMenuList: [String]
+    ) {
         
         let targetRect = CGRect(
             x: 0,
@@ -28,14 +52,20 @@ class FHXToolView: UIView {
         
         super.init(frame: targetRect)
         
-        self.winApp = winApp
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
+        self.winApp         = winApp
+        self.screenWidth    = screenWidth
+        self.screenHeight   = screenHeight
         self.totalTopHeight = totalTopHeight
+        self.menuList       = menuList
+        self.subMenuList    = subMenuList
         buildUI()
     }
     
-    private var valueBlock:((_ index:NSInteger)->())?
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private var valueBlock:((_ value: String)->())?
     
     private var winApp: UIWindow?
     
@@ -45,50 +75,74 @@ class FHXToolView: UIView {
     
     private var totalTopHeight: CGFloat?
     
-    // MARK: - Background Button
+    private var clickButton: UIButton?
     
-    lazy private var button: UIButton = {
+    private var isShowSubMenu = false
+    
+    private var menuList:[String] = [String]()
+    
+    private var subMenuList:[String] = [String]()
+        
+    lazy private var bottomButton: UIButton = {
         let btn = UIButton(type: .custom)
         btn.backgroundColor = .clear
         btn.addTarget(self, action: #selector(buttonClick), for: .touchUpInside)
         return btn
     }()
     
-    // MARK: - Bottom Content
-    
-    lazy private var bgView: UIView = {
+    lazy private var shadowMenuView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 22
-        view.layer.maskedCorners = [
-            .layerMinXMinYCorner,
-            .layerMaxXMinYCorner
-        ]
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowRadius = 20
+        view.layer.shadowOffset = .zero
         return view
     }()
     
     
-    // MARK: - Show
+    lazy private var bgMenuView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 0.5
+        view.layer.borderColor = UIColor(red: 210.0/255.0, green: 214.0/255.0, blue: 218.0/255.0, alpha: 1.0).cgColor
+        return view
+    }()
     
-    static func showCurrentView(
-        vc: UIViewController,
-        winApp: UIWindow,
-        screenWidth: CGFloat,
-        screenHeight: CGFloat,
-        totalTopHeight: CGFloat,
-        valueBlock:((NSInteger)->())?
-    ) {
-        let selfView = FHXToolView(
-            winApp: winApp,
-            screenWidth: screenWidth,
-            screenHeight: screenHeight,
-            totalTopHeight: totalTopHeight
-        )
-        selfView.valueBlock = valueBlock
-        vc.view.addSubview(selfView)
-        selfView.showView()
-    }
+    lazy private var menuView: FHXToolMenuView = {
+        let view = FHXToolMenuView()
+        view.delegate = self
+        view.list = menuList
+        return view
+    }()
+    
+    lazy private var shadowSubMenuView: UIView = {
+        let view = UIView()
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowRadius = 20
+        view.layer.shadowOffset = .zero
+        view.layer.anchorPoint = CGPoint(x: 0, y: 0.5)
+        return view
+    }()
+        
+    lazy private var bgSubMenuView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 0.5
+        view.layer.borderColor = UIColor(red: 210.0/255.0, green: 214.0/255.0, blue: 218.0/255.0, alpha: 1.0).cgColor
+        return view
+    }()
+    
+    lazy private var subMenuView: FHXToolSubMenuView = {
+        let view = FHXToolSubMenuView()
+        view.list = subMenuList
+        view.delegate = self
+        return view
+    }()
     
     // MARK: - UI
     
@@ -96,64 +150,190 @@ class FHXToolView: UIView {
         
         backgroundColor = .clear
         
-        addSubview(button)
-        button.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        addSubview(bottomButton)
         
-        button.addSubview(bgView)
-        bgView.snp.makeConstraints { make in
-            make.left.right.bottom.equalToSuperview()
-            make.height.equalTo(600)
-        }
-
+        bottomButton.addSubview(shadowMenuView)
+        shadowMenuView.addSubview(bgMenuView)
+        bgMenuView.contentView.addSubview(menuView)
         
+        bottomButton.addSubview(shadowSubMenuView)
+        shadowSubMenuView.addSubview(bgSubMenuView)
+        bgSubMenuView.contentView.addSubview(subMenuView)
+        
+        shadowSubMenuView.alpha = 0
+        shadowSubMenuView.isHidden = true
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        bottomButton.frame     = bounds
+        shadowMenuView.frame   = CGRectMake(20, totalTopHeight ?? 0, 150, CGFloat(44 * menuView.list.count))
+        bgMenuView.frame       = shadowMenuView.bounds
+        menuView.frame         = shadowMenuView.bounds
+        
+        shadowSubMenuView.frame   = CGRectMake(CGRectGetMaxX(shadowMenuView.frame) + 2, CGRectGetMinY(shadowMenuView.frame), 150, CGFloat(44 * subMenuView.list.count))
+        bgSubMenuView.frame       = shadowSubMenuView.bounds
+        subMenuView.frame         = shadowSubMenuView.bounds
     }
     
     // MARK: - Show
     
-    func showView() {
-        
-        bgView.transform = CGAffineTransform(
+    func showMenuView() {
+
+        shadowMenuView.alpha = 0
+        shadowMenuView.transform = CGAffineTransform(
             translationX: 0,
-            y: UIScreen.main.bounds.height
+            y: -10
+        ).scaledBy(x: 0.95, y: 0.95)
+
+        backgroundColor = UIColor.black.withAlphaComponent(0)
+
+        UIView.animate(
+            withDuration: 0.25,
+            delay: 0,
+            usingSpringWithDamping: 0.82,
+            initialSpringVelocity: 0.6,
+            options: [.curveEaseOut]
+        ) {
+
+            self.backgroundColor = UIColor.black.withAlphaComponent(0.05)
+
+            self.shadowMenuView.alpha = 1
+            self.shadowMenuView.transform = .identity
+        }
+    }
+    
+    private func showSubMenu() {
+
+        guard !isShowSubMenu else { return }
+
+        isShowSubMenu = true
+
+        shadowSubMenuView.layer.removeAllAnimations()
+
+        shadowSubMenuView.isHidden = false
+        shadowSubMenuView.alpha = 0
+        shadowSubMenuView.transform = CGAffineTransform(
+            scaleX: 0.92,
+            y: 0.92
         )
-        
-        UIView.animate(withDuration: 0.3) {
-            
-            self.backgroundColor = .black.withAlphaComponent(0.45)
-            
-            self.bgView.transform = .identity
+
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            usingSpringWithDamping: 0.85,
+            initialSpringVelocity: 0.8,
+            options: [.curveEaseOut]
+        ) {
+
+            self.shadowSubMenuView.alpha = 1
+            self.shadowSubMenuView.transform = .identity
         }
     }
     
     // MARK: - Dismiss
     
-    func dismissView() {
-        
-        UIView.animate(withDuration: 0.25, animations: {
-            
+    func hideMenuView() {
+
+        UIView.animate(
+            withDuration: 0.18,
+            delay: 0,
+            options: [.curveEaseIn]
+        ) {
+
             self.backgroundColor = .clear
-            
-            self.bgView.transform = CGAffineTransform(
+
+            self.shadowMenuView.alpha = 0
+            self.shadowSubMenuView.alpha = 0
+
+            self.shadowMenuView.transform = CGAffineTransform(
                 translationX: 0,
-                y: UIScreen.main.bounds.height
+                y: -8
+            ).scaledBy(
+                x: 0.98,
+                y: 0.98
             )
+
+            self.shadowSubMenuView.transform = CGAffineTransform(
+                scaleX: 0.95,
+                y: 0.95
+            )
+
+        } completion: { _ in
             
-        }) { _ in
+            self.isShowSubMenu = false
+            self.shadowSubMenuView.isHidden = true
+            self.shadowSubMenuView.transform = .identity
+
             self.removeFromSuperview()
+        }
+    }
+    
+    private func hideSubMenu() {
+
+        guard isShowSubMenu else { return }
+
+        isShowSubMenu = false
+
+        shadowSubMenuView.layer.removeAllAnimations()
+
+        UIView.animate(
+            withDuration: 0.18,
+            delay: 0,
+            options: [.curveEaseIn]
+        ) {
+
+            self.shadowSubMenuView.alpha = 0
+
+            self.shadowSubMenuView.transform = CGAffineTransform(
+                scaleX: 0.95,
+                y: 0.95
+            )
+
+        } completion: { _ in
+
+            self.shadowSubMenuView.isHidden = true
+            self.shadowSubMenuView.transform = .identity
         }
     }
     
     // MARK: - Action
     
     @objc func buttonClick() {
-        dismissView()
+        hideMenuView()
     }
     
     @objc func closeButtonClick() {
-        dismissView()
+        hideMenuView()
     }
     
 }
+
+extension FHXToolView : FHXToolMenuViewDelegate {
+    
+    func fhxToolMenuView(model:FHXToolMenuView, didSelectRowAt indexPath: IndexPath) {
+        if menuList[indexPath.item] == "筛选" {
+            if isShowSubMenu {
+                hideSubMenu()
+                valueBlock?(menuList[indexPath.item])
+            } else {
+                showSubMenu()
+            }
+        } else if menuList[indexPath.item] == "搜索" {
+            hideMenuView()
+            valueBlock?(menuList[indexPath.item])
+        }
+    }
+    
+}
+
+extension FHXToolView: FHXToolSubMenuViewDelegate {
+    func fhxToolSubMenuView(view: FHXToolSubMenuView, didSelectRowAt indexPath: IndexPath) {
+        hideMenuView()
+        valueBlock?(subMenuList[indexPath.item])
+    }
+}
+
 

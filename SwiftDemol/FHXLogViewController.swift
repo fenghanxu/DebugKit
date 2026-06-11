@@ -10,7 +10,7 @@ import SnapKit
 
 class FHXLogViewController: UIViewController {
     
-    var winApp: UIWindow?
+    var keyWindowApp: UIWindow?
     
     var screenWidth: CGFloat?
     
@@ -53,6 +53,7 @@ class FHXLogViewController: UIViewController {
     /// 当前筛选
     private var currentFilter: FHXLogFilter = .all
     
+    /// 筛选枚举
     private enum FHXLogFilter {
         case all
         case debug
@@ -60,8 +61,6 @@ class FHXLogViewController: UIViewController {
         case error
         case crash
     }
-    
-    private var tag: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -214,13 +213,13 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
         cell.messageLabel.text = "\(data[indexPath.row].file)." + "\(data[indexPath.row].function):" + "[\(data[indexPath.row].line)] "
 
         if data[indexPath.row].level.rawValue == 0 {// debug
-            cell.levelLabel.backgroundColor = UIColor(hex: 0x00DDDD)
-        } else if data[indexPath.row].level.rawValue == 1 {// info
-            cell.levelLabel.backgroundColor = UIColor(hex: 0x00AA00)
-        } else if data[indexPath.row].level.rawValue == 2 {// warning
-            cell.levelLabel.backgroundColor = UIColor(hex: 0xFFCC22)
-        } else if data[indexPath.row].level.rawValue == 3 {// error
-            cell.levelLabel.backgroundColor = UIColor(hex: 0xFF3333)
+            cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+        } else if data[indexPath.row].level.rawValue == 1 {// network
+            cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+        } else if data[indexPath.row].level.rawValue == 2 {// error
+            cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+        } else if data[indexPath.row].level.rawValue == 3 {// crash
+            cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
         }
         
         let paragraphStyle = NSMutableParagraphStyle()
@@ -282,51 +281,14 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
 
 }
 
-extension UIColor {
-    
-    /// UIColor(hex: 0xFFFFFF)
-    convenience init(hex: UInt32, alpha: CGFloat = 1.0) {
-        let red   = CGFloat((hex & 0xFF0000) >> 16) / 255.0
-        let green = CGFloat((hex & 0x00FF00) >> 8) / 255.0
-        let blue  = CGFloat(hex & 0x0000FF) / 255.0
-        
-        self.init(red: red, green: green, blue: blue, alpha: alpha)
-    }
-    
-    /// UIColor.hex(0xFFFFFF)
-    static func hex(_ hex: UInt32, alpha: CGFloat = 1.0) -> UIColor {
-        UIColor(hex: hex, alpha: alpha)
-    }
-}
-
 extension FHXLogViewController:FHXNavigationViewDelegate{
 
-    func fhxNavigationView(view:FHXNavigationView, buttonClick buttonName:String) {
-        if buttonName == "cancel" {
+    func fhxNavigationView(view:FHXNavigationView, buttonClick button:UIButton) {
+        if button.tag == 0 {
             navigationController?.popViewController(animated: true)
-        } else if buttonName == "log" {
-//            tag += 1
-//            
-//            if tag == 4 {
-//                tag = 0
-//            }
-//
-//            if tag == 0 {
-//                currentFilter = .all
-//            } else if tag == 1 {
-//                currentFilter = .debug
-//            } else if tag == 2 {
-//                currentFilter = .network
-//            } else if tag == 3 {
-//                currentFilter = .error
-//            } else if tag == 4 {
-//                currentFilter = .crash
-//            }
-//
-//            applyFilter()
-            
-            
-            guard let keyWindowAppPartial = self.winApp,
+        } else if button.tag == 1 {
+
+            guard let keyWindowAppPartial = self.keyWindowApp,
                   let screenWidthPartial = self.screenWidth,
                   let screenHeightPartial = self.screenHeight,
                   let totalTopHeightPartial = self.totalTopHeight
@@ -334,11 +296,30 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                 return
             }
             
-            FHXToolView.showCurrentView(vc: self, winApp: keyWindowAppPartial, screenWidth: screenWidthPartial, screenHeight: screenHeightPartial, totalTopHeight: totalTopHeightPartial) { tag in
-                
+            FHXToolView.showCurrentView(
+                vc: self,
+                winApp: keyWindowAppPartial,
+                screenWidth: screenWidthPartial,
+                screenHeight: screenHeightPartial,
+                totalTopHeight: totalTopHeightPartial,
+                menuList: ["筛选", "搜索"],
+                subMenuList: ["All","Debug", "Network", "Error", "Crash"]
+            ) {[weak self] value in
+                guard let self = self else { return }
+                if value == "All" {
+                    self.currentFilter = .all
+                } else if value == "Debug" {
+                    self.currentFilter = .debug
+                } else if value == "Network" {
+                    self.currentFilter = .network
+                } else if value == "Error" {
+                    self.currentFilter = .error
+                } else if value == "Crash" {
+                    self.currentFilter = .crash
+                }
+                applyFilter()
             }
-            
-            
+
         }
     }
 }

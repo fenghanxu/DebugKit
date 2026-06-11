@@ -149,6 +149,7 @@ class ViewController: UIViewController {
                 vc.screenWidth = screenWidth
                 vc.screenHeight = screenHeight
                 vc.totalTopHeight = totalTopHeight(self)
+                vc.keyWindowApp = keyWindowApp
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
