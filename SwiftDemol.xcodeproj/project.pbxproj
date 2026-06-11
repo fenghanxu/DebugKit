@@ -7,11 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D52B8C72FD95E46003E34FA /* FHXToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D52B8C62FD95E46003E34FA /* FHXToolView.swift */; };
+		2D52BB122FD96193003E34FA /* SPMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D52BB112FD96193003E34FA /* SPMacro.swift */; };
 		2D757BE72FD2797E001FEA94 /* FHXNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D757BE62FD2797E001FEA94 /* FHXNavigationView.swift */; };
 		2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8F62FD129E600E83F11 /* FHXLog.swift */; };
 		2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */; };
 		2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */; };
 		2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */; };
+		2D8B103F2FDA5B3F0018F98E /* FHXToolMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8B103E2FDA5B3F0018F98E /* FHXToolMenuView.swift */; };
+		2D8B10412FDA5E340018F98E /* FHXToolMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8B10402FDA5E340018F98E /* FHXToolMenuCell.swift */; };
+		2D8B128C2FDA925E0018F98E /* FHXToolSubMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8B128B2FDA925E0018F98E /* FHXToolSubMenuView.swift */; };
+		2D8B128E2FDA93460018F98E /* FHXToolSubMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8B128D2FDA93460018F98E /* FHXToolSubMenuCell.swift */; };
 		3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DCE284F408C00D585B4 /* AppDelegate.swift */; };
 		3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DD0284F408C00D585B4 /* SceneDelegate.swift */; };
 		3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DD2284F408C00D585B4 /* ViewController.swift */; };
@@ -24,11 +30,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D52B8C62FD95E46003E34FA /* FHXToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolView.swift; sourceTree = "<group>"; };
+		2D52BB112FD96193003E34FA /* SPMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPMacro.swift; sourceTree = "<group>"; };
 		2D757BE62FD2797E001FEA94 /* FHXNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXNavigationView.swift; sourceTree = "<group>"; };
 		2D7DA8F62FD129E600E83F11 /* FHXLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLog.swift; sourceTree = "<group>"; };
 		2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogStore.swift; sourceTree = "<group>"; };
 		2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
 		2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
+		2D8B103E2FDA5B3F0018F98E /* FHXToolMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolMenuView.swift; sourceTree = "<group>"; };
+		2D8B10402FDA5E340018F98E /* FHXToolMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolMenuCell.swift; sourceTree = "<group>"; };
+		2D8B128B2FDA925E0018F98E /* FHXToolSubMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolSubMenuView.swift; sourceTree = "<group>"; };
+		2D8B128D2FDA93460018F98E /* FHXToolSubMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolSubMenuCell.swift; sourceTree = "<group>"; };
 		3F795DCB284F408C00D585B4 /* SwiftDemol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftDemol.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F795DCE284F408C00D585B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F795DD0284F408C00D585B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +89,7 @@
 		3F795DCD284F408C00D585B4 /* SwiftDemol */ = {
 			isa = PBXGroup;
 			children = (
+				2D52BB112FD96193003E34FA /* SPMacro.swift */,
 				3F795DCE284F408C00D585B4 /* AppDelegate.swift */,
 				3F795DD0284F408C00D585B4 /* SceneDelegate.swift */,
 				3F795DD2284F408C00D585B4 /* ViewController.swift */,
@@ -86,6 +99,11 @@
 				2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */,
 				2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */,
 				88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */,
+				2D52B8C62FD95E46003E34FA /* FHXToolView.swift */,
+				2D8B103E2FDA5B3F0018F98E /* FHXToolMenuView.swift */,
+				2D8B10402FDA5E340018F98E /* FHXToolMenuCell.swift */,
+				2D8B128B2FDA925E0018F98E /* FHXToolSubMenuView.swift */,
+				2D8B128D2FDA93460018F98E /* FHXToolSubMenuCell.swift */,
 				88E55E802FD6E548000C065D /* file.bundle */,
 				3F795DD4284F408C00D585B4 /* Main.storyboard */,
 				3F795DD7284F408D00D585B4 /* Assets.xcassets */,
@@ -235,12 +253,18 @@
 				3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */,
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
 				88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */,
+				2D52B8C72FD95E46003E34FA /* FHXToolView.swift in Sources */,
 				2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */,
+				2D8B10412FDA5E340018F98E /* FHXToolMenuCell.swift in Sources */,
 				2D757BE72FD2797E001FEA94 /* FHXNavigationView.swift in Sources */,
 				2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */,
+				2D52BB122FD96193003E34FA /* SPMacro.swift in Sources */,
+				2D8B128E2FDA93460018F98E /* FHXToolSubMenuCell.swift in Sources */,
+				2D8B103F2FDA5B3F0018F98E /* FHXToolMenuView.swift in Sources */,
 				2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */,
 				3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */,
 				2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */,
+				2D8B128C2FDA925E0018F98E /* FHXToolSubMenuView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

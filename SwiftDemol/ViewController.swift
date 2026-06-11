@@ -141,14 +141,22 @@ class ViewController: UIViewController {
         // (保留方法写法)网络日志
         FHXLog.shared.network(json_1)
 
-        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
-        doubleTap.numberOfTapsRequired = 3
-        self.view.addGestureRecognizer(doubleTap)
+
+
+        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()+1.0) {
+            DispatchQueue.main.async {
+                let vc = FHXLogViewController()
+                vc.screenWidth = screenWidth
+                vc.screenHeight = screenHeight
+                vc.totalTopHeight = totalTopHeight(self)
+                vc.keyWindowApp = keyWindowApp
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+
+
     }
- 
-    @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
-        navigationController?.pushViewController(FHXLogViewController(), animated: true)
-    }
+
     
 }
 

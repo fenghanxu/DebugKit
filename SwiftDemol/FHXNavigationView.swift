@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FHXNavigationViewDelegate:NSObjectProtocol {
-    func fhxNavigationView(view:FHXNavigationView, buttonClick buttonName:String)
+    func fhxNavigationView(view:FHXNavigationView, buttonClick button:UIButton)
 }
 
 class FHXNavigationView: UIView {
@@ -30,6 +30,7 @@ class FHXNavigationView: UIView {
             in: sdkBundle,
             compatibleWith: nil
         )
+        button.tag = 0
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
         return button
@@ -37,6 +38,7 @@ class FHXNavigationView: UIView {
     
     lazy private var logButton: UIButton = {
         let button = UIButton()
+        button.tag = 1
         button.setTitle("日志", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
@@ -44,11 +46,11 @@ class FHXNavigationView: UIView {
         return button
     }()
     
-    lazy private var searchBgView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        return view
-    }()
+//    lazy private var searchBgView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .red
+//        return view
+//    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,27 +75,25 @@ class FHXNavigationView: UIView {
         }
         
         backgroundView.addSubview(cancelButton)
-        cancelButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(5)
-            make.width.height.equalTo(44)
-        }
-        
         backgroundView.addSubview(logButton)
-        logButton.snp.makeConstraints { make in
-            make.width.height.equalTo(44)
-            make.centerY.equalToSuperview()
-            make.left.equalTo(cancelButton.snp.right).offset(10)
-        }
+
         
-        backgroundView.addSubview(searchBgView)
-        searchBgView.snp.makeConstraints { make in
-            make.left.equalTo(cancelButton.snp.right).offset(10)
-            make.centerY.equalTo(cancelButton)
-            make.height.equalTo(44)
-            make.right.equalToSuperview()
-        }
+//        backgroundView.addSubview(searchBgView)
+//        searchBgView.snp.makeConstraints { make in
+//            make.left.equalTo(cancelButton.snp.right).offset(10)
+//            make.centerY.equalTo(cancelButton)
+//            make.height.equalTo(44)
+//            make.right.equalToSuperview()
+//        }
         
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        cancelButton.frame = CGRectMake(5, 0, 44, 44)
+        let logButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
+        logButton.frame = CGRectMake(logButtonRight, 0, 44, 44)
     }
 
 
@@ -102,25 +102,10 @@ class FHXNavigationView: UIView {
 // MARK: - button click
 extension FHXNavigationView {
     @objc private func cancelButtonClick() {
-//        delegate?.fhxNavigationView(view: self, buttonClick: "cancel")
-        
-        cancelButton.isSelected.toggle()
-        
-        if cancelButton.isSelected {
-            UIView.animate(withDuration: 0.25) { [weak self] in
-                guard let self = self else { return }
-                self.searchBgView.alpha = 0.0
-            }
-        } else {
-            UIView.animate(withDuration: 0.25) { [weak self] in
-                guard let self = self else { return }
-                self.searchBgView.alpha = 1.0
-            }
-        }
-       
+        delegate?.fhxNavigationView(view: self, buttonClick: cancelButton)
     }
     
     @objc private func logButtonClick() {
-        delegate?.fhxNavigationView(view: self, buttonClick: "log")
+        delegate?.fhxNavigationView(view: self, buttonClick: logButton)
     }
 }
