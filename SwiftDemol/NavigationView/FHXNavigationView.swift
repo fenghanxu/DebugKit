@@ -9,11 +9,20 @@ import UIKit
 
 protocol FHXNavigationViewDelegate:NSObjectProtocol {
     func fhxNavigationView(view:FHXNavigationView, buttonClick button:UIButton)
+    func fhxNavigationView(view:FHXNavigationView, searchContent text:String)
 }
 
 class FHXNavigationView: UIView {
     
     weak var delegate:FHXNavigationViewDelegate?
+    
+    var keyWindowApp: UIWindow?
+    
+    var screenWidth: CGFloat?
+    
+    var screenHeight: CGFloat?
+    
+    var totalTopHeight: CGFloat?
     
     lazy private var backgroundView:UIView = {
         var view = UIView()
@@ -46,10 +55,10 @@ class FHXNavigationView: UIView {
         return button
     }()
     
-    lazy private var searchBgView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
+    lazy private var searchBgView: FHXSearchView = {
+        let view = FHXSearchView()
         view.alpha = 0.0
+        view.delegate = self
         return view
     }()
     
@@ -79,32 +88,27 @@ class FHXNavigationView: UIView {
         backgroundColor = .white
         
         addSubview(backgroundView)
-        backgroundView.snp.makeConstraints { make in
-            make.left.equalToSuperview()
-            make.height.equalTo(44)
-            make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
-        
         backgroundView.addSubview(cancelButton)
         backgroundView.addSubview(logButton)
         backgroundView.addSubview(searchBgView)
-        
-        searchBgView.snp.makeConstraints { make in
-            make.left.equalTo(cancelButton.snp.right).offset(10)
-            make.centerY.equalTo(cancelButton)
-            make.height.equalTo(44)
-            make.right.equalToSuperview()
-        }
-        
+  
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        guard let totalTopHeightPartial = totalTopHeight, let screenWidthPartial = screenWidth else { return }
+        
+        backgroundView.frame = CGRectMake(0, totalTopHeightPartial - 44, screenWidthPartial, 44)
+        
         cancelButton.frame = CGRectMake(5, 0, 44, 44)
+        
         let logButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
         logButton.frame = CGRectMake(logButtonRight, 0, 44, 44)
+        
+        let cancelButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
+        let cancelButtonWidth = screenWidthPartial - (CGRectGetMaxX(cancelButton.frame) + 10)
+        searchBgView.frame = CGRectMake(cancelButtonRight, 0, cancelButtonWidth, 44)
     }
 
 
@@ -119,4 +123,21 @@ extension FHXNavigationView {
     @objc private func logButtonClick() {
         delegate?.fhxNavigationView(view: self, buttonClick: logButton)
     }
+}
+
+extension FHXNavigationView: FHXSearchViewDelegate {
+    
+    func fhxSearchView(view: FHXSearchView, searchContent text: String) {
+        delegate?.fhxNavigationView(view: self, searchContent: text)
+    }
+    
+    func fhxSearchView(view: FHXSearchView, buttonClick button: UIButton) {
+        isShowSearchBgView = false
+        
+        UIView.animate(withDuration: 0.25, animations: { [weak self] in
+            guard let self = self else { return }
+            self.searchBgView.alpha = 0.0
+        })
+    }
+    
 }

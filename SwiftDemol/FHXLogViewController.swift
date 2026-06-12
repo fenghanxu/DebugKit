@@ -28,6 +28,7 @@ class FHXLogViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100.0
+        tableView.keyboardDismissMode = .onDrag
         tableView.register(FHXLogCell.self, forCellReuseIdentifier: FHXLogCell.identifier)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
@@ -41,6 +42,10 @@ class FHXLogViewController: UIViewController {
     lazy private var navigatonView : FHXNavigationView = {
         let navigationView = FHXNavigationView()
         navigationView.delegate = self
+        navigationView.keyWindowApp = keyWindowApp
+        navigationView.screenWidth = screenWidth
+        navigationView.screenHeight = screenHeight
+        navigationView.totalTopHeight = totalTopHeight
         return navigationView
     }()
     
@@ -61,6 +66,9 @@ class FHXLogViewController: UIViewController {
         case error
         case crash
     }
+    
+    /// 关键词
+    private var searchTerm = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -196,6 +204,93 @@ class FHXLogViewController: UIViewController {
             animated: true
         )
     }
+    
+    private func search(_ keyword: String) {
+
+        guard !keyword.isEmpty else {
+            applyFilter()
+            return
+        }
+
+        let lowerKeyword = keyword.lowercased()
+
+        data = allData.filter {
+
+            $0.message.lowercased().contains(lowerKeyword)
+            ||
+            $0.file.lowercased().contains(lowerKeyword)
+            ||
+            $0.function.lowercased().contains(lowerKeyword)
+        }
+
+        tableView.reloadData()
+    }
+    
+    /// 关键搜索词高亮
+    func highlightText(
+        text: String,
+        keyword: String
+    ) -> NSAttributedString {
+
+        let attr = NSMutableAttributedString( string: text)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 8
+        
+        attr.addAttributes(
+            [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 14),
+                .paragraphStyle: paragraphStyle
+            ],
+            range: NSRange(
+                location: 0,
+                length: text.count
+            )
+        )
+
+        guard !keyword.isEmpty else {
+            return attr
+        }
+
+        let nsText = text as NSString
+
+        var searchRange = NSRange(
+            location: 0,
+            length: nsText.length
+        )
+
+        while true {
+
+            let range = nsText.range(
+                of: keyword,
+                options: .caseInsensitive,
+                range: searchRange
+            )
+
+            if range.location == NSNotFound {
+                break
+            }
+
+            attr.addAttributes(
+                [
+                    .foregroundColor: UIColor.red,
+                    .font: UIFont.boldSystemFont(ofSize: 14)
+                ],
+                range: range
+            )
+
+            let nextLocation =
+                range.location + range.length
+
+            searchRange = NSRange(
+                location: nextLocation,
+                length: nsText.length - nextLocation
+            )
+        }
+
+        return attr
+    }
 
 }
 
@@ -222,20 +317,24 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
         }
         
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 8 // 行间距
+        if searchTerm == String() {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 8 // 行间距
 
-        let attributes: [NSAttributedString.Key: Any] = [
-            .paragraphStyle: paragraphStyle,
-            .font: UIFont.systemFont(ofSize: 14),
-            .foregroundColor: UIColor.black
-        ]
+            let attributes: [NSAttributedString.Key: Any] = [
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.systemFont(ofSize: 14),
+                .foregroundColor: UIColor.black
+            ]
 
-        cell.contentLabel.attributedText = NSAttributedString(
-            string: "\(data[indexPath.row].message)",
-            attributes: attributes
-        )
-        
+            cell.contentLabel.attributedText = NSAttributedString(
+                string: "\(data[indexPath.row].message)",
+                attributes: attributes
+            )
+        } else {
+            cell.contentLabel.attributedText = highlightText(text: data[indexPath.row].message, keyword: searchTerm)
+        }
+
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         cell.timeLabel.text = formatter.string(from: data[indexPath.row].time)
@@ -323,10 +422,14 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                     applyFilter()
                 } else if value == "搜索" {
                     self.navigatonView.isShowSearchBgView = true
-                }
-                
+                }                
             }
 
         }
+    }
+    
+    func fhxNavigationView(view:FHXNavigationView, searchContent text:String) {
+        searchTerm = text
+        search(text)
     }
 }
