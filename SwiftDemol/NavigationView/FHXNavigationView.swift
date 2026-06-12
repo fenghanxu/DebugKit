@@ -50,7 +50,7 @@ class FHXNavigationView: UIView {
         button.tag = 1
         button.setTitle("日志", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         button.addTarget(self, action: #selector(logButtonClick), for: .touchUpInside)
         return button
     }()
