@@ -305,8 +305,6 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
 
         cell.levelLabel.text = "\(data[indexPath.row].level)"
         
-        cell.messageLabel.text = "\(data[indexPath.row].file)." + "\(data[indexPath.row].function):" + "[\(data[indexPath.row].line)] "
-
         if data[indexPath.row].level.rawValue == 0 {// debug
             cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         } else if data[indexPath.row].level.rawValue == 1 {// network
@@ -317,7 +315,16 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
         }
         
-        if searchTerm == String() {
+        let messageString = "\(data[indexPath.row].file)." + "\(data[indexPath.row].function):" + "[\(data[indexPath.row].line)] "
+        if messageString.range(of: searchTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
+            cell.messageLabel.attributedText = highlightText(text: messageString, keyword: searchTerm)
+        } else {
+            cell.messageLabel.text = "\(data[indexPath.row].file)." + "\(data[indexPath.row].function):" + "[\(data[indexPath.row].line)] "
+        }
+        
+        if searchTerm != String() && data[indexPath.row].message.range(of: searchTerm, options: .caseInsensitive) != nil {
+            cell.contentLabel.attributedText = highlightText(text: data[indexPath.row].message, keyword: searchTerm)
+        } else {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 8 // 行间距
 
@@ -331,8 +338,6 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
                 string: "\(data[indexPath.row].message)",
                 attributes: attributes
             )
-        } else {
-            cell.contentLabel.attributedText = highlightText(text: data[indexPath.row].message, keyword: searchTerm)
         }
 
         let formatter = DateFormatter()
@@ -425,6 +430,9 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                 }                
             }
 
+        } else if button.tag == 2 {
+            searchTerm = String()
+            search(searchTerm)
         }
     }
     

@@ -138,6 +138,8 @@ extension FHXNavigationView: FHXSearchViewDelegate {
             guard let self = self else { return }
             self.searchBgView.alpha = 0.0
         })
+        
+        delegate?.fhxNavigationView(view: self, buttonClick: button)
     }
     
 }

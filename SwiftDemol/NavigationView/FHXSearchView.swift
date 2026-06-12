@@ -35,6 +35,7 @@ class FHXSearchView: UIView {
             in: sdkBundle,
             compatibleWith: nil
         )
+        button.tag = 2
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
         return button
