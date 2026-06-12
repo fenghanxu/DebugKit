@@ -64,9 +64,7 @@ class FHXLogViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .black
-        
+
         setupUI()
         loadData()
         addNotification()
@@ -96,6 +94,8 @@ class FHXLogViewController: UIViewController {
     }
 
     private func setupUI() {
+        view.backgroundColor = .white
+        
         view.addSubview(navigatonView)
         navigatonView.snp.makeConstraints { make in
             make.left.top.right.equalToSuperview()
@@ -308,16 +308,23 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                 guard let self = self else { return }
                 if value == "All" {
                     self.currentFilter = .all
+                    applyFilter()
                 } else if value == "Debug" {
                     self.currentFilter = .debug
+                    applyFilter()
                 } else if value == "Network" {
                     self.currentFilter = .network
+                    applyFilter()
                 } else if value == "Error" {
                     self.currentFilter = .error
+                    applyFilter()
                 } else if value == "Crash" {
                     self.currentFilter = .crash
+                    applyFilter()
+                } else if value == "搜索" {
+                    self.navigatonView.isShowSearchBgView = true
                 }
-                applyFilter()
+                
             }
 
         }

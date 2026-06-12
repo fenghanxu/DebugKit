@@ -49,7 +49,6 @@ class FHXLogCell: UITableViewCell {
         label.numberOfLines = 0
         return label
     }()
-
     
     static func cell(with tableview: UITableView) -> FHXLogCell {
         var cell = tableview.dequeueReusableCell(withIdentifier: identifier) as? FHXLogCell
@@ -70,7 +69,7 @@ class FHXLogCell: UITableViewCell {
     
     private func buildUI(){
         selectionStyle = .none
-        backgroundColor = .white;
+        backgroundColor = .white
         
         contentView.addSubview(line)
         line.snp.makeConstraints { make in

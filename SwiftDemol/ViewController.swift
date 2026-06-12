@@ -11,9 +11,20 @@ import Alamofire
 
 class ViewController: UIViewController {
 
+    lazy private var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "1")
+        return imageView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        view.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
  
         
         // 2. 开关控制（SPLogs 优点）
