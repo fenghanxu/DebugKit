@@ -324,10 +324,10 @@ extension FHXToolView : FHXToolMenuViewDelegate {
         } else if menuList[indexPath.item] == "搜索" {
             hideMenuView()
             valueBlock?(menuList[indexPath.item])
-        } else if menuList[indexPath.item] == "导出TXT" {
+        } else if menuList[indexPath.item] == "导出" {
             hideMenuView()
             valueBlock?(menuList[indexPath.item])
-        } else if menuList[indexPath.item] == "导出" {
+        } else if menuList[indexPath.item] == "清空日志" {
             hideMenuView()
             valueBlock?(menuList[indexPath.item])
         }

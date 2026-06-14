@@ -96,6 +96,10 @@ class FHXLog {
         )
     }
 
+}
+
+// MARK: - 备用
+extension FHXLog {
     func network(
         _ message: String,
         file: String = #file,
@@ -131,58 +135,93 @@ class FHXLog {
     ) {
         saveLog(message, level: .error, file: file, function: function, line: line)
     }
-
 }
 
 extension FHXLog {
 
-    func allLogs() -> [FHXLogModel] {
-        store.all()        
+    /// 获取当前日志数据
+    func currentLogs() -> [FHXLogModel] {
+        store.currentLogs()
     }
 
-    func clear() {
-        store.clear()
-        
+    /// 获取历史日志数据
+    func historyLogs() -> [FHXLogModel] {
+        store.historyLogs()
+    }
+    
+    /// 清空当前日志
+    func clearCurrentLogs() {
+        store.clearCurrentLogs()
+
         DispatchQueue.main.async {
             NotificationCenter.default.post(
                 name: .fhxLogDidClear,
-                object: nil
+                object: "current"
             )
         }
     }
     
-    func deleteLog(
-        id: String
-    ) {
-        store.delete(id: id)
+    /// 清空历史日志
+    func clearHistoryLogs() {
+        store.clearHistoryLogs()
+
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(
+                name: .fhxLogDidClear,
+                object: "history"
+            )
+        }
+    }
+    
+    /// 删除当前日志单条数据
+    func deleteCurrentLog(id: String) {
+        store.deleteCurrentLog(id: id)
+    }
+    
+    /// 删除历史日志单条数据
+    func deleteHistoryLog(id: String) {
+        store.deleteHistoryLog(id: id)
     }
 
-    func deleteLogs(
-        ids: [String]
-    ) {
-        store.delete(ids: ids)
+    /// 删除当前日志多条数据
+    func deleteCurrentLogs(ids: [String]) {
+        store.deleteCurrentLogs(ids: ids)
+    }
+    
+    /// 删除当历史志多条数据
+    func deleteHistoryLogs(ids: [String]) {
+        store.deleteHistoryLogs(ids: ids)
+    }
+    
+    /// 获取当前日志数量
+    func currentLogCount() -> Int {
+        store.currentCount()
+    }
+    
+    /// 获取历史日志数量
+    func historyLogCount() -> Int {
+        store.historyCount()
     }
 
+    /// 更新日志(当前日志 +  历史日志)
     func updateLog(
         _ model: FHXLogModel
     ) {
         store.update(model)
     }
 
-    func logCount() -> Int {
-        store.count()
-    }
+
 }
 
 // MARK: 导出功能
 extension FHXLog {
-    
-    func exportTXT() -> String {
+    /// 整理TXT数据
+    func organizeCurrentLogsTXT() -> String {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
-        return allLogs()
+        return currentLogs()
             .map {
 
                 """
@@ -196,9 +235,11 @@ extension FHXLog {
             .joined(separator: "\n")
     }
     
-    func saveTXTFile() throws -> URL {
+    
+    /// 导出TXT文件
+    func exportCurrentLogsTXTFile() throws -> URL {
 
-        let txt = exportTXT()
+        let txt = organizeCurrentLogsTXT()
 
         let fileURL = FileManager.default
             .temporaryDirectory
@@ -215,9 +256,10 @@ extension FHXLog {
         return fileURL
     }
     
-    func saveJSONFile() throws -> URL {
+    /// 导出JSON文件
+    func exportCurrentLogsJSONFile() throws -> URL {
 
-        let logs = allLogs()
+        let logs = currentLogs()
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted

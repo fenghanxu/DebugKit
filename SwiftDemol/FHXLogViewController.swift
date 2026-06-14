@@ -50,10 +50,10 @@ class FHXLogViewController: UIViewController {
     }()
     
     /// 所有日志
-    private var allData: [FHXLogModel] = []
+    private var currentLogs: [FHXLogModel] = []
 
     /// 当前显示日志
-    private var data: [FHXLogModel] = []
+    private var filterLogs: [FHXLogModel] = []
 
     /// 当前筛选
     private var currentFilter: FHXLogFilter = .all
@@ -118,28 +118,28 @@ class FHXLogViewController: UIViewController {
     }
     
     private func loadData() {
-        allData = FHXLog.shared.allLogs()
+        currentLogs = FHXLog.shared.currentLogs()
         applyFilter()
     }
     
     private func applyFilter() {
         switch currentFilter {
             case .all:
-                data = allData
+                filterLogs = currentLogs
             case .debug:
-                data = allData.filter {
+            filterLogs = currentLogs.filter {
                     $0.level == .debug
                 }
             case .network:
-                data = allData.filter {
+            filterLogs = currentLogs.filter {
                     $0.level == .network
                 }
             case .error:
-                data = allData.filter {
+            filterLogs = currentLogs.filter {
                     $0.level == .error
                 }
             case .crash:
-                data = allData.filter {
+            filterLogs = currentLogs.filter {
                     $0.level == .crash
                 }
         }
@@ -166,12 +166,12 @@ class FHXLogViewController: UIViewController {
     
     private func scrollToBottom() {
 
-        guard data.count > 0 else {
+        guard filterLogs.count > 0 else {
             return
         }
 
         let indexPath = IndexPath(
-            row: data.count - 1,
+            row: filterLogs.count - 1,
             section: 0
         )
 
@@ -191,7 +191,7 @@ class FHXLogViewController: UIViewController {
 
         let lowerKeyword = keyword.lowercased()
 
-        data = allData.filter {
+        filterLogs = currentLogs.filter {
 
             $0.message.lowercased().contains(lowerKeyword)
             ||
@@ -280,12 +280,12 @@ extension FHXLogViewController {
             return
         }
 
-        data.append(model)
+        filterLogs.append(model)
         
         applyFilter()
 
         let indexPath = IndexPath(
-            row: data.count - 1,
+            row: filterLogs.count - 1,
             section: 0
         )
 
@@ -306,8 +306,8 @@ extension FHXLogViewController {
     @objc
     private func logDidClear() {
 
-        allData.removeAll()
-        data.removeAll()
+        currentLogs.removeAll()
+        filterLogs.removeAll()
 
         tableView.reloadData()
     }
@@ -316,33 +316,33 @@ extension FHXLogViewController {
 extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return filterLogs.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:FHXLogCell = FHXLogCell.cell(with: tableView)
 
-        cell.levelLabel.text = "\(data[indexPath.row].level)"
+        cell.levelLabel.text = "\(filterLogs[indexPath.row].level)"
         
-        if data[indexPath.row].level.rawValue == 0 {// debug
+        if filterLogs[indexPath.row].level.rawValue == 0 {// debug
             cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-        } else if data[indexPath.row].level.rawValue == 1 {// network
+        } else if filterLogs[indexPath.row].level.rawValue == 1 {// network
             cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-        } else if data[indexPath.row].level.rawValue == 2 {// error
+        } else if filterLogs[indexPath.row].level.rawValue == 2 {// error
             cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
-        } else if data[indexPath.row].level.rawValue == 3 {// crash
+        } else if filterLogs[indexPath.row].level.rawValue == 3 {// crash
             cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
         }
         
-        let messageString = "\(data[indexPath.row].file)." + "\(data[indexPath.row].function):" + "[\(data[indexPath.row].line)] "
+        let messageString = "\(filterLogs[indexPath.row].file)." + "\(filterLogs[indexPath.row].function):" + "[\(filterLogs[indexPath.row].line)] "
         if messageString.range(of: searchTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
             cell.messageLabel.attributedText = highlightText(text: messageString, keyword: searchTerm)
         } else {
-            cell.messageLabel.text = "\(data[indexPath.row].file)." + "\(data[indexPath.row].function):" + "[\(data[indexPath.row].line)] "
+            cell.messageLabel.text = "\(filterLogs[indexPath.row].file)." + "\(filterLogs[indexPath.row].function):" + "[\(filterLogs[indexPath.row].line)] "
         }
         
-        if searchTerm != String() && data[indexPath.row].message.range(of: searchTerm, options: .caseInsensitive) != nil {
-            cell.contentLabel.attributedText = highlightText(text: data[indexPath.row].message, keyword: searchTerm)
+        if searchTerm != String() && filterLogs[indexPath.row].message.range(of: searchTerm, options: .caseInsensitive) != nil {
+            cell.contentLabel.attributedText = highlightText(text: filterLogs[indexPath.row].message, keyword: searchTerm)
         } else {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 8 // 行间距
@@ -354,14 +354,14 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             ]
 
             cell.contentLabel.attributedText = NSAttributedString(
-                string: "\(data[indexPath.row].message)",
+                string: "\(filterLogs[indexPath.row].message)",
                 attributes: attributes
             )
         }
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        cell.timeLabel.text = formatter.string(from: data[indexPath.row].time)
+        cell.timeLabel.text = formatter.string(from: filterLogs[indexPath.row].time)
     
         return cell
     }
@@ -372,7 +372,7 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
 
-        let model = data[indexPath.row]
+        let model = filterLogs[indexPath.row]
 
         return UIContextMenuConfiguration(
             identifier: nil,
@@ -455,7 +455,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                         if index == 0 {
                             do {
                                 let url =
-                                try FHXLog.shared.saveTXTFile()
+                                try FHXLog.shared.exportCurrentLogsTXTFile()
                                 let vc =  UIActivityViewController(activityItems: [url], applicationActivities: nil)
                                 self.present(vc, animated: true)
                             } catch {
@@ -464,7 +464,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                         } else if index == 1 {
                             do {
                                 let url =
-                                try FHXLog.shared.saveJSONFile()
+                                try FHXLog.shared.exportCurrentLogsJSONFile()
                                 let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                                 self.present(vc, animated: true)
                             } catch {
@@ -477,7 +477,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                     alert.addAction(UIAlertAction(title: "取消", style: .cancel))
                     alert.addAction(
                         UIAlertAction(title: "确定", style: .destructive) { _ in
-                            FHXLog.shared.clear()
+                            FHXLog.shared.clearCurrentLogs()
                         }
                     )
                     self.present(alert, animated: true)
@@ -487,6 +487,9 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
         } else if button.tag == 2 {
             searchTerm = String()
             search(searchTerm)
+        } else if button.currentTitle == "历史日志" {
+            currentLogs = FHXLog.shared.historyLogs()
+            applyFilter()
         }
     }
     

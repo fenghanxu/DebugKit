@@ -11,8 +11,13 @@ final class FHXLogStore {
     
     // MARK: - Data
 
-    private var logs: [FHXLogModel] = []
+    /// 当前运行日志
+    private var currentLogList: [FHXLogModel] = []
+
+    /// 历史持久化日志
+    private var historyLogList: [FHXLogModel] = []
     
+    /// 创建串行队列
     private let queue = DispatchQueue(label: "fhx.log.queue")
     
     // MARK: - File路径
@@ -31,7 +36,7 @@ final class FHXLogStore {
     // MARK: - Init
 
     init() {
-        load()
+        loadHistory()
     }
 
 }
@@ -39,7 +44,7 @@ final class FHXLogStore {
 // MARK: - 读取
 
 private extension FHXLogStore {
-    func load() {
+    private func loadHistory() {
         queue.sync {
             guard FileManager.default.fileExists(
                 atPath: fileURL.path
@@ -48,13 +53,13 @@ private extension FHXLogStore {
             }
 
             do {
-                let data =
-                try Data(contentsOf: fileURL)
+                let data = try Data(contentsOf: fileURL)
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .iso8601
-                logs = try decoder.decode([FHXLogModel].self, from: data)
+                historyLogList = try decoder.decode([FHXLogModel].self,from: data)
             } catch {
                 print("FHXLog load error:", error)
+
             }
         }
     }
@@ -63,19 +68,24 @@ private extension FHXLogStore {
 // MARK: 新增日志
 
 extension FHXLogStore {
-
     func append(
         _ log: FHXLogModel,
         maxCount: Int
     ) {
         queue.async {
-            self.logs.append(log)
-            if self.logs.count > maxCount {
-                let overflow =
-                self.logs.count - maxCount
-                self.logs.removeFirst(overflow)
+            self.currentLogList.append(log)
+            self.historyLogList.append(log)
+            if self.currentLogList.count > maxCount {
+                let overflow = self.currentLogList.count - maxCount
+                self.currentLogList.removeFirst(overflow)
             }
-            self.save()
+
+            if self.historyLogList.count > maxCount {
+                let overflow = self.historyLogList.count - maxCount
+                self.historyLogList.removeFirst(overflow)
+            }
+
+            self.saveHistoryData()
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: .fhxLogDidAppend,
@@ -90,27 +100,59 @@ extension FHXLogStore {
 
 extension FHXLogStore {
 
-    func all() -> [FHXLogModel] {
+    /// 获取当前日志
+    func currentLogs() -> [FHXLogModel] {
         queue.sync {
-            logs
+            currentLogList
         }
     }
 
-    func count() -> Int {
+    /// 获取历史日志
+    func historyLogs() -> [FHXLogModel] {
         queue.sync {
-            logs.count
+            historyLogList
         }
     }
 
-    func first() -> FHXLogModel? {
+    /// 获取当前日志数量
+    func currentCount() -> Int {
         queue.sync {
-            logs.first
+            currentLogList.count
         }
     }
 
-    func last() -> FHXLogModel? {
+    /// 获取历史日志数量
+    func historyCount() -> Int {
         queue.sync {
-            logs.last
+            historyLogList.count
+        }
+    }
+
+    /// 获取当前日志第一个模型
+    func currentFirst() -> FHXLogModel? {
+        queue.sync {
+            currentLogList.first
+        }
+    }
+
+    /// 获取当前日志最后一个模型
+    func currentLast() -> FHXLogModel? {
+        queue.sync {
+            currentLogList.last
+        }
+    }
+
+    /// 获取历史第一个模型
+    func historyFirst() -> FHXLogModel? {
+        queue.sync {
+            historyLogList.first
+        }
+    }
+
+    /// 获取历史最后一个模型
+    func historyLast() -> FHXLogModel? {
+        queue.sync {
+            historyLogList.last
         }
     }
 }
@@ -119,14 +161,11 @@ extension FHXLogStore {
 
 extension FHXLogStore {
 
-    func delete(
+    func deleteCurrentLog(
         id: String
     ) {
         queue.async {
-            self.logs.removeAll {
-                $0.id == id
-            }
-            self.save()
+            self.currentLogList.removeAll {$0.id == id}
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: .fhxLogDidDelete,
@@ -135,62 +174,83 @@ extension FHXLogStore {
             }
         }
     }
+    
+    func deleteHistoryLog(
+        id: String
+    ) {
+        queue.async {
+            self.historyLogList.removeAll { $0.id == id }
+            self.saveHistoryData()
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: .fhxLogDidDelete,
+                    object: id
+                )
+            }
+        }
+    }
+    
 }
 
 // MARK: 删除多条
 
 extension FHXLogStore {
 
-    func delete(
+    /// 清空当前日志
+    func deleteCurrentLogs(
         ids: [String]
     ) {
         queue.async {
-            self.logs.removeAll {
+            self.currentLogList.removeAll {
                 ids.contains($0.id)
             }
-            self.save()
         }
     }
-}
-
-// MARK: 更新（虽然日志通常不会更新，备用）
-
-extension FHXLogStore {
-
-    func update(
-        _ model: FHXLogModel
+    
+    /// 清空历史数据 = 删除全部历史日志
+    func deleteHistoryLogs(
+        ids: [String]
     ) {
         queue.async {
-            guard let index =
-                    self.logs.firstIndex(
-                        where: {
-                            $0.id == model.id
-                        }
-                    )
-            else {
-                return
+            self.historyLogList.removeAll {
+                ids.contains($0.id)
             }
-            self.logs[index] = model
-            self.save()
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: .fhxLogDidUpdate,
-                    object: model
-                )
-            }
+            self.saveHistoryData()
         }
     }
+    
 }
 
 // MARK: 清空
 
 extension FHXLogStore {
 
-    func clear() {
+    func clearCurrentLogs() {
+
         queue.async {
-            self.logs.removeAll()
-            self.save()
+
+            self.currentLogList.removeAll()
+
             DispatchQueue.main.async {
+
+                NotificationCenter.default.post(
+                    name: .fhxLogDidClear,
+                    object: nil
+                )
+            }
+        }
+    }
+    
+    func clearHistoryLogs() {
+
+        queue.async {
+
+            self.historyLogList.removeAll()
+
+            self.saveHistoryData()
+
+            DispatchQueue.main.async {
+
                 NotificationCenter.default.post(
                     name: .fhxLogDidClear,
                     object: nil
@@ -201,12 +261,47 @@ extension FHXLogStore {
     
 }
 
+// MARK: 更新（虽然日志通常不会更新，备用）
+
+extension FHXLogStore {
+
+    func update(
+        _ model: FHXLogModel
+    ) {
+
+        queue.async {
+            if let index =
+                self.currentLogList.firstIndex(
+                    where: { $0.id == model.id }
+                ) {
+                self.currentLogList[index] = model
+            }
+
+            if let index =
+                self.historyLogList.firstIndex(
+                    where: { $0.id == model.id }
+                ) {
+                self.historyLogList[index] = model
+            }
+
+            self.saveHistoryData()
+
+            DispatchQueue.main.async {
+
+                NotificationCenter.default.post(
+                    name: .fhxLogDidUpdate,
+                    object: model
+                )
+            }
+        }
+    }
+}
 
 // MARK: 保存
 
 private extension FHXLogStore {
 
-    func save() {
+    func saveHistoryData() {
 
         do {
 
@@ -215,7 +310,7 @@ private extension FHXLogStore {
             encoder.dateEncodingStrategy = .iso8601
 
             let data =
-            try encoder.encode(logs)
+            try encoder.encode(historyLogList)
 
             try data.write(
                 to: fileURL,
