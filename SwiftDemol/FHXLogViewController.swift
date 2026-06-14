@@ -13,7 +13,7 @@ class FHXLogViewController: UIViewController {
     var keyWindowApp: UIWindow?
     
     var screenWidth: CGFloat?
-    
+     
     var screenHeight: CGFloat?
     
     var totalTopHeight: CGFloat?
@@ -155,36 +155,13 @@ class FHXLogViewController: UIViewController {
             name: .fhxLogDidAppend,
             object: nil
         )
-    }
-    
-    @objc
-    private func logDidAppend(_ notification: Notification) {
-
-        guard let model = notification.object as? FHXLogModel else {
-            return
-        }
-
-        data.append(model)
         
-        applyFilter()
-
-        let indexPath = IndexPath(
-            row: data.count - 1,
-            section: 0
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(logDidClear),
+            name: .fhxLogDidClear,
+            object: nil
         )
-
-        tableView.performBatchUpdates({
-
-            tableView.insertRows(
-                at: [indexPath],
-                with: .none
-            )
-
-        }, completion: { _ in
-
-            self.scrollToBottom()
-
-        })
     }
     
     private func scrollToBottom() {
@@ -292,6 +269,48 @@ class FHXLogViewController: UIViewController {
         return attr
     }
 
+}
+
+/// Notification
+extension FHXLogViewController {
+    @objc
+    private func logDidAppend(_ notification: Notification) {
+
+        guard let model = notification.object as? FHXLogModel else {
+            return
+        }
+
+        data.append(model)
+        
+        applyFilter()
+
+        let indexPath = IndexPath(
+            row: data.count - 1,
+            section: 0
+        )
+
+        tableView.performBatchUpdates({
+
+            tableView.insertRows(
+                at: [indexPath],
+                with: .none
+            )
+
+        }, completion: { _ in
+
+            self.scrollToBottom()
+
+        })
+    }
+    
+    @objc
+    private func logDidClear() {
+
+        allData.removeAll()
+        data.removeAll()
+
+        tableView.reloadData()
+    }
 }
 
 extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
@@ -406,7 +425,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                 screenWidth: screenWidthPartial,
                 screenHeight: screenHeightPartial,
                 totalTopHeight: totalTopHeightPartial,
-                menuList: ["筛选", "搜索"],
+                menuList: ["筛选", "搜索", "导出", "清空日志"],
                 subMenuList: ["All","Debug", "Network", "Error", "Crash"]
             ) {[weak self] value in
                 guard let self = self else { return }
@@ -427,7 +446,42 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                     applyFilter()
                 } else if value == "搜索" {
                     self.navigatonView.isShowSearchBgView = true
-                }                
+                } else if value == "导出" {
+                    FHXExportView.showCurrentView(
+                        array: ["TXT","JSON","取消"],
+                        VCView: self.view
+                    ) { [weak self] index in
+                        guard let self = self else { return }
+                        if index == 0 {
+                            do {
+                                let url =
+                                try FHXLog.shared.saveTXTFile()
+                                let vc =  UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                                self.present(vc, animated: true)
+                            } catch {
+                                print(error)
+                            }
+                        } else if index == 1 {
+                            do {
+                                let url =
+                                try FHXLog.shared.saveJSONFile()
+                                let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                                self.present(vc, animated: true)
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }
+                } else if value == "清空日志" {
+                    let alert = UIAlertController(title: "提示", message: "确定清空所有日志吗？", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+                    alert.addAction(
+                        UIAlertAction(title: "确定", style: .destructive) { _ in
+                            FHXLog.shared.clear()
+                        }
+                    )
+                    self.present(alert, animated: true)
+                }
             }
 
         } else if button.tag == 2 {

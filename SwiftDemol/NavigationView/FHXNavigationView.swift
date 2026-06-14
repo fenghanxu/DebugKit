@@ -55,6 +55,16 @@ class FHXNavigationView: UIView {
         return button
     }()
     
+    lazy private var historyLogButton: UIButton = {
+        let button = UIButton()
+        button.tag = 1
+        button.setTitle("历史日志", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(historyLogButtonClick), for: .touchUpInside)
+        return button
+    }()
+    
     lazy private var searchBgView: FHXSearchView = {
         let view = FHXSearchView()
         view.alpha = 0.0
@@ -90,6 +100,7 @@ class FHXNavigationView: UIView {
         addSubview(backgroundView)
         backgroundView.addSubview(cancelButton)
         backgroundView.addSubview(logButton)
+        backgroundView.addSubview(historyLogButton)
         backgroundView.addSubview(searchBgView)
   
     }
@@ -106,6 +117,10 @@ class FHXNavigationView: UIView {
         let logButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
         logButton.frame = CGRectMake(logButtonRight, 0, 44, 44)
         
+        
+        let historyLogButtonRight = CGRectGetMaxX(logButton.frame) + 10
+        historyLogButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
+        
         let cancelButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
         let cancelButtonWidth = screenWidthPartial - (CGRectGetMaxX(cancelButton.frame) + 10)
         searchBgView.frame = CGRectMake(cancelButtonRight, 0, cancelButtonWidth, 44)
@@ -116,12 +131,19 @@ class FHXNavigationView: UIView {
 
 // MARK: - button click
 extension FHXNavigationView {
-    @objc private func cancelButtonClick() {
+    @objc
+    private func cancelButtonClick() {
         delegate?.fhxNavigationView(view: self, buttonClick: cancelButton)
     }
     
-    @objc private func logButtonClick() {
+    @objc
+    private func logButtonClick() {
         delegate?.fhxNavigationView(view: self, buttonClick: logButton)
+    }
+    
+    @objc
+    private func historyLogButtonClick() {
+        
     }
 }
 

@@ -14,4 +14,12 @@ extension Notification.Name {
     /// 新增日志
     static let fhxLogDidAppend = Notification.Name("fhxLogDidAppend")
 
+    /// 清空日志
+    static let fhxLogDidClear = Notification.Name("fhxLogDidClear")
+    
+    /// 删除日志
+    static let fhxLogDidDelete = Notification.Name("fhxLogDidDelete")
+
+    /// 更新日志
+    static let fhxLogDidUpdate = Notification.Name("fhxLogDidUpdate")
 }
