@@ -65,8 +65,8 @@ class FHXNavigationView: UIView {
         return button
     }()
     
-    lazy private var searchBgView: FHXSearchView = {
-        let view = FHXSearchView()
+    lazy private var searchCurrentView: FHXSearchCurrentView = {
+        let view = FHXSearchCurrentView()
         view.alpha = 0.0
         view.delegate = self
         return view
@@ -77,7 +77,7 @@ class FHXNavigationView: UIView {
             if isShowSearchBgView {
                 UIView.animate(withDuration: 0.25, animations: { [weak self] in
                     guard let self = self else { return }
-                    self.searchBgView.alpha = 1.0
+                    self.searchCurrentView.alpha = 1.0
                 })
             }
         }
@@ -101,7 +101,7 @@ class FHXNavigationView: UIView {
         backgroundView.addSubview(cancelButton)
         backgroundView.addSubview(logButton)
         backgroundView.addSubview(historyLogButton)
-        backgroundView.addSubview(searchBgView)
+        backgroundView.addSubview(searchCurrentView)
   
     }
     
@@ -123,7 +123,7 @@ class FHXNavigationView: UIView {
         
         let cancelButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
         let cancelButtonWidth = screenWidthPartial - (CGRectGetMaxX(cancelButton.frame) + 10)
-        searchBgView.frame = CGRectMake(cancelButtonRight, 0, cancelButtonWidth, 44)
+        searchCurrentView.frame = CGRectMake(cancelButtonRight, 0, cancelButtonWidth, 44)
     }
 
 
@@ -147,18 +147,18 @@ extension FHXNavigationView {
     }
 }
 
-extension FHXNavigationView: FHXSearchViewDelegate {
+extension FHXNavigationView: FHXSearchCurrentViewDelegate {
     
-    func fhxSearchView(view: FHXSearchView, searchContent text: String) {
+    func fhxSearchCurrentView(view: FHXSearchCurrentView, searchContent text: String) {
         delegate?.fhxNavigationView(view: self, searchContent: text)
     }
     
-    func fhxSearchView(view: FHXSearchView, buttonClick button: UIButton) {
+    func fhxSearchCurrentView(view: FHXSearchCurrentView, buttonClick button: UIButton) {
         isShowSearchBgView = false
         
         UIView.animate(withDuration: 0.25, animations: { [weak self] in
             guard let self = self else { return }
-            self.searchBgView.alpha = 0.0
+            self.searchCurrentView.alpha = 0.0
         })
         
         delegate?.fhxNavigationView(view: self, buttonClick: button)

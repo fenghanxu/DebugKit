@@ -13,13 +13,10 @@
 		2D6B1D782FDB9D5200B9B9B2 /* FHXToolMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1D702FDB9D5200B9B9B2 /* FHXToolMenuView.swift */; };
 		2D6B1D792FDB9D5200B9B9B2 /* FHXToolSubMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1D712FDB9D5200B9B9B2 /* FHXToolSubMenuCell.swift */; };
 		2D6B1D7A2FDB9D5200B9B9B2 /* FHXToolSubMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1D722FDB9D5200B9B9B2 /* FHXToolSubMenuView.swift */; };
-		2D6B1D802FDBA59C00B9B9B2 /* FHXSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1D7E2FDBA59C00B9B9B2 /* FHXSearchView.swift */; };
 		2D6B1D812FDBA59C00B9B9B2 /* FHXNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1D7D2FDBA59C00B9B9B2 /* FHXNavigationView.swift */; };
 		2D6B1FD02FDBF97C00B9B9B2 /* Documentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1FCF2FDBF97C00B9B9B2 /* Documentation.swift */; };
 		2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8F62FD129E600E83F11 /* FHXLog.swift */; };
 		2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */; };
-		2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */; };
-		2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */; };
 		3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DCE284F408C00D585B4 /* AppDelegate.swift */; };
 		3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DD0284F408C00D585B4 /* SceneDelegate.swift */; };
 		3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F795DD2284F408C00D585B4 /* ViewController.swift */; };
@@ -28,6 +25,10 @@
 		3F795DDB284F408D00D585B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD9284F408D00D585B4 /* LaunchScreen.storyboard */; };
 		49AE62EC9825619C4DA5B8DD /* Pods_SwiftDemol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */; };
 		889FA6C62FDD76B6000F8865 /* FHXExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C52FDD76B6000F8865 /* FHXExportView.swift */; };
+		889FA6CA2FDEDD51000F8865 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */; };
+		889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */; };
+		889FA6CF2FDEDEF2000F8865 /* FHXSearchCurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6CE2FDEDEF2000F8865 /* FHXSearchCurrentView.swift */; };
+		889FA6D12FDEE0AC000F8865 /* FHXToolCurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */; };
 		88E55E812FD6E548000C065D /* file.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 88E55E802FD6E548000C065D /* file.bundle */; };
 		88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */; };
 /* End PBXBuildFile section */
@@ -40,12 +41,9 @@
 		2D6B1D722FDB9D5200B9B9B2 /* FHXToolSubMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolSubMenuView.swift; sourceTree = "<group>"; };
 		2D6B1D732FDB9D5200B9B9B2 /* FHXToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolView.swift; sourceTree = "<group>"; };
 		2D6B1D7D2FDBA59C00B9B9B2 /* FHXNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXNavigationView.swift; sourceTree = "<group>"; };
-		2D6B1D7E2FDBA59C00B9B9B2 /* FHXSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSearchView.swift; sourceTree = "<group>"; };
 		2D6B1FCF2FDBF97C00B9B9B2 /* Documentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Documentation.swift; sourceTree = "<group>"; };
 		2D7DA8F62FD129E600E83F11 /* FHXLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLog.swift; sourceTree = "<group>"; };
 		2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogStore.swift; sourceTree = "<group>"; };
-		2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
-		2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
 		3F795DCB284F408C00D585B4 /* SwiftDemol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftDemol.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F795DCE284F408C00D585B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F795DD0284F408C00D585B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,6 +53,10 @@
 		3F795DDA284F408D00D585B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F795DDC284F408D00D585B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		889FA6C52FDD76B6000F8865 /* FHXExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXExportView.swift; sourceTree = "<group>"; };
+		889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
+		889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
+		889FA6CE2FDEDEF2000F8865 /* FHXSearchCurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSearchCurrentView.swift; sourceTree = "<group>"; };
+		889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolCurrentView.swift; sourceTree = "<group>"; };
 		88E55E802FD6E548000C065D /* file.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = file.bundle; sourceTree = "<group>"; };
 		88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogNotification.swift; sourceTree = "<group>"; };
 		D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftDemol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +92,8 @@
 			isa = PBXGroup;
 			children = (
 				2D6B1D7D2FDBA59C00B9B9B2 /* FHXNavigationView.swift */,
-				2D6B1D7E2FDBA59C00B9B9B2 /* FHXSearchView.swift */,
+				889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */,
+				889FA6CE2FDEDEF2000F8865 /* FHXSearchCurrentView.swift */,
 			);
 			path = NavigationView;
 			sourceTree = "<group>";
@@ -122,10 +125,9 @@
 				3F795DD2284F408C00D585B4 /* ViewController.swift */,
 				2D7DA8F62FD129E600E83F11 /* FHXLog.swift */,
 				2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */,
-				2D7DA8FA2FD12AA100E83F11 /* FHXLogViewController.swift */,
-				2D7DA8FC2FD1697A00E83F11 /* FHXLogCell.swift */,
 				88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */,
 				889FA6C52FDD76B6000F8865 /* FHXExportView.swift */,
+				889FA6C92FDEDD51000F8865 /* Log */,
 				2D6B1D7F2FDBA59C00B9B9B2 /* NavigationView */,
 				2D6B1D742FDB9D5200B9B9B2 /* ToolView */,
 				88E55E802FD6E548000C065D /* file.bundle */,
@@ -136,6 +138,15 @@
 				2D6B1FCF2FDBF97C00B9B9B2 /* Documentation.swift */,
 			);
 			path = SwiftDemol;
+			sourceTree = "<group>";
+		};
+		889FA6C92FDEDD51000F8865 /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */,
+				889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */,
+			);
+			path = Log;
 			sourceTree = "<group>";
 		};
 		930FD0F6DD6DBCA1155B9611 /* Pods */ = {
@@ -275,19 +286,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				889FA6CA2FDEDD51000F8865 /* FHXLogViewController.swift in Sources */,
+				889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */,
 				3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */,
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
-				2D6B1D802FDBA59C00B9B9B2 /* FHXSearchView.swift in Sources */,
 				2D6B1D812FDBA59C00B9B9B2 /* FHXNavigationView.swift in Sources */,
 				2D6B1D752FDB9D5200B9B9B2 /* FHXToolMenuCell.swift in Sources */,
 				2D6B1D762FDB9D5200B9B9B2 /* FHXToolView.swift in Sources */,
+				889FA6D12FDEE0AC000F8865 /* FHXToolCurrentView.swift in Sources */,
 				2D6B1D782FDB9D5200B9B9B2 /* FHXToolMenuView.swift in Sources */,
+				889FA6CF2FDEDEF2000F8865 /* FHXSearchCurrentView.swift in Sources */,
 				2D6B1D792FDB9D5200B9B9B2 /* FHXToolSubMenuCell.swift in Sources */,
 				2D6B1D7A2FDB9D5200B9B9B2 /* FHXToolSubMenuView.swift in Sources */,
 				889FA6C62FDD76B6000F8865 /* FHXExportView.swift in Sources */,
 				88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */,
-				2D7DA8FD2FD1697A00E83F11 /* FHXLogCell.swift in Sources */,
-				2D7DA8FB2FD12AA100E83F11 /* FHXLogViewController.swift in Sources */,
 				2D52BB122FD96193003E34FA /* SPMacro.swift in Sources */,
 				2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */,
 				3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */,

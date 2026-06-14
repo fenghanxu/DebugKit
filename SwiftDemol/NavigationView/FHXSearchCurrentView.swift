@@ -1,20 +1,20 @@
 //
-//  FHXSearchView.swift
+//  FHXSearchCurrentView.swift
 //  SwiftDemol
 //
-//  Created by fenghanxu on 2026/6/12.
+//  Created by imac on 2026/6/14.
 //
 
 import UIKit
 
-protocol FHXSearchViewDelegate: NSObjectProtocol {
-    func fhxSearchView(view: FHXSearchView, searchContent text: String)
-    func fhxSearchView(view: FHXSearchView, buttonClick button: UIButton)
+protocol FHXSearchCurrentViewDelegate: NSObjectProtocol {
+    func fhxSearchCurrentView(view: FHXSearchCurrentView, searchContent text: String)
+    func fhxSearchCurrentView(view: FHXSearchCurrentView, buttonClick button: UIButton)
 }
 
-class FHXSearchView: UIView {
+class FHXSearchCurrentView: UIView {
     
-    weak var delegate: FHXSearchViewDelegate?
+    weak var delegate: FHXSearchCurrentViewDelegate?
     
     lazy private var searchView: UIView = {
         let view = UIView()
@@ -107,16 +107,17 @@ class FHXSearchView: UIView {
     
     @objc private func cancelButtonClick() {
         textfield.text = String()
-        delegate?.fhxSearchView(view: self, buttonClick: cancelButton)
+        delegate?.fhxSearchCurrentView(view: self, buttonClick: cancelButton)
     }
 
 }
 
-extension FHXSearchView: UITextFieldDelegate {
+extension FHXSearchCurrentView: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) {
-            delegate?.fhxSearchView(view: self, searchContent: newText)
+            delegate?.fhxSearchCurrentView(view: self, searchContent: newText)
         }
         return true
     }
 }
+
