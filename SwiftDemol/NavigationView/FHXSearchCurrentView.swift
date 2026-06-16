@@ -16,6 +16,16 @@ class FHXSearchCurrentView: UIView {
     
     weak var delegate: FHXSearchCurrentViewDelegate?
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        build()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     lazy private var searchView: UIView = {
         let view = UIView()
         view.layer.borderColor = UIColor.black.cgColor
@@ -73,15 +83,7 @@ class FHXSearchCurrentView: UIView {
         return textfield
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        build()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+
     
     private func build() {
         backgroundColor = .white
@@ -97,11 +99,13 @@ class FHXSearchCurrentView: UIView {
         super.layoutSubviews()
                 
         searchView.frame = CGRectMake(0, 2, 265, 40)
-        let cancelButtonLeft = bounds.size.width - 10 - 33
-        cancelButton.frame = CGRectMake(cancelButtonLeft, 5.5, 33, 33)
         
+        cancelButton.frame = CGRectMake(bounds.size.width - 10 - 33, 5.5, 33, 33)
+
         searchButton.frame = CGRectMake(0, 1, 38, 38)
+        
         line.frame = CGRectMake(38 , 10, 1, 20)
+        
         textfield.frame = CGRectMake(45, 5, 265 - 49, 30)
     }
     

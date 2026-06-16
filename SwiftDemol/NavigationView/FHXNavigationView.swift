@@ -24,45 +24,10 @@ class FHXNavigationView: UIView {
     
     var totalTopHeight: CGFloat?
     
-    lazy private var backgroundView:UIView = {
-        var view = UIView()
-        view.backgroundColor = .white
+    lazy private var toolCurrentView:FHXToolCurrentView = {
+        var view = FHXToolCurrentView()
+        view.delegate = self
         return view
-    }()
-    
-    lazy private var cancelButton:UIButton = {
-        let button = UIButton()
-        let bundle = Bundle.main.url(forResource: "file", withExtension: "bundle")
-        let sdkBundle = Bundle(url: bundle!)
-        let image = UIImage(
-            named: "nav_back",
-            in: sdkBundle,
-            compatibleWith: nil
-        )
-        button.tag = 0
-        button.setImage(image, for: .normal)
-        button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
-        return button
-    }()
-    
-    lazy private var logButton: UIButton = {
-        let button = UIButton()
-        button.tag = 1
-        button.setTitle("日志", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(logButtonClick), for: .touchUpInside)
-        return button
-    }()
-    
-    lazy private var historyLogButton: UIButton = {
-        let button = UIButton()
-        button.tag = 3
-        button.setTitle("历史日志", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(historyLogButtonClick), for: .touchUpInside)
-        return button
     }()
     
     lazy private var searchCurrentView: FHXSearchCurrentView = {
@@ -82,6 +47,18 @@ class FHXNavigationView: UIView {
             }
         }
     }
+    
+    init(frame: CGRect, keyWindowApp: UIWindow?, screenWidth: CGFloat?, screenHeight: CGFloat?, totalTopHeight: CGFloat?) {
+        
+        self.keyWindowApp = keyWindowApp
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
+        self.totalTopHeight = totalTopHeight
+        
+        super.init(frame: frame)
+        
+        buildUI()
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -97,54 +74,32 @@ class FHXNavigationView: UIView {
         
         backgroundColor = .white
         
-        addSubview(backgroundView)
-        backgroundView.addSubview(cancelButton)
-        backgroundView.addSubview(logButton)
-        backgroundView.addSubview(historyLogButton)
-        backgroundView.addSubview(searchCurrentView)
+        addSubview(toolCurrentView)
+
+        toolCurrentView.addSubview(searchCurrentView)
   
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let totalTopHeightPartial = totalTopHeight, let screenWidthPartial = screenWidth else { return }
+        guard let totalTopHeightPartial = totalTopHeight else { return }
         
-        backgroundView.frame = CGRectMake(0, totalTopHeightPartial - 44, screenWidthPartial, 44)
+        toolCurrentView.frame = CGRectMake(0, totalTopHeightPartial - 44, bounds.size.width, 44)
         
-        cancelButton.frame = CGRectMake(5, 0, 44, 44)
-        
-        let logButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
-        logButton.frame = CGRectMake(logButtonRight, 0, 44, 44)
-        
-        
-        let historyLogButtonRight = CGRectGetMaxX(logButton.frame) + 10
-        historyLogButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
-        
-        let cancelButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
-        let cancelButtonWidth = screenWidthPartial - (CGRectGetMaxX(cancelButton.frame) + 10)
-        searchCurrentView.frame = CGRectMake(cancelButtonRight, 0, cancelButtonWidth, 44)
-    }
+        searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, bounds.size.width - 5 - 44 - 10, 44)
 
+    }
 
 }
 
 // MARK: - button click
-extension FHXNavigationView {
-    @objc
-    private func cancelButtonClick() {
-        delegate?.fhxNavigationView(view: self, buttonClick: cancelButton)
-    }
+extension FHXNavigationView: FHXToolCurrentViewDelegate {
     
-    @objc
-    private func logButtonClick() {
-        delegate?.fhxNavigationView(view: self, buttonClick: logButton)
+    func fhxToolCurrentView(view:FHXToolCurrentView, buttonClick button:UIButton) {
+        delegate?.fhxNavigationView(view: self, buttonClick: button)
     }
-    
-    @objc
-    private func historyLogButtonClick() {
-        delegate?.fhxNavigationView(view: self, buttonClick: historyLogButton)
-    }
+
 }
 
 extension FHXNavigationView: FHXSearchCurrentViewDelegate {

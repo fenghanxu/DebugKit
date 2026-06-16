@@ -40,12 +40,12 @@ class FHXLogViewController: UIViewController {
     }()
     
     lazy private var navigatonView : FHXNavigationView = {
-        let navigationView = FHXNavigationView()
+        let navigationView = FHXNavigationView(frame: view.frame, keyWindowApp: keyWindowApp, screenWidth: screenWidth, screenHeight: screenHeight, totalTopHeight: totalTopHeight)
         navigationView.delegate = self
-        navigationView.keyWindowApp = keyWindowApp
-        navigationView.screenWidth = screenWidth
-        navigationView.screenHeight = screenHeight
-        navigationView.totalTopHeight = totalTopHeight
+//        navigationView.keyWindowApp = keyWindowApp
+//        navigationView.screenWidth = screenWidth
+//        navigationView.screenHeight = screenHeight
+//        navigationView.totalTopHeight = totalTopHeight
         return navigationView
     }()
     

@@ -23,75 +23,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "271A5FF7-6B72-4FC0-9AA6-E9B984B456A0"
-            shouldBeEnabled = "No"
+            uuid = "E8A391A3-1EEF-4323-A7F9-0865A9DA3C5C"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SwiftDemol/NavigationView/FHXNavigationView.swift"
+            filePath = "SwiftDemol/Log/FHXLogViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "searchCurrentView"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "navigatonView"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "271A5FF7-6B72-4FC0-9AA6-E9B984B456A0 - 9ad82ffdecc1e969"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftDemol.FHXNavigationView.searchBgView.getter : SwiftDemol.FHXSearchView"
-                  moduleName = "SwiftDemol.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imac/Desktop/DebugKit/SwiftDemol/NavigationView/FHXNavigationView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "271A5FF7-6B72-4FC0-9AA6-E9B984B456A0 - 462dd5bf4cc99780"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftDemol.FHXSearchView in SwiftDemol.FHXNavigationView.searchBgView.getter : SwiftDemol.FHXSearchView"
-                  moduleName = "SwiftDemol.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imac/Desktop/DebugKit/SwiftDemol/NavigationView/FHXNavigationView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "69"
-                  endingLineNumber = "69">
-               </Location>
-               <Location
-                  uuid = "271A5FF7-6B72-4FC0-9AA6-E9B984B456A0 - cc9290cc0f83897d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftDemol.FHXNavigationView.searchBgView.setter : SwiftDemol.FHXSearchView"
-                  moduleName = "SwiftDemol.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imac/Desktop/DebugKit/SwiftDemol/NavigationView/FHXNavigationView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "271A5FF7-6B72-4FC0-9AA6-E9B984B456A0 - 554b3de91804516c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SwiftDemol.FHXNavigationView.searchBgView.modify : SwiftDemol.FHXSearchView"
-                  moduleName = "SwiftDemol.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imac/Desktop/DebugKit/SwiftDemol/NavigationView/FHXNavigationView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
