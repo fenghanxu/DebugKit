@@ -24,6 +24,7 @@
 		3F795DD8284F408D00D585B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD7284F408D00D585B4 /* Assets.xcassets */; };
 		3F795DDB284F408D00D585B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD9284F408D00D585B4 /* LaunchScreen.storyboard */; };
 		49AE62EC9825619C4DA5B8DD /* Pods_SwiftDemol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */; };
+		8894E5A12FE2C62C00382BB0 /* FHXToolHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894E5A02FE2C62C00382BB0 /* FHXToolHistoryView.swift */; };
 		889FA6C62FDD76B6000F8865 /* FHXExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C52FDD76B6000F8865 /* FHXExportView.swift */; };
 		889FA6CA2FDEDD51000F8865 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */; };
 		889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */; };
@@ -52,6 +53,7 @@
 		3F795DD7284F408D00D585B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F795DDA284F408D00D585B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F795DDC284F408D00D585B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8894E5A02FE2C62C00382BB0 /* FHXToolHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolHistoryView.swift; sourceTree = "<group>"; };
 		889FA6C52FDD76B6000F8865 /* FHXExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXExportView.swift; sourceTree = "<group>"; };
 		889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
 		889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			children = (
 				2D6B1D7D2FDBA59C00B9B9B2 /* FHXNavigationView.swift */,
 				889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */,
+				8894E5A02FE2C62C00382BB0 /* FHXToolHistoryView.swift */,
 				889FA6CE2FDEDEF2000F8865 /* FHXSearchCurrentView.swift */,
 			);
 			path = NavigationView;
@@ -290,6 +293,7 @@
 				889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */,
 				3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */,
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
+				8894E5A12FE2C62C00382BB0 /* FHXToolHistoryView.swift in Sources */,
 				2D6B1D812FDBA59C00B9B9B2 /* FHXNavigationView.swift in Sources */,
 				2D6B1D752FDB9D5200B9B9B2 /* FHXToolMenuCell.swift in Sources */,
 				2D6B1D762FDB9D5200B9B9B2 /* FHXToolView.swift in Sources */,

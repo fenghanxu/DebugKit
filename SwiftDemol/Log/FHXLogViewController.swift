@@ -407,9 +407,9 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
 extension FHXLogViewController:FHXNavigationViewDelegate{
 
     func fhxNavigationView(view:FHXNavigationView, buttonClick button:UIButton) {
-        if button.tag == 0 {
+        if button.tag == 0 { // pop
             navigationController?.popViewController(animated: true)
-        } else if button.tag == 1 {
+        } else if button.tag == 1 {// 当前日志
 
             guard let keyWindowAppPartial = self.keyWindowApp,
                   let screenWidthPartial = self.screenWidth,
@@ -484,12 +484,20 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                 }
             }
 
-        } else if button.tag == 2 {
+        } else if button.tag == 2 { //当前日志搜索栏取消按键
             searchTerm = String()
             search(searchTerm)
         } else if button.currentTitle == "历史日志" {
             currentLogs = FHXLog.shared.historyLogs()
             applyFilter()
+        } else if button.tag == 3 {
+            print("--- \(3)")
+        } else if button.tag == 4 {
+            print("--- \(4)")
+        } else if button.tag == 5 {
+            print("--- \(5)")
+        } else if button.tag == 6{
+            print("--- \(6)")
         }
     }
     

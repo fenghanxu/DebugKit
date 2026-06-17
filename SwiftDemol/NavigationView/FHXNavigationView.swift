@@ -24,8 +24,14 @@ class FHXNavigationView: UIView {
     
     var totalTopHeight: CGFloat?
     
-    lazy private var toolCurrentView:FHXToolCurrentView = {
-        var view = FHXToolCurrentView()
+    lazy private var toolCurrentView: FHXToolCurrentView = {
+        let view = FHXToolCurrentView()
+        view.delegate = self
+        return view
+    }()
+    
+    lazy private var toolHistoryView: FHXToolHistoryView = {
+        let view = FHXToolHistoryView()
         view.delegate = self
         return view
     }()
@@ -39,12 +45,13 @@ class FHXNavigationView: UIView {
     
     var isShowSearchBgView:Bool = false {
         didSet {
-            if isShowSearchBgView {
-                UIView.animate(withDuration: 0.25, animations: { [weak self] in
-                    guard let self = self else { return }
-                    self.searchCurrentView.alpha = 1.0
-                })
-            }
+            self.searchCurrentView.isShowSearchBgView = isShowSearchBgView
+//            if isShowSearchBgView {
+//                UIView.animate(withDuration: 0.25, animations: { [weak self] in
+//                    guard let self = self else { return }
+//                    self.searchCurrentView.alpha = 1.0
+//                })
+//            }
         }
     }
     
@@ -75,6 +82,8 @@ class FHXNavigationView: UIView {
         backgroundColor = .white
         
         addSubview(toolCurrentView)
+        
+        addSubview(toolHistoryView)
 
         toolCurrentView.addSubview(searchCurrentView)
   
@@ -83,9 +92,11 @@ class FHXNavigationView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let totalTopHeightPartial = totalTopHeight else { return }
+        guard let totalTopHeight = totalTopHeight else { return }
         
-        toolCurrentView.frame = CGRectMake(0, totalTopHeightPartial - 44, bounds.size.width, 44)
+        toolCurrentView.frame = CGRectMake(0, totalTopHeight - 44, bounds.size.width, 44)
+        
+        toolHistoryView.frame = CGRectMake(5 + 44 + 10, totalTopHeight - 44, bounds.size.width - 5 - 44 - 10, 44)
         
         searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, bounds.size.width - 5 - 44 - 10, 44)
 
@@ -97,7 +108,12 @@ class FHXNavigationView: UIView {
 extension FHXNavigationView: FHXToolCurrentViewDelegate {
     
     func fhxToolCurrentView(view:FHXToolCurrentView, buttonClick button:UIButton) {
-        delegate?.fhxNavigationView(view: self, buttonClick: button)
+        if button.currentTitle == "历史日志" {
+            toolHistoryView.isShowToolHistoryView = true
+        } else {
+            delegate?.fhxNavigationView(view: self, buttonClick: button)
+        }
+        
     }
 
 }
@@ -109,14 +125,25 @@ extension FHXNavigationView: FHXSearchCurrentViewDelegate {
     }
     
     func fhxSearchCurrentView(view: FHXSearchCurrentView, buttonClick button: UIButton) {
-        isShowSearchBgView = false
-        
-        UIView.animate(withDuration: 0.25, animations: { [weak self] in
-            guard let self = self else { return }
-            self.searchCurrentView.alpha = 0.0
-        })
+//        isShowSearchBgView = false
+//        
+//        UIView.animate(withDuration: 0.25, animations: { [weak self] in
+//            guard let self = self else { return }
+//            self.searchCurrentView.alpha = 0.0
+//        })
         
         delegate?.fhxNavigationView(view: self, buttonClick: button)
+    }
+    
+}
+
+extension FHXNavigationView: FHXToolHistoryViewDelegate {
+    
+    func fhxToolHistoryView(view: FHXToolHistoryView, buttonClick button: UIButton) {
+        toolHistoryView.isShowToolHistoryView = false
+        if button.tag != 7 { // 如果不是  历史日志框 取消按键
+            delegate?.fhxNavigationView(view: self, buttonClick: button)
+        }
     }
     
 }

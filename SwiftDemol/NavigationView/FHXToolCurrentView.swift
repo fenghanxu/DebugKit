@@ -43,7 +43,6 @@ class FHXToolCurrentView: UIView {
     
     lazy private var historyLogButton: UIButton = {
         let button = UIButton()
-        button.tag = 3
         button.setTitle("历史日志", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)

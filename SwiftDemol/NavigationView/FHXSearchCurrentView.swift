@@ -16,6 +16,22 @@ class FHXSearchCurrentView: UIView {
     
     weak var delegate: FHXSearchCurrentViewDelegate?
     
+    var isShowSearchBgView:Bool = false {
+        didSet {
+            if isShowSearchBgView {
+                UIView.animate(withDuration: 0.25, animations: { [weak self] in
+                    guard let self = self else { return }
+                    self.alpha = 1.0
+                })
+            } else {
+                UIView.animate(withDuration: 0.25, animations: { [weak self] in
+                    guard let self = self else { return }
+                    self.alpha = 0.0
+                })
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -110,6 +126,7 @@ class FHXSearchCurrentView: UIView {
     }
     
     @objc private func cancelButtonClick() {
+        isShowSearchBgView = false
         textfield.text = String()
         delegate?.fhxSearchCurrentView(view: self, buttonClick: cancelButton)
     }
