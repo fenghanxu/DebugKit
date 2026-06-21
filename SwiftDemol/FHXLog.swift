@@ -1,9 +1,4 @@
-//
-//  FHXLog.swift
-//  SwiftDemol
-//
-//  Created by fenghanxu on 2026/6/4.
-//
+
 
 import Foundation
 
@@ -152,25 +147,11 @@ extension FHXLog {
     /// 清空当前日志
     func clearCurrentLogs() {
         store.clearCurrentLogs()
-
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(
-                name: .fhxLogDidClear,
-                object: "current"
-            )
-        }
     }
     
     /// 清空历史日志
     func clearHistoryLogs() {
         store.clearHistoryLogs()
-
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(
-                name: .fhxLogDidClear,
-                object: "history"
-            )
-        }
     }
     
     /// 删除当前日志单条数据
@@ -215,36 +196,38 @@ extension FHXLog {
 
 // MARK: 导出功能
 extension FHXLog {
-    /// 整理TXT数据
-    func organizeCurrentLogsTXT() -> String {
+
+    /// 整理 TXT
+    private func organizeTXT(logs: [FHXLogModel]) -> String {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
-        return currentLogs()
-            .map {
+        return logs.map {
 
-                """
-                [\(formatter.string(from: $0.time))]
-                [\($0.level)]
-                \($0.file).\($0.function):[\($0.line)]
-                \($0.message)
+            """
+            [\(formatter.string(from: $0.time))]
+            [\($0.level)]
+            \($0.file).\($0.function):[\($0.line)]
+            \($0.message)
 
-                """
-            }
-            .joined(separator: "\n")
+            """
+        }
+        .joined(separator: "\n")
     }
-    
-    
-    /// 导出TXT文件
-    func exportCurrentLogsTXTFile() throws -> URL {
 
-        let txt = organizeCurrentLogsTXT()
+    /// 导出 TXT
+    private func exportTXTFile(
+        logs: [FHXLogModel],
+        prefix: String
+    ) throws -> URL {
+
+        let txt = organizeTXT(logs: logs)
 
         let fileURL = FileManager.default
             .temporaryDirectory
             .appendingPathComponent(
-                "FHXLog_\(Int(Date().timeIntervalSince1970)).txt"
+                "\(prefix)_\(Int(Date().timeIntervalSince1970)).txt"
             )
 
         try txt.write(
@@ -255,11 +238,12 @@ extension FHXLog {
 
         return fileURL
     }
-    
-    /// 导出JSON文件
-    func exportCurrentLogsJSONFile() throws -> URL {
 
-        let logs = currentLogs()
+    /// 导出 JSON
+    private func exportJSONFile(
+        logs: [FHXLogModel],
+        prefix: String
+    ) throws -> URL {
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
@@ -270,14 +254,48 @@ extension FHXLog {
         let fileURL = FileManager.default
             .temporaryDirectory
             .appendingPathComponent(
-                "FHXLog_\(Int(Date().timeIntervalSince1970)).json"
+                "\(prefix)_\(Int(Date().timeIntervalSince1970)).json"
             )
 
         try data.write(to: fileURL)
 
         return fileURL
     }
-    
+}
+
+extension FHXLog {
+
+    // MARK: 当前日志
+
+    func exportCurrentLogsTXTFile() throws -> URL {
+        try exportTXTFile(
+            logs: currentLogs(),
+            prefix: "FHXCurrentLog"
+        )
+    }
+
+    func exportCurrentLogsJSONFile() throws -> URL {
+        try exportJSONFile(
+            logs: currentLogs(),
+            prefix: "FHXCurrentLog"
+        )
+    }
+
+    // MARK: 历史日志
+
+    func exportHistoryLogsTXTFile() throws -> URL {
+        try exportTXTFile(
+            logs: historyLogs(),
+            prefix: "FHXHistoryLog"
+        )
+    }
+
+    func exportHistoryLogsJSONFile() throws -> URL {
+        try exportJSONFile(
+            logs: historyLogs(),
+            prefix: "FHXHistoryLog"
+        )
+    }
 }
 
 private extension FHXLog {

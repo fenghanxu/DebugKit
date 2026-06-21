@@ -1,9 +1,4 @@
-//
-//  FHXLogNotification.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/8.
-//
+
 
 //用于添加新日志，通知出去刷新tableView
 
@@ -12,10 +7,13 @@ import Foundation
 extension Notification.Name {
 
     /// 新增日志
-    static let fhxLogDidAppend = Notification.Name("fhxLogDidAppend")
+    static let logDidAppendCurrentData = Notification.Name("logDidAppendCurrentData")
 
-    /// 清空日志
-    static let fhxLogDidClear = Notification.Name("fhxLogDidClear")
+    /// 清空当前日志
+    static let logDidClearCurrentData = Notification.Name("logDidClearCurrentData")
+    
+    /// 清空历史日志
+    static let logDidClearHistoryData = Notification.Name("logDidClearHistoryData")
     
     /// 删除日志
     static let fhxLogDidDelete = Notification.Name("fhxLogDidDelete")

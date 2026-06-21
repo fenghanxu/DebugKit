@@ -1,28 +1,23 @@
-//
-//  FHXNavigationView.swift
-//  SwiftDemol
-//
-//  Created by fenghanxu on 2026/6/5.
-//
+
 
 import UIKit
 
 protocol FHXNavigationViewDelegate:NSObjectProtocol {
     func fhxNavigationView(view:FHXNavigationView, buttonClick button:UIButton)
-    func fhxNavigationView(view:FHXNavigationView, searchContent text:String)
+    func fhxNavigationView(view:FHXNavigationView, searchContent text:String, returnLogType logType:LogType)
 }
 
 class FHXNavigationView: UIView {
     
     weak var delegate:FHXNavigationViewDelegate?
     
-    var keyWindowApp: UIWindow?
+    private var keyWindowApp: UIWindow?
     
-    var screenWidth: CGFloat?
+    private var screenWidth: CGFloat?
     
-    var screenHeight: CGFloat?
+    private var screenHeight: CGFloat?
     
-    var totalTopHeight: CGFloat?
+    private var totalTopHeight: CGFloat?
     
     lazy private var toolCurrentView: FHXToolCurrentView = {
         let view = FHXToolCurrentView()
@@ -36,22 +31,31 @@ class FHXNavigationView: UIView {
         return view
     }()
     
-    lazy private var searchCurrentView: FHXSearchCurrentView = {
-        let view = FHXSearchCurrentView()
+    lazy private var searchCurrentView: FHXSearchView = {
+        let view = FHXSearchView()
         view.alpha = 0.0
         view.delegate = self
+        view.logType = .current
         return view
     }()
     
-    var isShowSearchBgView:Bool = false {
+    lazy private var searchHistoryView: FHXSearchView = {
+        let view = FHXSearchView()
+        view.alpha = 0.0
+        view.delegate = self
+        view.logType = .history
+        return view
+    }()
+    
+    var isShowSearchCurrentView:Bool = false {
         didSet {
-            self.searchCurrentView.isShowSearchBgView = isShowSearchBgView
-//            if isShowSearchBgView {
-//                UIView.animate(withDuration: 0.25, animations: { [weak self] in
-//                    guard let self = self else { return }
-//                    self.searchCurrentView.alpha = 1.0
-//                })
-//            }
+            self.searchCurrentView.isShowSearchView = isShowSearchCurrentView
+        }
+    }
+    
+    var isShowSearchHistoryView:Bool = false {
+        didSet {
+            self.searchHistoryView.isShowSearchView = isShowSearchHistoryView
         }
     }
     
@@ -82,68 +86,42 @@ class FHXNavigationView: UIView {
         backgroundColor = .white
         
         addSubview(toolCurrentView)
-        
         addSubview(toolHistoryView)
-
         toolCurrentView.addSubview(searchCurrentView)
-  
+        toolHistoryView.addSubview(searchHistoryView)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let totalTopHeight = totalTopHeight else { return }
-        
-        toolCurrentView.frame = CGRectMake(0, totalTopHeight - 44, bounds.size.width, 44)
-        
-        toolHistoryView.frame = CGRectMake(5 + 44 + 10, totalTopHeight - 44, bounds.size.width - 5 - 44 - 10, 44)
-        
-        searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, bounds.size.width - 5 - 44 - 10, 44)
-
+        guard let screenWidth = screenWidth else { return }
+        toolCurrentView.frame = CGRectMake(0, 0, screenWidth, 44)
+        toolHistoryView.frame = CGRectMake(screenWidth, 0, screenWidth, 44)
+        searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, screenWidth - 5 - 44 - 10, 44)
+        searchHistoryView.frame = CGRectMake(5 + 44 + 10, 0, screenWidth - 5 - 44 - 10, 44)
     }
 
 }
 
 // MARK: - button click
 extension FHXNavigationView: FHXToolCurrentViewDelegate {
-    
     func fhxToolCurrentView(view:FHXToolCurrentView, buttonClick button:UIButton) {
-        if button.currentTitle == "历史日志" {
-            toolHistoryView.isShowToolHistoryView = true
-        } else {
-            delegate?.fhxNavigationView(view: self, buttonClick: button)
-        }
-        
-    }
-
-}
-
-extension FHXNavigationView: FHXSearchCurrentViewDelegate {
-    
-    func fhxSearchCurrentView(view: FHXSearchCurrentView, searchContent text: String) {
-        delegate?.fhxNavigationView(view: self, searchContent: text)
-    }
-    
-    func fhxSearchCurrentView(view: FHXSearchCurrentView, buttonClick button: UIButton) {
-//        isShowSearchBgView = false
-//        
-//        UIView.animate(withDuration: 0.25, animations: { [weak self] in
-//            guard let self = self else { return }
-//            self.searchCurrentView.alpha = 0.0
-//        })
-        
         delegate?.fhxNavigationView(view: self, buttonClick: button)
     }
-    
 }
 
 extension FHXNavigationView: FHXToolHistoryViewDelegate {
-    
     func fhxToolHistoryView(view: FHXToolHistoryView, buttonClick button: UIButton) {
-        toolHistoryView.isShowToolHistoryView = false
-        if button.tag != 7 { // 如果不是  历史日志框 取消按键
-            delegate?.fhxNavigationView(view: self, buttonClick: button)
-        }
+        delegate?.fhxNavigationView(view: self, buttonClick: button)
+    }
+}
+
+extension FHXNavigationView: FHXSearchViewDelegate {
+    func fhxSearchView(view: FHXSearchView, searchContent text: String, returnLogType logType:LogType) {
+        delegate?.fhxNavigationView(view: self, searchContent: text, returnLogType: logType)
     }
     
+    func fhxSearchView(view: FHXSearchView, buttonClick button: UIButton) {
+        delegate?.fhxNavigationView(view: self, buttonClick: button)
+    }    
 }

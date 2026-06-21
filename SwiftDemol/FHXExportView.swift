@@ -1,19 +1,31 @@
-//
-//  FHXExportView.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/13.
-//
 
 import UIKit
 import SnapKit
 
 class FHXExportView: UIView {
+    
+    static func showCurrentView(
+        array: [String],
+        VCView: UIView,
+        valueBlock:((NSInteger)->())?
+    ) {
+        let selfView = FHXExportView(with: array)
+        selfView.valueBlock = valueBlock
+        VCView.addSubview(selfView)
+        selfView.showView()
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Data
+
+    private var valueBlock:((_ index: NSInteger)->())?
+
+    private var list = [String]()
+
+    
     init(with array: [String]) {
 
         list = array
@@ -28,23 +40,6 @@ class FHXExportView: UIView {
         super.init(frame: targetRect)
 
         buildUI()
-    }
-
-    // MARK: - Data
-
-    private var valueBlock:((_ index: NSInteger)->())?
-
-    private var list = [String]()
-
-    static func showCurrentView(
-        array: [String],
-        VCView: UIView,
-        valueBlock:((NSInteger)->())?
-    ) {
-        let selfView = FHXExportView(with: array)
-        selfView.valueBlock = valueBlock
-        VCView.addSubview(selfView)
-        selfView.showView()
     }
 
     // MARK: - UI

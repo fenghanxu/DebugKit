@@ -1,9 +1,3 @@
-//
-//  FHXToolCurrentView.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/14.
-//
 
 
 import UIKit
@@ -41,12 +35,13 @@ class FHXToolCurrentView: UIView {
         return button
     }()
     
-    lazy private var historyLogButton: UIButton = {
+    lazy private var historyButton: UIButton = {
         let button = UIButton()
+        button.tag = 8
         button.setTitle("历史日志", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(historyLogButtonClick), for: .touchUpInside)
+        button.addTarget(self, action: #selector(historyButtonClick), for: .touchUpInside)
         return button
     }()
 
@@ -65,7 +60,7 @@ class FHXToolCurrentView: UIView {
 
         addSubview(cancelButton)
         addSubview(logButton)
-        addSubview(historyLogButton)
+        addSubview(historyButton)
     }
     
     override func layoutSubviews() {
@@ -78,7 +73,7 @@ class FHXToolCurrentView: UIView {
         
         
         let historyLogButtonRight = CGRectGetMaxX(logButton.frame) + 10
-        historyLogButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
+        historyButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
 
     }
 
@@ -97,7 +92,7 @@ extension FHXToolCurrentView {
     }
     
     @objc
-    private func historyLogButtonClick() {
-        delegate?.fhxToolCurrentView(view: self, buttonClick: historyLogButton)
+    private func historyButtonClick() {
+        delegate?.fhxToolCurrentView(view: self, buttonClick: historyButton)
     }
 }

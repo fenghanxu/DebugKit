@@ -1,24 +1,26 @@
-//
-//  FHXSearchCurrentView.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/14.
-//
+
 
 import UIKit
 
-protocol FHXSearchCurrentViewDelegate: NSObjectProtocol {
-    func fhxSearchCurrentView(view: FHXSearchCurrentView, searchContent text: String)
-    func fhxSearchCurrentView(view: FHXSearchCurrentView, buttonClick button: UIButton)
+protocol FHXSearchViewDelegate: NSObjectProtocol {
+    func fhxSearchView(view: FHXSearchView, searchContent text: String, returnLogType logType:LogType)
+    func fhxSearchView(view: FHXSearchView, buttonClick button: UIButton)
 }
 
-class FHXSearchCurrentView: UIView {
+enum LogType {
+    case current
+    case history
+}
+
+class FHXSearchView: UIView {
     
-    weak var delegate: FHXSearchCurrentViewDelegate?
+    weak var delegate: FHXSearchViewDelegate?
+
+    var logType: LogType = .current
     
-    var isShowSearchBgView:Bool = false {
+    var isShowSearchView:Bool = false {
         didSet {
-            if isShowSearchBgView {
+            if isShowSearchView {
                 UIView.animate(withDuration: 0.25, animations: { [weak self] in
                     guard let self = self else { return }
                     self.alpha = 1.0
@@ -99,8 +101,6 @@ class FHXSearchCurrentView: UIView {
         return textfield
     }()
 
-
-    
     private func build() {
         backgroundColor = .white
         
@@ -114,31 +114,28 @@ class FHXSearchCurrentView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
                 
-        searchView.frame = CGRectMake(0, 2, 265, 40)
-        
-        cancelButton.frame = CGRectMake(bounds.size.width - 10 - 33, 5.5, 33, 33)
-
+        searchView.frame   = CGRectMake(0, 2, 265, 40)
         searchButton.frame = CGRectMake(0, 1, 38, 38)
-        
-        line.frame = CGRectMake(38 , 10, 1, 20)
-        
-        textfield.frame = CGRectMake(45, 5, 265 - 49, 30)
+        line.frame         = CGRectMake(38 , 10, 1, 20)
+        textfield.frame    = CGRectMake(45, 5, 265 - 49, 30)
+        cancelButton.frame = CGRectMake(CGRectGetMaxX(searchView.frame) + 10, 5.5, 33, 33)
     }
     
     @objc private func cancelButtonClick() {
-        isShowSearchBgView = false
+        isShowSearchView = false
         textfield.text = String()
-        delegate?.fhxSearchCurrentView(view: self, buttonClick: cancelButton)
+        delegate?.fhxSearchView(view: self, buttonClick: cancelButton)
     }
 
 }
 
-extension FHXSearchCurrentView: UITextFieldDelegate {
+extension FHXSearchView: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) {
-            delegate?.fhxSearchCurrentView(view: self, searchContent: newText)
+            delegate?.fhxSearchView(view: self, searchContent: newText, returnLogType: logType)
         }
         return true
     }
 }
+
 

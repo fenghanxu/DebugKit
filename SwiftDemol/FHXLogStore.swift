@@ -1,9 +1,4 @@
-//
-//  FHXLogStore.swift
-//  SwiftDemol
-//
-//  Created by fenghanxu on 2026/6/4.
-//
+
 
 import Foundation
 
@@ -88,7 +83,7 @@ extension FHXLogStore {
             self.saveHistoryData()
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
-                    name: .fhxLogDidAppend,
+                    name: .logDidAppendCurrentData,
                     object: log
                 )
             }
@@ -234,7 +229,7 @@ extension FHXLogStore {
             DispatchQueue.main.async {
 
                 NotificationCenter.default.post(
-                    name: .fhxLogDidClear,
+                    name: .logDidClearCurrentData,
                     object: nil
                 )
             }
@@ -252,7 +247,7 @@ extension FHXLogStore {
             DispatchQueue.main.async {
 
                 NotificationCenter.default.post(
-                    name: .fhxLogDidClear,
+                    name: .logDidClearHistoryData,
                     object: nil
                 )
             }

@@ -1,25 +1,42 @@
-//
-//  FHXLogViewController.swift
-//  SwiftDemol
-//
-//  Created by fenghanxu on 2026/6/4.
-//
+
 
 import UIKit
 import SnapKit
 
 class FHXLogViewController: UIViewController {
     
-    var keyWindowApp: UIWindow?
+    private var keyWindowApp: UIWindow?
     
-    var screenWidth: CGFloat?
+    private var screenWidth: CGFloat?
      
-    var screenHeight: CGFloat?
+    private var screenHeight: CGFloat?
     
-    var totalTopHeight: CGFloat?
+    private var totalTopHeight: CGFloat?
+    
+    private var safeAreaTop: CGFloat?
+    
+    lazy private var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.contentSize = CGSize(width: view.bounds.size.width * 2, height: (screenHeight ?? 0) - (totalTopHeight ?? 0))
+        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.bounces = false
+        scrollView.isPagingEnabled = true
+        scrollView.backgroundColor = .red
+        return scrollView
+    }()
+    
+    lazy private var navigatonView : FHXNavigationView = {
+        let navigationView = FHXNavigationView(frame: view.frame, keyWindowApp: keyWindowApp, screenWidth: screenWidth, screenHeight: screenHeight, totalTopHeight: totalTopHeight)
+        navigationView.delegate = self
+        navigationView.backgroundColor = .green
+        return navigationView
+    }()
 
-    lazy private var tableView: UITableView = {
+    lazy private var currentTableView: UITableView = {
         var tableView = UITableView()
+        tableView.tag = 101
         tableView.backgroundColor = .white
         tableView.delegate = self
         tableView.dataSource = self
@@ -39,43 +56,97 @@ class FHXLogViewController: UIViewController {
         return tableView
     }()
     
-    lazy private var navigatonView : FHXNavigationView = {
-        let navigationView = FHXNavigationView(frame: view.frame, keyWindowApp: keyWindowApp, screenWidth: screenWidth, screenHeight: screenHeight, totalTopHeight: totalTopHeight)
-        navigationView.delegate = self
-//        navigationView.keyWindowApp = keyWindowApp
-//        navigationView.screenWidth = screenWidth
-//        navigationView.screenHeight = screenHeight
-//        navigationView.totalTopHeight = totalTopHeight
-        return navigationView
+    lazy private var historyTableView: UITableView = {
+        var tableView = UITableView()
+        tableView.tag = 102
+        tableView.backgroundColor = .white
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100.0
+        tableView.keyboardDismissMode = .onDrag
+        tableView.register(FHXLogCell.self, forCellReuseIdentifier: FHXLogCell.identifier)
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
+        tableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
+        tableView.sectionHeaderHeight = CGFloat.leastNormalMagnitude
+        tableView.estimatedSectionFooterHeight = 0.0
+        tableView.estimatedSectionHeaderHeight = 0.0
+        return tableView
     }()
     
-    /// 所有日志
-    private var currentLogs: [FHXLogModel] = []
+    /// 筛选枚举当前数据
+    private enum FHXLogFilterCurrentState {
+        case allCurrentFilter
+        case debugCurrentFilter
+        case networkCurrentFilter
+        case errorCurrentFilter
+        case crashCurrentFilter
+    }
 
     /// 当前显示日志
-    private var filterLogs: [FHXLogModel] = []
+    private var filterCurrentLogs: [FHXLogModel] = []
 
-    /// 当前筛选
-    private var currentFilter: FHXLogFilter = .all
+    /// 当前筛选状态
+    private var filterCurrentState: FHXLogFilterCurrentState = .allCurrentFilter
+
+    /// 当前关键词
+    private var searchCurrentTerm = String()
     
-    /// 筛选枚举
-    private enum FHXLogFilter {
-        case all
-        case debug
-        case network
-        case error
-        case crash
+    /// 筛选枚举历史数据
+    private enum FHXLogFilterHistoryState {
+        case allHistoryFilter
+        case debugHistoryFilter
+        case networkHistoryFilter
+        case errorHistoryFilter
+        case crashHistoryFilter
+    }
+
+    /// 历史显示日志
+    private var filterHistoryLogs: [FHXLogModel] = []
+
+    /// 历史筛选状态
+    private var filterHistoryState: FHXLogFilterHistoryState = .allHistoryFilter
+
+    /// 历史关键词
+    private var searchHistoryTerm = String()
+    
+    init(keyWindowApp: UIWindow, screenWidth: CGFloat, screenHeight: CGFloat, totalTopHeight: CGFloat, safeAreaTop: CGFloat) {
+        self.keyWindowApp = keyWindowApp
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
+        self.totalTopHeight = totalTopHeight
+        self.safeAreaTop = safeAreaTop
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
-    /// 关键词
-    private var searchTerm = String()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupUI()
-        loadData()
+        applyFilterCurrentData()
+        applyFilterHistoryData()
         addNotification()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let screenWidth = screenWidth, let screenHeight = screenHeight, let safeAreaTop = safeAreaTop {
+            scrollView.frame = CGRectMake(0, safeAreaTop, screenWidth, screenHeight - safeAreaTop)
+            navigatonView.frame = CGRectMake(0, 0, screenWidth * 2, 44)
+            currentTableView.frame = CGRectMake(0, CGRectGetMaxY(navigatonView.frame), screenWidth, screenHeight - safeAreaTop - 44)
+            historyTableView.frame = CGRectMake(screenWidth, CGRectGetMaxY(navigatonView.frame), screenWidth, screenHeight - safeAreaTop - 44)
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,15 +159,6 @@ class FHXLogViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-
-        navigatonView.snp.updateConstraints({ make in
-            make.left.top.right.equalToSuperview()
-            make.height.equalTo(view.safeAreaInsets.top + 44)
-        })
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -104,94 +166,114 @@ class FHXLogViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .white
         
-        view.addSubview(navigatonView)
-        navigatonView.snp.makeConstraints { make in
-            make.left.top.right.equalToSuperview()
-            make.height.equalTo(44)
-        }
-        
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(navigatonView.snp.bottom)
-            make.left.right.bottom.equalToSuperview()
-        }
+        view.addSubview(scrollView)
+        scrollView.addSubview(navigatonView)
+        scrollView.addSubview(currentTableView)
+        scrollView.addSubview(historyTableView)
     }
     
-    private func loadData() {
-        currentLogs = FHXLog.shared.currentLogs()
-        applyFilter()
-    }
-    
-    private func applyFilter() {
-        switch currentFilter {
-            case .all:
-                filterLogs = currentLogs
-            case .debug:
-            filterLogs = currentLogs.filter {
-                    $0.level == .debug
-                }
-            case .network:
-            filterLogs = currentLogs.filter {
-                    $0.level == .network
-                }
-            case .error:
-            filterLogs = currentLogs.filter {
-                    $0.level == .error
-                }
-            case .crash:
-            filterLogs = currentLogs.filter {
-                    $0.level == .crash
-                }
+    private func applyFilterCurrentData() {
+        switch filterCurrentState {
+            case .allCurrentFilter:
+                filterCurrentLogs = FHXLog.shared.currentLogs()
+            case .debugCurrentFilter:
+                filterCurrentLogs = FHXLog.shared.currentLogs().filter {
+                        $0.level == .debug
+                    }
+            case .networkCurrentFilter:
+                filterCurrentLogs = FHXLog.shared.currentLogs().filter {
+                        $0.level == .network
+                    }
+            case .errorCurrentFilter:
+                filterCurrentLogs = FHXLog.shared.currentLogs().filter {
+                        $0.level == .error
+                    }
+            case .crashCurrentFilter:
+                filterCurrentLogs = FHXLog.shared.currentLogs().filter {
+                        $0.level == .crash
+                    }
         }
 
-        tableView.reloadData()
+        currentTableView.reloadData()
+    }
+    
+    private func applyFilterHistoryData() {
+        switch filterHistoryState {
+        case .allHistoryFilter:
+            filterHistoryLogs = FHXLog.shared.historyLogs()
+        case .debugHistoryFilter:
+            filterHistoryLogs = FHXLog.shared.historyLogs().filter({ model in
+                model.level == .debug
+            })
+        case .networkHistoryFilter:
+            filterHistoryLogs = FHXLog.shared.historyLogs().filter({ model in
+                model.level == .network
+            })
+        case .errorHistoryFilter:
+            filterHistoryLogs = FHXLog.shared.historyLogs().filter({ model in
+                model.level == .error
+            })
+        case .crashHistoryFilter:
+            filterHistoryLogs = FHXLog.shared.historyLogs().filter({ model in
+                model.level == .crash
+            })
+        }
+        
+        historyTableView.reloadData()
     }
     
     private func addNotification() {
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(logDidAppend(_:)),
-            name: .fhxLogDidAppend,
+            selector: #selector(logDidAppendCurrentData(_:)),
+            name: .logDidAppendCurrentData,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(logDidClear),
-            name: .fhxLogDidClear,
+            selector: #selector(logDidClearCurrentData),
+            name: .logDidClearCurrentData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(logDidClearHistoryData),
+            name: .logDidClearHistoryData,
             object: nil
         )
     }
     
     private func scrollToBottom() {
 
-        guard filterLogs.count > 0 else {
+        guard filterCurrentLogs.count > 0 else {
             return
         }
 
         let indexPath = IndexPath(
-            row: filterLogs.count - 1,
+            row: filterCurrentLogs.count - 1,
             section: 0
         )
 
-        tableView.scrollToRow(
+        currentTableView.scrollToRow(
             at: indexPath,
             at: .bottom,
             animated: true
         )
     }
     
-    private func search(_ keyword: String) {
+    private func searchCurrent(_ keyword: String) {
 
         guard !keyword.isEmpty else {
-            applyFilter()
+            applyFilterCurrentData()
             return
         }
 
         let lowerKeyword = keyword.lowercased()
 
-        filterLogs = currentLogs.filter {
+        filterCurrentLogs = FHXLog.shared.currentLogs().filter {
 
             $0.message.lowercased().contains(lowerKeyword)
             ||
@@ -200,7 +282,28 @@ class FHXLogViewController: UIViewController {
             $0.function.lowercased().contains(lowerKeyword)
         }
 
-        tableView.reloadData()
+        currentTableView.reloadData()
+    }
+    
+    private func searchHistory(_ keyword: String) {
+
+        guard !keyword.isEmpty else {
+            applyFilterHistoryData()
+            return
+        }
+
+        let lowerKeyword = keyword.lowercased()
+
+        filterHistoryLogs = FHXLog.shared.historyLogs().filter {
+
+            $0.message.lowercased().contains(lowerKeyword)
+            ||
+            $0.file.lowercased().contains(lowerKeyword)
+            ||
+            $0.function.lowercased().contains(lowerKeyword)
+        }
+
+        historyTableView.reloadData()
     }
     
     /// 关键搜索词高亮
@@ -274,24 +377,24 @@ class FHXLogViewController: UIViewController {
 /// Notification
 extension FHXLogViewController {
     @objc
-    private func logDidAppend(_ notification: Notification) {
+    private func logDidAppendCurrentData(_ notification: Notification) {
 
         guard let model = notification.object as? FHXLogModel else {
             return
         }
 
-        filterLogs.append(model)
+        filterCurrentLogs.append(model)
         
-        applyFilter()
+        applyFilterCurrentData()
 
         let indexPath = IndexPath(
-            row: filterLogs.count - 1,
+            row: filterCurrentLogs.count - 1,
             section: 0
         )
 
-        tableView.performBatchUpdates({
+        currentTableView.performBatchUpdates({
 
-            tableView.insertRows(
+            currentTableView.insertRows(
                 at: [indexPath],
                 with: .none
             )
@@ -304,66 +407,123 @@ extension FHXLogViewController {
     }
     
     @objc
-    private func logDidClear() {
-
-        currentLogs.removeAll()
-        filterLogs.removeAll()
-
-        tableView.reloadData()
+    private func logDidClearCurrentData() {
+        filterCurrentLogs.removeAll()
+        currentTableView.reloadData()
+    }
+    
+    @objc
+    private func logDidClearHistoryData() {
+        filterHistoryLogs.removeAll()
+        historyTableView.reloadData()
     }
 }
 
 extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filterLogs.count
+        switch tableView.tag {
+        case 101:
+            return filterCurrentLogs.count
+        case 102:
+            return filterHistoryLogs.count
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:FHXLogCell = FHXLogCell.cell(with: tableView)
+        switch tableView.tag {
+        case 101:
+            cell.levelLabel.text = "\(filterCurrentLogs[indexPath.row].level)"
+            
+            if filterCurrentLogs[indexPath.row].level.rawValue == 0 {// debug
+                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+            } else if filterCurrentLogs[indexPath.row].level.rawValue == 1 {// network
+                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+            } else if filterCurrentLogs[indexPath.row].level.rawValue == 2 {// error
+                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+            } else if filterCurrentLogs[indexPath.row].level.rawValue == 3 {// crash
+                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
+            }
+            
+            let messageString = "\(filterCurrentLogs[indexPath.row].file)." + "\(filterCurrentLogs[indexPath.row].function):" + "[\(filterCurrentLogs[indexPath.row].line)] "
+            if messageString.range(of: searchCurrentTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
+                cell.messageLabel.attributedText = highlightText(text: messageString, keyword: searchCurrentTerm)
+            } else {
+                cell.messageLabel.text = "\(filterCurrentLogs[indexPath.row].file)." + "\(filterCurrentLogs[indexPath.row].function):" + "[\(filterCurrentLogs[indexPath.row].line)] "
+            }
+            
+            if searchCurrentTerm != String() && filterCurrentLogs[indexPath.row].message.range(of: searchCurrentTerm, options: .caseInsensitive) != nil {
+                cell.contentLabel.attributedText = highlightText(text: filterCurrentLogs[indexPath.row].message, keyword: searchCurrentTerm)
+            } else {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 8 // 行间距
 
-        cell.levelLabel.text = "\(filterLogs[indexPath.row].level)"
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .paragraphStyle: paragraphStyle,
+                    .font: UIFont.systemFont(ofSize: 14),
+                    .foregroundColor: UIColor.black
+                ]
+
+                cell.contentLabel.attributedText = NSAttributedString(
+                    string: "\(filterCurrentLogs[indexPath.row].message)",
+                    attributes: attributes
+                )
+            }
+
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            cell.timeLabel.text = formatter.string(from: filterCurrentLogs[indexPath.row].time)
         
-        if filterLogs[indexPath.row].level.rawValue == 0 {// debug
-            cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-        } else if filterLogs[indexPath.row].level.rawValue == 1 {// network
-            cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-        } else if filterLogs[indexPath.row].level.rawValue == 2 {// error
-            cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
-        } else if filterLogs[indexPath.row].level.rawValue == 3 {// crash
-            cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
-        }
-        
-        let messageString = "\(filterLogs[indexPath.row].file)." + "\(filterLogs[indexPath.row].function):" + "[\(filterLogs[indexPath.row].line)] "
-        if messageString.range(of: searchTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
-            cell.messageLabel.attributedText = highlightText(text: messageString, keyword: searchTerm)
-        } else {
-            cell.messageLabel.text = "\(filterLogs[indexPath.row].file)." + "\(filterLogs[indexPath.row].function):" + "[\(filterLogs[indexPath.row].line)] "
-        }
-        
-        if searchTerm != String() && filterLogs[indexPath.row].message.range(of: searchTerm, options: .caseInsensitive) != nil {
-            cell.contentLabel.attributedText = highlightText(text: filterLogs[indexPath.row].message, keyword: searchTerm)
-        } else {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = 8 // 行间距
-
-            let attributes: [NSAttributedString.Key: Any] = [
-                .paragraphStyle: paragraphStyle,
-                .font: UIFont.systemFont(ofSize: 14),
-                .foregroundColor: UIColor.black
-            ]
-
-            cell.contentLabel.attributedText = NSAttributedString(
-                string: "\(filterLogs[indexPath.row].message)",
-                attributes: attributes
-            )
-        }
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        cell.timeLabel.text = formatter.string(from: filterLogs[indexPath.row].time)
+            return cell
+        case 102:
+            cell.levelLabel.text = "\(filterHistoryLogs[indexPath.row].level)"
     
-        return cell
+            if filterHistoryLogs[indexPath.row].level.rawValue == 0 {// debug
+                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+            } else if filterHistoryLogs[indexPath.row].level.rawValue == 1 {// network
+                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+            } else if filterHistoryLogs[indexPath.row].level.rawValue == 2 {// error
+                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+            } else if filterHistoryLogs[indexPath.row].level.rawValue == 3 {// crash
+                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
+            }
+    
+            let messageString = "\(filterHistoryLogs[indexPath.row].file)." + "\(filterHistoryLogs[indexPath.row].function):" + "[\(filterHistoryLogs[indexPath.row].line)] "
+            if messageString.range(of: searchHistoryTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
+                cell.messageLabel.attributedText = highlightText(text: messageString, keyword: searchHistoryTerm)
+            } else {
+                cell.messageLabel.text = "\(filterHistoryLogs[indexPath.row].file)." + "\(filterHistoryLogs[indexPath.row].function):" + "[\(filterHistoryLogs[indexPath.row].line)] "
+            }
+    
+            if searchHistoryTerm != String() && filterHistoryLogs[indexPath.row].message.range(of: searchHistoryTerm, options: .caseInsensitive) != nil {
+                cell.contentLabel.attributedText = highlightText(text: filterHistoryLogs[indexPath.row].message, keyword: searchHistoryTerm)
+            } else {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 8 // 行间距
+    
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .paragraphStyle: paragraphStyle,
+                    .font: UIFont.systemFont(ofSize: 14),
+                    .foregroundColor: UIColor.black
+                ]
+    
+                cell.contentLabel.attributedText = NSAttributedString(
+                    string: "\(filterHistoryLogs[indexPath.row].message)",
+                    attributes: attributes
+                )
+            }
+    
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            cell.timeLabel.text = formatter.string(from: filterHistoryLogs[indexPath.row].time)
+    
+            return cell
+        default:
+            return UITableViewCell()
+        }
     }
     
     func tableView(
@@ -372,7 +532,7 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
 
-        let model = filterLogs[indexPath.row]
+        let model = filterCurrentLogs[indexPath.row]
 
         return UIContextMenuConfiguration(
             identifier: nil,
@@ -419,7 +579,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
                 return
             }
             
-            FHXToolView.showCurrentView(
+            ToolCurrentPopupView.showCurrentView(
                 vc: self,
                 winApp: keyWindowAppPartial,
                 screenWidth: screenWidthPartial,
@@ -430,26 +590,26 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
             ) {[weak self] value in
                 guard let self = self else { return }
                 if value == "All" {
-                    self.currentFilter = .all
-                    applyFilter()
+                    self.filterCurrentState = .allCurrentFilter
+                    applyFilterCurrentData()
                 } else if value == "Debug" {
-                    self.currentFilter = .debug
-                    applyFilter()
+                    self.filterCurrentState = .debugCurrentFilter
+                    applyFilterCurrentData()
                 } else if value == "Network" {
-                    self.currentFilter = .network
-                    applyFilter()
+                    self.filterCurrentState = .networkCurrentFilter
+                    applyFilterCurrentData()
                 } else if value == "Error" {
-                    self.currentFilter = .error
-                    applyFilter()
+                    self.filterCurrentState = .errorCurrentFilter
+                    applyFilterCurrentData()
                 } else if value == "Crash" {
-                    self.currentFilter = .crash
-                    applyFilter()
+                    self.filterCurrentState = .crashCurrentFilter
+                    applyFilterCurrentData()
                 } else if value == "搜索" {
-                    self.navigatonView.isShowSearchBgView = true
+                    self.navigatonView.isShowSearchCurrentView = true
                 } else if value == "导出" {
                     FHXExportView.showCurrentView(
                         array: ["TXT","JSON","取消"],
-                        VCView: self.view
+                        VCView: self.view,
                     ) { [weak self] index in
                         guard let self = self else { return }
                         if index == 0 {
@@ -485,24 +645,93 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
             }
 
         } else if button.tag == 2 { //当前日志搜索栏取消按键
-            searchTerm = String()
-            search(searchTerm)
-        } else if button.currentTitle == "历史日志" {
-            currentLogs = FHXLog.shared.historyLogs()
-            applyFilter()
-        } else if button.tag == 3 {
-            print("--- \(3)")
-        } else if button.tag == 4 {
-            print("--- \(4)")
-        } else if button.tag == 5 {
-            print("--- \(5)")
-        } else if button.tag == 6{
-            print("--- \(6)")
+            searchCurrentTerm = String()
+            searchCurrent(searchCurrentTerm)
+        } else if button.tag == 8 { // 历史日志
+            UIView.animate(withDuration: 0.25) {
+                self.scrollView.contentOffset = CGPoint(
+                    x: self.screenWidth ?? 0,
+                    y: 0
+                )
+            }
+            filterHistoryState = .allHistoryFilter
+            applyFilterHistoryData()
+        } else if button.tag == 3 { // 筛选
+            ToolHistoryPopupView.showCurrentView(
+                vc: self,
+                totalTopHeight: totalTopHeight ?? 0,
+                menuList: ["All", "Debug", "Network", "Error", "Crash"]
+            ) { [weak self] value in
+                guard let self = self else { return }
+                if value == "All" {
+                    self.filterHistoryState = .allHistoryFilter
+                    applyFilterHistoryData()
+                } else if value == "Debug" {
+                    self.filterHistoryState = .debugHistoryFilter
+                    applyFilterHistoryData()
+                } else if value == "Network" {
+                    self.filterHistoryState = .networkHistoryFilter
+                    applyFilterHistoryData()
+                } else if value == "Error" {
+                    self.filterHistoryState = .errorHistoryFilter
+                    applyFilterHistoryData()
+                } else if value == "Crash" {
+                    self.filterHistoryState = .crashHistoryFilter
+                    applyFilterHistoryData()
+                }
+            }
+        } else if button.tag == 4 { // 搜索
+            self.navigatonView.isShowSearchHistoryView = true
+        } else if button.tag == 5 { // 导出
+            FHXExportView.showCurrentView(
+                array: ["TXT","JSON","取消"],
+                VCView: self.view,
+            ) { [weak self] index in
+                guard let self = self else { return }
+                if index == 0 {
+                    do {
+                        let url =
+                        try FHXLog.shared.exportHistoryLogsTXTFile()
+                        let vc =  UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        self.present(vc, animated: true)
+                    } catch {
+                        print(error)
+                    }
+                } else if index == 1 {
+                    do {
+                        let url =
+                        try FHXLog.shared.exportHistoryLogsJSONFile()
+                        let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        self.present(vc, animated: true)
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
+        } else if button.tag == 6{ // 清空日志
+            let alert = UIAlertController(title: "提示", message: "确定清空所有日志吗？", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+            alert.addAction(
+                UIAlertAction(title: "确定", style: .destructive) { _ in
+                    FHXLog.shared.clearHistoryLogs()
+                }
+            )
+            self.present(alert, animated: true)
+        } else if button.tag == 7{ // 返回
+            UIView.animate(withDuration: 0.25) {
+                self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
+            }
         }
     }
     
-    func fhxNavigationView(view:FHXNavigationView, searchContent text:String) {
-        searchTerm = text
-        search(text)
+    func fhxNavigationView(view:FHXNavigationView, searchContent text:String, returnLogType logType:LogType) {
+        if logType == .current {
+            searchCurrentTerm = text
+            searchCurrent(text)
+        } else if logType == .history {
+            searchHistoryTerm = text
+            searchHistory(text)
+        }
     }
+    
 }

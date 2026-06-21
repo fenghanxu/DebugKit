@@ -23,16 +23,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "32DF0C7D-67DA-4965-ABB6-16FFDA03C617"
+            uuid = "D4DB6BCA-B7BB-48C7-BCC4-2EB407BDDA1E"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SwiftDemol/NavigationView/FHXNavigationView.swift"
+            filePath = "SwiftDemol/FHXLog.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "layoutSubviews()"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "clearCurrentLogs()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E42C9E5D-C46E-4861-A6B8-DF2C84AF5FD0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftDemol/FHXLogStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
+            landmarkName = "clearCurrentLogs()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

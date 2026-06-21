@@ -1,9 +1,4 @@
-//
-//  FHXToolHistoryView.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/17.
-//
+
 
 import UIKit
 
@@ -15,21 +10,20 @@ class FHXToolHistoryView: UIView {
 
     weak var delegate: FHXToolHistoryViewDelegate?
     
-    var isShowToolHistoryView:Bool = false {
-        didSet {
-            if isShowToolHistoryView {
-                UIView.animate(withDuration: 0.25, animations: { [weak self] in
-                    guard let self = self else { return }
-                    self.alpha = 1.0
-                })
-            } else {
-                UIView.animate(withDuration: 0.25, animations: { [weak self] in
-                    guard let self = self else { return }
-                    self.alpha = 0.0
-                })
-            }
-        }
-    }
+    lazy private var cancelButton:UIButton = {
+        let button = UIButton()
+        let bundle = Bundle.main.url(forResource: "file", withExtension: "bundle")
+        let sdkBundle = Bundle(url: bundle!)
+        let image = UIImage(
+            named: "nav_back",
+            in: sdkBundle,
+            compatibleWith: nil
+        )
+        button.tag = 7
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
+        return button
+    }()
     
     lazy private var filterButton: UIButton = {
         let button = UIButton()
@@ -71,21 +65,6 @@ class FHXToolHistoryView: UIView {
         return button
     }()
 
-    lazy private var cancelButton: UIButton = {
-        let button = UIButton()
-        let bundle = Bundle.main.url(forResource: "file", withExtension: "bundle")
-        let sdkBundle = Bundle(url: bundle!)
-        let image = UIImage(
-            named: "cancel",
-            in: sdkBundle,
-            compatibleWith: nil
-        )
-        button.tag = 7
-        button.setImage(image, for: .normal)
-        button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
-        return button
-    }()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -98,23 +77,22 @@ class FHXToolHistoryView: UIView {
     
     private func buildUI() {        
         backgroundColor = .white
-        alpha = 0.0
         
+        addSubview(cancelButton)
         addSubview(filterButton)
         addSubview(searchButton)
         addSubview(exportButton)
         addSubview(clearnButton)
-        addSubview(cancelButton)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        filterButton.frame = CGRectMake(0, 0, bounds.size.width * 0.2, 44)
-        searchButton.frame = CGRectMake(CGRectGetMaxX(filterButton.frame), 0, bounds.size.width * 0.2, 44)
-        exportButton.frame = CGRectMake(CGRectGetMaxX(searchButton.frame), 0, bounds.size.width * 0.2, 44)
-        clearnButton.frame = CGRectMake(CGRectGetMaxX(exportButton.frame), 0, bounds.size.width * 0.2, 44)
-        cancelButton.frame = CGRectMake(CGRectGetMaxX(clearnButton.frame), 0, bounds.size.width * 0.2, 44)
+        cancelButton.frame = CGRectMake(0, 0, screenWidth * 0.2, 44)
+        filterButton.frame = CGRectMake(CGRectGetMaxX(cancelButton.frame), 0, screenWidth * 0.2, 44)
+        searchButton.frame = CGRectMake(CGRectGetMaxX(filterButton.frame), 0, screenWidth * 0.2, 44)
+        exportButton.frame = CGRectMake(CGRectGetMaxX(searchButton.frame), 0, screenWidth * 0.2, 44)
+        clearnButton.frame = CGRectMake(CGRectGetMaxX(exportButton.frame), 0, screenWidth * 0.2, 44)
 
     }
 

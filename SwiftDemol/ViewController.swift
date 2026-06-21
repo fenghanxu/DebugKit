@@ -1,9 +1,4 @@
-//
-//  ViewController.swift
-//  SwiftDemol
-//
-//  Created by fenghanxu on 2022/6/7.
-//  Alamofire
+
 
 import UIKit
 import SnapKit
@@ -160,15 +155,70 @@ class ViewController: UIViewController {
 
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()+1.0) {
             DispatchQueue.main.async {
-                let vc = FHXLogViewController()
-                vc.screenWidth = screenWidth
-                vc.screenHeight = screenHeight
-                vc.totalTopHeight = totalTopHeight(self)
-                vc.keyWindowApp = keyWindowApp
+                guard let win = keyWindowApp else { return }
+                let vc = FHXLogViewController(keyWindowApp: win, screenWidth: screenWidth, screenHeight: screenHeight, totalTopHeight: totalTopHeight(self), safeAreaTop: safeAreaTop)
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
+        
+        requestCityStations()
 
+    }
+    
+
+    func requestCityStations() {
+        
+        guard let url = URL(string: "https://cellsys.cn:3202/api/cityStation/getAllCitiesWithStations") else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // Header
+        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwib3JnIjowLCJyb2xlIjoiIiwiVXNlcm5hbWUiOiJteWVlYnVzX3p3MDEiLCJSZWFsTmFtZSI6IiIsIkF1dGhvcml0eUlkIjowLCJhdXRob3JpdHlJZHMiOls1XSwiSUQiOjI1LCJVVUlEIjoiMmQyODA2MjUtY2M2My00MDc2LWFkZWYtZDIyM2VhOTRiYTFjIiwiQnVmZmVyVGltZSI6NjA0ODAwLCJpc3MiOiJhaXJrb29uIiwiYXVkIjpbIkdWQSJdLCJleHAiOjE3ODQyNTk1MTUsIm5iZiI6MTc4MTY2NzUxNX0.x1yHlR4C4dFIQCGFZRb9Vm0HgZklpefBwmUSN7mi9h0"
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(token, forHTTPHeaderField: "Authorization")
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            
+            if let error = error {
+                print("请求失败：\(error.localizedDescription)")
+                return
+            }
+            
+            guard let data = data else {
+                print("返回数据为空")
+                return
+            }
+            
+            // 原始字符串
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("原始返回：")
+                print(jsonString)
+            }
+            
+            // 格式化 JSON 输出
+            do {
+                let jsonObject = try JSONSerialization.jsonObject(with: data)
+                
+                let prettyData = try JSONSerialization.data(
+                    withJSONObject: jsonObject,
+                    options: [.prettyPrinted]
+                )
+                
+                if let prettyJson = String(data: prettyData, encoding: .utf8) {
+                    print("格式化JSON：")
+                    print(prettyJson)
+                }
+                
+            } catch {
+                print("JSON解析失败：\(error)")
+            }
+            
+        }.resume()
     }
     
 }
