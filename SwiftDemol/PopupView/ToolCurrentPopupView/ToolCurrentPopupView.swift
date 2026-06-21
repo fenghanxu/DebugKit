@@ -1,14 +1,8 @@
-//
-//  FHXToolView.swift
-//  SwiftDemol
-//
-//  Created by fenghanxu on 2026/6/10.
-//
 
 import UIKit
 import SnapKit
 
-class FHXToolView: UIView {
+class ToolCurrentPopupView: UIView {
         
     // MARK: - Show
     static func showCurrentView(
@@ -21,7 +15,7 @@ class FHXToolView: UIView {
         subMenuList: [String],
         valueBlock:((String)->())?
     ) {
-        let selfView = FHXToolView(
+        let selfView = ToolCurrentPopupView(
             winApp: winApp,
             screenWidth: screenWidth,
             screenHeight: screenHeight,
@@ -311,7 +305,7 @@ class FHXToolView: UIView {
     
 }
 
-extension FHXToolView : FHXToolMenuViewDelegate {
+extension ToolCurrentPopupView : FHXToolMenuViewDelegate {
     
     func fhxToolMenuView(model:FHXToolMenuView, didSelectRowAt indexPath: IndexPath) {
         if menuList[indexPath.item] == "筛选" {
@@ -335,11 +329,12 @@ extension FHXToolView : FHXToolMenuViewDelegate {
     
 }
 
-extension FHXToolView: FHXToolSubMenuViewDelegate {
+extension ToolCurrentPopupView: FHXToolSubMenuViewDelegate {
     func fhxToolSubMenuView(view: FHXToolSubMenuView, didSelectRowAt indexPath: IndexPath) {
         hideMenuView()
         valueBlock?(subMenuList[indexPath.item])
     }
 }
+
 
 
