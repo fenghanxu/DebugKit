@@ -20,4 +20,11 @@ extension Notification.Name {
 
     /// 更新日志
     static let fhxLogDidUpdate = Notification.Name("fhxLogDidUpdate")
+    
+    
+    /// (抓包)添加日志
+    static let fhxNetworkDidAppend = Notification.Name("fhxNetworkDidAppend")
+
+    /// (抓包)清除日志
+    static let fhxNetworkDidClear = Notification.Name("fhxNetworkDidClear")
 }

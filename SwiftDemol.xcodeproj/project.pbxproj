@@ -19,7 +19,16 @@
 		3F795DD8284F408D00D585B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD7284F408D00D585B4 /* Assets.xcassets */; };
 		3F795DDB284F408D00D585B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD9284F408D00D585B4 /* LaunchScreen.storyboard */; };
 		49AE62EC9825619C4DA5B8DD /* Pods_SwiftDemol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */; };
+		8890CE5A2FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890CE572FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift */; };
+		8890CE5B2FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890CE582FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift */; };
+		8890CE5C2FEF5D1E003D76E4 /* URLSessionTask+FHX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890CE592FEF5D1E003D76E4 /* URLSessionTask+FHX.swift */; };
 		8894E5A12FE2C62C00382BB0 /* FHXToolHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894E5A02FE2C62C00382BB0 /* FHXToolHistoryView.swift */; };
+		8895198F2FED553B00E43CF0 /* FHXNetworkLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895198E2FED553B00E43CF0 /* FHXNetworkLogModel.swift */; };
+		889519912FED555700E43CF0 /* FHXNetworkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889519902FED555700E43CF0 /* FHXNetworkStore.swift */; };
+		889519932FED569E00E43CF0 /* FHXDebugKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889519922FED569E00E43CF0 /* FHXDebugKit.swift */; };
+		889519952FED56B100E43CF0 /* FHXNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889519942FED56B100E43CF0 /* FHXNetworkInterceptor.swift */; };
+		889519992FED586F00E43CF0 /* URLSessionConfiguration+Swizzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889519982FED586F00E43CF0 /* URLSessionConfiguration+Swizzle.swift */; };
+		8895199B2FED5A5800E43CF0 /* FHXURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8895199A2FED5A5800E43CF0 /* FHXURLProtocol.swift */; };
 		889FA6C62FDD76B6000F8865 /* FHXExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C52FDD76B6000F8865 /* FHXExportView.swift */; };
 		889FA6CA2FDEDD51000F8865 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */; };
 		889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */; };
@@ -49,7 +58,16 @@
 		3F795DD7284F408D00D585B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F795DDA284F408D00D585B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F795DDC284F408D00D585B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8890CE572FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXURLSessionSwizzle.swift; sourceTree = "<group>"; };
+		8890CE582FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+FHXCompletion.swift"; sourceTree = "<group>"; };
+		8890CE592FEF5D1E003D76E4 /* URLSessionTask+FHX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionTask+FHX.swift"; sourceTree = "<group>"; };
 		8894E5A02FE2C62C00382BB0 /* FHXToolHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolHistoryView.swift; sourceTree = "<group>"; };
+		8895198E2FED553B00E43CF0 /* FHXNetworkLogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXNetworkLogModel.swift; sourceTree = "<group>"; };
+		889519902FED555700E43CF0 /* FHXNetworkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXNetworkStore.swift; sourceTree = "<group>"; };
+		889519922FED569E00E43CF0 /* FHXDebugKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXDebugKit.swift; sourceTree = "<group>"; };
+		889519942FED56B100E43CF0 /* FHXNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXNetworkInterceptor.swift; sourceTree = "<group>"; };
+		889519982FED586F00E43CF0 /* URLSessionConfiguration+Swizzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+Swizzle.swift"; sourceTree = "<group>"; };
+		8895199A2FED5A5800E43CF0 /* FHXURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXURLProtocol.swift; sourceTree = "<group>"; };
 		889FA6C52FDD76B6000F8865 /* FHXExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXExportView.swift; sourceTree = "<group>"; };
 		889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
 		889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +138,7 @@
 				2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */,
 				88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */,
 				889FA6C52FDD76B6000F8865 /* FHXExportView.swift */,
+				8895198D2FED551F00E43CF0 /* NetworkInterceptor */,
 				88E8A1D92FE78CFF00E35F61 /* PopupView */,
 				889FA6C92FDEDD51000F8865 /* Log */,
 				2D6B1D7F2FDBA59C00B9B9B2 /* NavigationView */,
@@ -131,6 +150,22 @@
 				2D6B1FCF2FDBF97C00B9B9B2 /* Documentation.swift */,
 			);
 			path = SwiftDemol;
+			sourceTree = "<group>";
+		};
+		8895198D2FED551F00E43CF0 /* NetworkInterceptor */ = {
+			isa = PBXGroup;
+			children = (
+				8895198E2FED553B00E43CF0 /* FHXNetworkLogModel.swift */,
+				889519902FED555700E43CF0 /* FHXNetworkStore.swift */,
+				889519922FED569E00E43CF0 /* FHXDebugKit.swift */,
+				889519942FED56B100E43CF0 /* FHXNetworkInterceptor.swift */,
+				889519982FED586F00E43CF0 /* URLSessionConfiguration+Swizzle.swift */,
+				8895199A2FED5A5800E43CF0 /* FHXURLProtocol.swift */,
+				8890CE572FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift */,
+				8890CE582FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift */,
+				8890CE592FEF5D1E003D76E4 /* URLSessionTask+FHX.swift */,
+			);
+			path = NetworkInterceptor;
 			sourceTree = "<group>";
 		};
 		889FA6C92FDEDD51000F8865 /* Log */ = {
@@ -315,17 +350,26 @@
 				88E8A1DB2FE78CFF00E35F61 /* ToolHistoryPopupView.swift in Sources */,
 				88E8A1DC2FE78CFF00E35F61 /* ToolCurrentPopupView.swift in Sources */,
 				88E8A1DD2FE78CFF00E35F61 /* FHXToolMenuView.swift in Sources */,
+				8890CE5A2FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift in Sources */,
+				8890CE5B2FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift in Sources */,
+				8890CE5C2FEF5D1E003D76E4 /* URLSessionTask+FHX.swift in Sources */,
+				889519912FED555700E43CF0 /* FHXNetworkStore.swift in Sources */,
 				88E8A1DE2FE78CFF00E35F61 /* FHXToolSubMenuCell.swift in Sources */,
 				88E8A1DF2FE78CFF00E35F61 /* FHXToolMenuCell.swift in Sources */,
+				889519952FED56B100E43CF0 /* FHXNetworkInterceptor.swift in Sources */,
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
 				8894E5A12FE2C62C00382BB0 /* FHXToolHistoryView.swift in Sources */,
 				2D6B1D812FDBA59C00B9B9B2 /* FHXNavigationView.swift in Sources */,
+				889519992FED586F00E43CF0 /* URLSessionConfiguration+Swizzle.swift in Sources */,
 				889FA6D12FDEE0AC000F8865 /* FHXToolCurrentView.swift in Sources */,
+				8895199B2FED5A5800E43CF0 /* FHXURLProtocol.swift in Sources */,
 				889FA6C62FDD76B6000F8865 /* FHXExportView.swift in Sources */,
 				88E8A1E12FE79EC900E35F61 /* FHXSearchView.swift in Sources */,
 				88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */,
+				889519932FED569E00E43CF0 /* FHXDebugKit.swift in Sources */,
 				2D52BB122FD96193003E34FA /* SPMacro.swift in Sources */,
 				2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */,
+				8895198F2FED553B00E43CF0 /* FHXNetworkLogModel.swift in Sources */,
 				3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */,
 				2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */,
 				2D6B1FD02FDBF97C00B9B9B2 /* Documentation.swift in Sources */,
