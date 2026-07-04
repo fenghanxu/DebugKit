@@ -1,9 +1,11 @@
-//
-//  URLSessionTask+FHX.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/25.
-//
+
+/**
+ 这个方法整体在干什么？
+ 
+ 记录时间 + 打印请求信息 + 再放行请求
+ 
+ 打印：请求方式 + URL
+ */
 
 import Foundation
 import ObjectiveC.runtime
@@ -15,12 +17,7 @@ extension URLSessionTask {
     @objc
     func fhx_resume() {
 
-        objc_setAssociatedObject(
-            self,
-            &FHXStartTimeKey,
-            Date(),
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+        objc_setAssociatedObject(self, &FHXStartTimeKey, Date(), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
         print("""
         
@@ -35,11 +32,7 @@ extension URLSessionTask {
         fhx_resume()
     }
 
-    var fhx_startTime: Date? {
-
-        objc_getAssociatedObject(
-            self,
-            &FHXStartTimeKey
-        ) as? Date
-    }
+    // 好像没有用过
+    var fhx_startTime: Date? { objc_getAssociatedObject( self, &FHXStartTimeKey) as? Date }
+    
 }

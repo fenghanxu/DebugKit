@@ -163,14 +163,48 @@ class ViewController: UIViewController {
         
         FHXDebugKit.start()
         
-        requestCityStations()
+        requestCityStation_a()
+//        requestCityStation_b()
+    }
+    
+    func requestCityStation_a() {
 
+        guard let url = URL(string: "https://eetest.cpolar.cn/api/cityStation/getAllCitiesWithStations") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjAsIm9yZyI6MCwicm9sZSI6IiIsIlVzZXJuYW1lIjoi5byg5piOIiwiUmVhbE5hbWUiOiIiLCJBdXRob3JpdHlJZCI6MCwiYXV0aG9yaXR5SWRzIjpbNSw4XSwiSUQiOjYwLCJVVUlEIjoiYzUzM2NkZWEtYzg5ZS00MjFmLThmNTItMWQyNTI4YzM3YjMwIiwiQnVmZmVyVGltZSI6NjA0ODAwLCJpc3MiOiJhaXJrb29uIiwiYXVkIjpbIkdWQSJdLCJleHAiOjE3ODU2MzU0OTEsIm5iZiI6MTc4MzA0MzQ5MX0.F-eMmVLuw4Ww3s9KwqckpGA5UsD66s5M1EgUSxb9aTc"
+
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(token, forHTTPHeaderField: "Authorization")
+
+        // 自己创建 Configuration
+        let config = URLSessionConfiguration.default
+
+        print("Before =", config.protocolClasses ?? [])
+
+        // 直接手动注入
+        config.protocolClasses = [FHXURLProtocol.self] + (config.protocolClasses ?? [])
+
+        print("After =", config.protocolClasses ?? [])
+
+        let session = URLSession(configuration: config)
+
+        session.dataTask(with: request) { data, response, error in
+
+            print("业务收到回调")
+
+        }.resume()
     }
     
 
-    func requestCityStations() {
+    func requestCityStation_b() {
         
-        guard let url = URL(string: "https://cellsys.cn:3202/api/cityStation/getAllCitiesWithStations") else {
+        guard let url = URL(string: "https://eetest.cpolar.cn/api/cityStation/getAllCitiesWithStations") else {
             return
         }
         
@@ -178,7 +212,7 @@ class ViewController: UIViewController {
         request.httpMethod = "POST"
         
         // Header
-        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwib3JnIjowLCJyb2xlIjoiIiwiVXNlcm5hbWUiOiJteWVlYnVzX3p3MDEiLCJSZWFsTmFtZSI6IiIsIkF1dGhvcml0eUlkIjowLCJhdXRob3JpdHlJZHMiOls1XSwiSUQiOjI1LCJVVUlEIjoiMmQyODA2MjUtY2M2My00MDc2LWFkZWYtZDIyM2VhOTRiYTFjIiwiQnVmZmVyVGltZSI6NjA0ODAwLCJpc3MiOiJhaXJrb29uIiwiYXVkIjpbIkdWQSJdLCJleHAiOjE3ODQyNTk1MTUsIm5iZiI6MTc4MTY2NzUxNX0.x1yHlR4C4dFIQCGFZRb9Vm0HgZklpefBwmUSN7mi9h0"
+        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjAsIm9yZyI6MCwicm9sZSI6IiIsIlVzZXJuYW1lIjoi5byg5piOIiwiUmVhbE5hbWUiOiIiLCJBdXRob3JpdHlJZCI6MCwiYXV0aG9yaXR5SWRzIjpbNSw4XSwiSUQiOjYwLCJVVUlEIjoiYzUzM2NkZWEtYzg5ZS00MjFmLThmNTItMWQyNTI4YzM3YjMwIiwiQnVmZmVyVGltZSI6NjA0ODAwLCJpc3MiOiJhaXJrb29uIiwiYXVkIjpbIkdWQSJdLCJleHAiOjE3ODU2MzU0OTEsIm5iZiI6MTc4MzA0MzQ5MX0.F-eMmVLuw4Ww3s9KwqckpGA5UsD66s5M1EgUSxb9aTc"
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -222,6 +256,8 @@ class ViewController: UIViewController {
             
         }.resume()
     }
+    
+    
     
 }
 

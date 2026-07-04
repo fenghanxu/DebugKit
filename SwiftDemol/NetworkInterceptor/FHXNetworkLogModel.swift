@@ -1,10 +1,3 @@
-//
-//  FHXNetworkLogModel.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/25.
-//
-
 import Foundation
 
 struct FHXNetworkLogModel: Codable {

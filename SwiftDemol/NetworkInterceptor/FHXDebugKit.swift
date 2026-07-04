@@ -1,10 +1,5 @@
-//
-//  FHXDebugKit.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/25.
-//
 
+/// 启动入口   初始化网络拦截器
 import Foundation
 
 public final class FHXDebugKit {

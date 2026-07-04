@@ -1,21 +1,38 @@
-//
-//  FHXURLProtocol.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/6/25.
-//
+
+// 协议级别(Network Layer)拦截
+
+/**
+当前的FHXURLProtocol本使用方案是： URLProtocol + URLSession.shared + completion(相当于block回调)
+ 
+ 还有另一种方案： URLProtocol + URLSession.shared +  Delegate(流式返回数据)
+ 
+ 目前的架构：
+ App请求
+    ↓
+ URLProtocol（拦截）
+    ↓
+ URLSession.shared.dataTask（真实请求）
+    ↓
+ completion block（拿到 response）
+    ↓
+ client?.urlProtocol(...)（回传系统）
+    ↓
+ saveNetworkLog（记录）
+ 
+ */
 
 import Foundation
 
 final class FHXURLProtocol: URLProtocol {
 
-    private var session: URLSession?
-
-    private var sessionTask: URLSessionDataTask?
-
-    private var responseData = Data()
-
     private var startTime: Date?
+    
+    override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
+
+        print("init URLProtocol")
+
+        super.init(request: request, cachedResponse: cachedResponse, client: client)
+    }
 
 }
 
@@ -23,280 +40,133 @@ final class FHXURLProtocol: URLProtocol {
 
 extension FHXURLProtocol {
 
-    override class func canInit(
-        with request: URLRequest
-    ) -> Bool {
+    override class func canInit(with request: URLRequest) -> Bool {
 
-        guard request.url != nil else {
+        guard let url = request.url else { return false }
+
+        // ⚠️ 关键：避免系统内部协议抢占
+        if url.scheme != "http" && url.scheme != "https" {
             return false
         }
 
-        // 防止死循环
-        if URLProtocol.property(
-            forKey: "FHXHandled",
-            in: request
-        ) != nil {
-
+        if URLProtocol.property(forKey: "FHXHandled", in: request) != nil {
             return false
         }
 
         return true
     }
     
-    override class func canInit(
-        with task: URLSessionTask
-    ) -> Bool {
-
-        return false
+    override class func canInit(with task: URLSessionTask) -> Bool {
+        guard let request = task.currentRequest else { return false }
+        return canInit(with: request)
     }
+    
+    
 
-    override class func canonicalRequest(
-        for request: URLRequest
-    ) -> URLRequest {
-
-        request
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        print("canonicalRequest")
+        return request
     }
 
     override func startLoading() {
 
+        print("🔥 startLoading")
+
         startTime = Date()
 
-        guard let mutableRequest =
-                (request as NSURLRequest)
-                .mutableCopy()
-                as? NSMutableURLRequest
-        else {
+        guard let mutableRequest = (request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else {
             return
         }
 
-        URLProtocol.setProperty(
-            true,
-            forKey: "FHXHandled",
-            in: mutableRequest
-        )
+        URLProtocol.setProperty(true, forKey: "FHXHandled", in: mutableRequest)
 
-        let config =
-        URLSessionConfiguration.ephemeral
+        let task = URLSession.shared.dataTask(with: mutableRequest as URLRequest) { [weak self] data, response, error in
 
-        config.protocolClasses = []
+            guard let self else { return }
 
-        session =
-        URLSession(
-            configuration: config,
-            delegate: self,
-            delegateQueue: nil
-        )
-
-        sessionTask =
-        session?.dataTask(
-            with: mutableRequest as URLRequest
-        )
-
-        sessionTask?.resume()
-    }
-
-    override func stopLoading() {
-
-        sessionTask?.cancel()
-
-        session?.invalidateAndCancel()
-
-        session = nil
-    }
-}
-
-// MARK: - URLSessionDataDelegate
-
-extension FHXURLProtocol: URLSessionDataDelegate, URLSessionTaskDelegate {
-
-    func urlSession(
-        _ session: URLSession,
-        dataTask: URLSessionDataTask,
-        didReceive response: URLResponse,
-        completionHandler: @escaping (URLSession.ResponseDisposition) -> Void
-    ) {
-
-        client?.urlProtocol(
-            self,
-            didReceive: response,
-            cacheStoragePolicy: .notAllowed
-        )
-
-        completionHandler(
-            .allow
-        )
-    }
-
-    func urlSession(
-        _ session: URLSession,
-        dataTask: URLSessionDataTask,
-        didReceive data: Data
-    ) {
-
-        responseData.append(
-            data
-        )
-
-        client?.urlProtocol(
-            self,
-            didLoad: data
-        )
-    }
-
-    func urlSession(
-        _ session: URLSession,
-        task: URLSessionTask,
-        didCompleteWithError error: Error?
-    ) {
-
-        defer {
-
-            if let error = error {
-
-                client?.urlProtocol(
-                    self,
-                    didFailWithError: error
-                )
-
-            } else {
-
-                client?.urlProtocolDidFinishLoading(
-                    self
-                )
+            if let response {
+                self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
             }
+
+            if let data {
+                self.client?.urlProtocol(self, didLoad: data)
+            }
+
+            if let error {
+                self.client?.urlProtocol(self, didFailWithError: error)
+            } else {
+                self.client?.urlProtocolDidFinishLoading(self)
+            }
+
+            self.saveNetworkLog(
+                request: self.request,
+                response: response,
+                data: data,
+                error: error
+            )
         }
 
-        saveNetworkLog(
-            task: task,
-            error: error
-        )
+        task.resume()
     }
-}
 
-private extension FHXURLProtocol {
+    override func stopLoading() { }
+    
+    private func saveNetworkLog(request: URLRequest,
+                                response: URLResponse?,
+                                data: Data?,
+                                error: Error?) {
 
-    func saveNetworkLog(
-        task: URLSessionTask,
-        error: Error?
-    ) {
+        let url = request.url?.absoluteString ?? ""
+        let method = request.httpMethod ?? "GET"
+        let headers = request.allHTTPHeaderFields ?? [:]
 
-        let request =
-        task.originalRequest
+        let responseString = String(data: data ?? Data(), encoding: .utf8) ?? ""
 
-        let url =
-        request?.url?.absoluteString
-        ?? ""
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+        let cost = Date().timeIntervalSince(startTime ?? Date())
 
-        let method =
-        request?.httpMethod
-        ?? "GET"
-
-        let headers =
-        request?.allHTTPHeaderFields
-        ?? [:]
-
-//        var parameter = ""
-
-//        if let body =
-//            request?.httpBody {
-//
-//            parameter =
-//            String(
-//                data: body,
-//                encoding: .utf8
-//            ) ?? ""
-//        }
-        
-        var parameter = ""
-
-        if let body = request?.httpBody {
-
-            parameter =
-            String(
-                data: body,
-                encoding: .utf8
-            ) ?? ""
-        }
-        else if let url = request?.url,
-                let query = url.query {
-
-            parameter = query
-        }
-
-        var responseString =
-        String(
-            data: responseData,
-            encoding: .utf8
-        ) ?? ""
-
-        if responseString.count > 5000 {
-
-            responseString =
-            String(
-                responseString.prefix(5000)
-            )
-        }
-
-        let statusCode =
-        (task.response as? HTTPURLResponse)?
-            .statusCode ?? 0
-
-        let cost =
-        Date()
-            .timeIntervalSince(
-                startTime ?? Date()
-            )
-
-        let model =
-        FHXNetworkLogModel(
+        let model = FHXNetworkLogModel(
             url: url,
             method: method,
             headers: headers,
-            parameters: parameter,
+            parameters: request.httpBody.flatMap {
+                String(data: $0, encoding: .utf8)
+            } ?? "",
             response: responseString,
             statusCode: statusCode,
             costTime: cost,
             errorMessage: error?.localizedDescription
         )
 
-        FHXNetworkStore
-            .shared
-            .append(model)
+        FHXNetworkStore.shared.append(model)
 
-        printNetworkLog(
-            model
-        )
+        printNetworkLog(model)
     }
 }
 
 private extension FHXURLProtocol {
 
-    func printNetworkLog(
-        _ model: FHXNetworkLogModel
-    ) {
+    func printNetworkLog(_ model: FHXNetworkLogModel) {
 
         print("""
 
         =========================
+        
+        URLProtocal打印数据：
 
         \(model.method)
 
         \(model.url)
 
-        Header
-        \(model.headers)
+        Header \(model.headers)
 
-        Parameter
-        \(model.parameters)
+        Parameter \(model.parameters)
 
-        Response
-        \(model.response)
+        Response \(model.response)
 
-        StatusCode
-        \(model.statusCode)
+        StatusCode \(model.statusCode)
 
-        CostTime
-        \(Int(model.costTime * 1000))ms
+        CostTime \(Int(model.costTime * 1000))ms
 
         =========================
 
