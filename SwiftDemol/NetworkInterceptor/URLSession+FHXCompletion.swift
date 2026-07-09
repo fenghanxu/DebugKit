@@ -75,47 +75,47 @@ extension URLSession {
             /// 读取请求参数
             let parameter = request.httpBody.flatMap {String( data: $0, encoding: .utf8)} ?? ""
 
-            /// 构造日志 Model
-            let model = FHXNetworkLogModel(
-                url: request.url?.absoluteString ?? "",
-                method: request.httpMethod ?? "GET",
-                headers: request.allHTTPHeaderFields ?? [:],
-                parameters: parameter,
-                response: responseString,
-                statusCode: statusCode,
-                costTime: cost,
-                errorMessage: error?.localizedDescription
-            )
-
-            /// 保存日志
-            FHXNetworkStore.shared.append(model)
+//            /// 构造日志 Model
+//            let model = FHXNetworkLogModel(
+//                url: request.url?.absoluteString ?? "",
+//                method: request.httpMethod ?? "GET",
+//                headers: request.allHTTPHeaderFields ?? [:],
+//                parameters: parameter,
+//                response: responseString,
+//                statusCode: statusCode,
+//                costTime: cost,
+//                errorMessage: error?.localizedDescription
+//            )
+//
+//            /// 保存日志
+//            FHXNetworkStore.shared.append(model)
             
-            FHXLog.shared.log("\(model.method)  \(model.url) Header \(model.headers) Parameter \(model.parameters) Response \(responseString.prefix(500)) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms", .network)
+            FHXLog.shared.log("\(request.httpMethod ?? "GET")  \(request.url?.absoluteString ?? "",) Header \(request.allHTTPHeaderFields ?? [:]) Parameter \(parameter) Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms errorMessage \(String(describing: error?.localizedDescription))", .network)
 
-            /// 打印日志
-            print("""
-
-            =========================
-            
-            方法的替换打印数据：
-
-            \(model.method)
-
-            \(model.url)
-
-            Header \(model.headers)
-
-            Parameter \(model.parameters)
-
-            Response \(responseString.prefix(500))
-
-            StatusCode \(statusCode)
-
-            CostTime \(Int(cost * 1000))ms
-
-            =========================
-
-            """)
+//            /// 打印日志
+//            print("""
+//
+//            =========================
+//            
+//            方法的替换打印数据：
+//
+//            \(model.method)
+//
+//            \(model.url)
+//
+//            Header \(model.headers)
+//
+//            Parameter \(model.parameters)
+//
+//            Response \(responseString.prefix(500))
+//
+//            StatusCode \(statusCode)
+//
+//            CostTime \(Int(cost * 1000))ms
+//
+//            =========================
+//
+//            """)
 
             /// 干完自己想干的事情之后，让接口返回数据
             completionHandler(data, response, error)

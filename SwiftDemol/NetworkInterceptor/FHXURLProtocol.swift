@@ -124,55 +124,57 @@ extension FHXURLProtocol {
 
         let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
         let cost = Date().timeIntervalSince(startTime ?? Date())
+        
+        FHXLog.shared.log("\(method)  \(url) Header \(headers) Parameter \(request.httpBody.flatMap { String(data: $0, encoding: .utf8) } ?? "") Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms  errorMessage \(String(describing: error?.localizedDescription))", .network)
 
-        let model = FHXNetworkLogModel(
-            url: url,
-            method: method,
-            headers: headers,
-            parameters: request.httpBody.flatMap {
-                String(data: $0, encoding: .utf8)
-            } ?? "",
-            response: responseString,
-            statusCode: statusCode,
-            costTime: cost,
-            errorMessage: error?.localizedDescription
-        )
+//        let model = FHXNetworkLogModel(
+//            url: url,
+//            method: method,
+//            headers: headers,
+//            parameters: request.httpBody.flatMap {
+//                String(data: $0, encoding: .utf8)
+//            } ?? "",
+//            response: responseString,
+//            statusCode: statusCode,
+//            costTime: cost,
+//            errorMessage: error?.localizedDescription
+//        )
+//
+//        FHXNetworkStore.shared.append(model)
 
-        FHXNetworkStore.shared.append(model)
-
-        printNetworkLog(model)
+//        printNetworkLog(model)
     }
 }
 
-private extension FHXURLProtocol {
-
-    func printNetworkLog(_ model: FHXNetworkLogModel) {
-        
-        FHXLog.shared.log("\(model.method)  \(model.url) Header \(model.headers) Parameter \(model.parameters) Response \(model.response) StatusCode \(model.statusCode) CostTime \(Int(model.costTime * 1000))ms", .network)
-
-        print("""
-
-        =========================
-        
-        URLProtocal打印数据：
-
-        \(model.method)
-
-        \(model.url)
-
-        Header \(model.headers)
-
-        Parameter \(model.parameters)
-
-        Response \(model.response)
-
-        StatusCode \(model.statusCode)
-
-        CostTime \(Int(model.costTime * 1000))ms
-
-        =========================
-
-        """)
-
-    }
-}
+//private extension FHXURLProtocol {
+//
+//    func printNetworkLog(_ model: FHXNetworkLogModel) {
+//        
+//        FHXLog.shared.log("\(model.method)  \(model.url) Header \(model.headers) Parameter \(model.parameters) Response \(model.response) StatusCode \(model.statusCode) CostTime \(Int(model.costTime * 1000))ms", .network)
+//
+//        print("""
+//
+//        =========================
+//        
+//        URLProtocal打印数据：
+//
+//        \(model.method)
+//
+//        \(model.url)
+//
+//        Header \(model.headers)
+//
+//        Parameter \(model.parameters)
+//
+//        Response \(model.response)
+//
+//        StatusCode \(model.statusCode)
+//
+//        CostTime \(Int(model.costTime * 1000))ms
+//
+//        =========================
+//
+//        """)
+//
+//    }
+//}
