@@ -147,6 +147,8 @@ extension FHXURLProtocol {
 private extension FHXURLProtocol {
 
     func printNetworkLog(_ model: FHXNetworkLogModel) {
+        
+        FHXLog.shared.log("\(model.method)  \(model.url) Header \(model.headers) Parameter \(model.parameters) Response \(model.response) StatusCode \(model.statusCode) CostTime \(Int(model.costTime * 1000))ms", .network)
 
         print("""
 

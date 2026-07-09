@@ -89,6 +89,8 @@ extension URLSession {
 
             /// 保存日志
             FHXNetworkStore.shared.append(model)
+            
+            FHXLog.shared.log("\(model.method)  \(model.url) Header \(model.headers) Parameter \(model.parameters) Response \(responseString.prefix(500)) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms", .network)
 
             /// 打印日志
             print("""

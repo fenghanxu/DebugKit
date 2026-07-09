@@ -1,5 +1,7 @@
 
 
+// 该文件只会在FHXLog用，FHXLog提供给外面用
+
 import Foundation
 
 final class FHXLogStore {
