@@ -125,7 +125,29 @@ extension FHXURLProtocol {
         let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
         let cost = Date().timeIntervalSince(startTime ?? Date())
         
-        FHXLog.shared.log("\(method)  \(url) Header \(headers) Parameter \(request.httpBody.flatMap { String(data: $0, encoding: .utf8) } ?? "") Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms  errorMessage \(String(describing: error?.localizedDescription))", .network)
+        let log = """
+        Method      : \(method)
+        URL         : \(url)
+        StatusCode  : \(statusCode)
+        CostTime    : \(Int(cost * 1000)) ms
+        Headers
+        \(prettyJSON(headers))
+        
+        Parameters
+        \(prettyJSONString(request.httpBody.flatMap {
+            String(data: $0, encoding: .utf8)
+        }))
+        
+        Response
+        \(prettyJSONString(responseString))
+        
+        Error
+        \(error?.localizedDescription ?? "nil")
+        """
+
+        FHXLog.shared.log(log, .network)
+        
+//        FHXLog.shared.log("\(method)  \(url) Header \(headers) Parameter \(request.httpBody.flatMap { String(data: $0, encoding: .utf8) } ?? "") Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms  errorMessage \(String(describing: error?.localizedDescription))", .network)
 
 //        let model = FHXNetworkLogModel(
 //            url: url,

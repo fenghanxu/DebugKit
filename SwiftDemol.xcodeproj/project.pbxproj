@@ -19,6 +19,7 @@
 		3F795DD8284F408D00D585B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD7284F408D00D585B4 /* Assets.xcassets */; };
 		3F795DDB284F408D00D585B4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F795DD9284F408D00D585B4 /* LaunchScreen.storyboard */; };
 		49AE62EC9825619C4DA5B8DD /* Pods_SwiftDemol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */; };
+		8878B49C2FFFE304005C6907 /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8878B49B2FFFE304005C6907 /* Format.swift */; };
 		8890CE5A2FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890CE572FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift */; };
 		8890CE5B2FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890CE582FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift */; };
 		8890CE5C2FEF5D1E003D76E4 /* URLSessionTask+FHX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890CE592FEF5D1E003D76E4 /* URLSessionTask+FHX.swift */; };
@@ -58,6 +59,7 @@
 		3F795DD7284F408D00D585B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F795DDA284F408D00D585B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3F795DDC284F408D00D585B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8878B49B2FFFE304005C6907 /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
 		8890CE572FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXURLSessionSwizzle.swift; sourceTree = "<group>"; };
 		8890CE582FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+FHXCompletion.swift"; sourceTree = "<group>"; };
 		8890CE592FEF5D1E003D76E4 /* URLSessionTask+FHX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionTask+FHX.swift"; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				2D7DA8F82FD12A6700E83F11 /* FHXLogStore.swift */,
 				88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */,
 				889FA6C52FDD76B6000F8865 /* FHXExportView.swift */,
+				8878B49B2FFFE304005C6907 /* Format.swift */,
 				8895198D2FED551F00E43CF0 /* NetworkInterceptor */,
 				88E8A1D92FE78CFF00E35F61 /* PopupView */,
 				889FA6C92FDEDD51000F8865 /* Log */,
@@ -371,6 +374,7 @@
 				2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */,
 				8895198F2FED553B00E43CF0 /* FHXNetworkLogModel.swift in Sources */,
 				3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */,
+				8878B49C2FFFE304005C6907 /* Format.swift in Sources */,
 				2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */,
 				2D6B1FD02FDBF97C00B9B9B2 /* Documentation.swift in Sources */,
 			);

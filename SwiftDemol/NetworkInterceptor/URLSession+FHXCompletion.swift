@@ -74,6 +74,10 @@ extension URLSession {
 
             /// 读取请求参数
             let parameter = request.httpBody.flatMap {String( data: $0, encoding: .utf8)} ?? ""
+            
+            
+
+            
 
 //            /// 构造日志 Model
 //            let model = FHXNetworkLogModel(
@@ -90,7 +94,7 @@ extension URLSession {
 //            /// 保存日志
 //            FHXNetworkStore.shared.append(model)
             
-            FHXLog.shared.log("\(request.httpMethod ?? "GET")  \(request.url?.absoluteString ?? "",) Header \(request.allHTTPHeaderFields ?? [:]) Parameter \(parameter) Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms errorMessage \(String(describing: error?.localizedDescription))", .network)
+//            FHXLog.shared.log("\(request.httpMethod ?? "GET")  \(request.url?.absoluteString ?? "",) Header \(request.allHTTPHeaderFields ?? [:]) Parameter \(parameter) Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms errorMessage \(String(describing: error?.localizedDescription))", .network)
 
 //            /// 打印日志
 //            print("""
