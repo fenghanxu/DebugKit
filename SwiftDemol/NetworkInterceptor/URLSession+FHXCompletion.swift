@@ -76,50 +76,53 @@ extension URLSession {
             let parameter = request.httpBody.flatMap {String( data: $0, encoding: .utf8)} ?? ""
             
             
-
+            let log = """
+            Method      : \(request.httpMethod ?? "GET")
+            URL         : \(request.url?.absoluteString ?? "")
+            StatusCode  : \(statusCode)
+            CostTime    : \(Int(cost * 1000)) ms
+            Headers
+            \(prettyJSON(request.allHTTPHeaderFields ?? [:]))
             
-
-//            /// 构造日志 Model
-//            let model = FHXNetworkLogModel(
-//                url: request.url?.absoluteString ?? "",
-//                method: request.httpMethod ?? "GET",
-//                headers: request.allHTTPHeaderFields ?? [:],
-//                parameters: parameter,
-//                response: responseString,
-//                statusCode: statusCode,
-//                costTime: cost,
-//                errorMessage: error?.localizedDescription
-//            )
-//
-//            /// 保存日志
-//            FHXNetworkStore.shared.append(model)
+            Parameters
+            \(prettyJSONString(parameter))
             
-//            FHXLog.shared.log("\(request.httpMethod ?? "GET")  \(request.url?.absoluteString ?? "",) Header \(request.allHTTPHeaderFields ?? [:]) Parameter \(parameter) Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms errorMessage \(String(describing: error?.localizedDescription))", .network)
+            Response
+            \(prettyJSONString(responseString))
+            
+            Error
+            \(error?.localizedDescription ?? "nil")
+            """
 
-//            /// 打印日志
-//            print("""
-//
-//            =========================
-//            
-//            方法的替换打印数据：
-//
-//            \(model.method)
-//
-//            \(model.url)
-//
-//            Header \(model.headers)
-//
-//            Parameter \(model.parameters)
-//
-//            Response \(responseString.prefix(500))
-//
-//            StatusCode \(statusCode)
-//
-//            CostTime \(Int(cost * 1000))ms
-//
-//            =========================
-//
-//            """)
+            FHXLog.shared.log(log, .network)
+
+            /// 打印日志
+            print("""
+
+            =========================
+            
+            方法的替换打印数据：
+
+            Method \(request.httpMethod ?? "GET")
+
+            URL \(request.url?.absoluteString ?? "")
+
+            Header \(prettyJSON(request.allHTTPHeaderFields ?? [:]))
+
+            Parameter \(prettyJSONString(parameter))
+
+            Response \(prettyJSONString(responseString))
+
+            StatusCode \(statusCode)
+
+            CostTime \(Int(cost * 1000))ms
+            
+            Error
+            \(error?.localizedDescription ?? "nil")
+
+            =========================
+
+            """)
 
             /// 干完自己想干的事情之后，让接口返回数据
             completionHandler(data, response, error)

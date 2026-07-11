@@ -12,6 +12,8 @@ class ViewController: UIViewController {
         return imageView
     }()
     
+    private var logTimer: Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -144,10 +146,14 @@ class ViewController: UIViewController {
             }
         }
         
-        FHXDebugKit.start()
+//        startAddMessage()
         
-        requestCityStation_a()
-        requestCityStation_b()
+
+        
+//        FHXDebugKit.start()
+//        
+//        requestCityStation_a()
+//        requestCityStation_b()
     }
     
     func requestCityStation_a() {
@@ -239,6 +245,30 @@ class ViewController: UIViewController {
             
         }.resume()
     }
+    
+    func startAddMessage() {
+        logTimer?.invalidate()
+
+        logTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+
+            let json = """
+            {
+                "success": true,
+                "message": "處理成功",
+                "code": 0
+            }
+            """
+
+            FHXLog.shared.log(json, .debug)
+        }
+    }
+
+    func stopAddMessage() {
+        logTimer?.invalidate()
+        logTimer = nil
+    }
+
+
     
     
     

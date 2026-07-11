@@ -1,6 +1,6 @@
 
 
-import Foundation
+import UIKit
 
 // 日志等级：
 enum FHXLogType: Int, Codable {
@@ -17,12 +17,18 @@ struct FHXLogModel: Codable {
 
     /// 日志内容
     let message: String
+    
+    /// 日志内容(富文本)
+    let messageAttributed: NSAttributedString
 
     /// 日志等级
     let level: FHXLogType
 
-    /// 时间
+    /// 时间(不用，用timeString代替)
     let time: Date
+    
+    /// 时间字符串
+    let timeString: String
 
     /// 文件
     let file: String
@@ -40,7 +46,8 @@ struct FHXLogModel: Codable {
         time: Date,
         file: String,
         function: String,
-        line: Int
+        line: Int,
+        messageAttributed:NSAttributedString
     ) {
         self.id = id
         self.message = message
@@ -49,7 +56,46 @@ struct FHXLogModel: Codable {
         self.file = file
         self.function = function
         self.line = line
+        self.timeString = Self.formatter.string(from: time)
+        self.messageAttributed = messageAttributed
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        message = try container.decode(String.self, forKey: .message)
+        level = try container.decode(FHXLogType.self, forKey: .level)
+        time = try container.decode(Date.self, forKey: .time)
+        timeString = try container.decode(String.self, forKey: .timeString)
+        file = try container.decode(String.self, forKey: .file)
+        function = try container.decode(String.self, forKey: .function)
+        line = try container.decode(Int.self, forKey: .line)
+        
+        // 自己补一个默认值
+        messageAttributed = NSAttributedString(string: message)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case message
+        case level
+        case time
+        case timeString
+        case file
+        case function
+        case line
+    }
+    
+    /// DateFormatter（全局只创建一次）
+    private static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .current
+        return formatter
+    }()
+    
 }
 
 class FHXLog {
@@ -90,6 +136,21 @@ class FHXLog {
             line: line
         )
     }
+    
+    // 初始化富文本 paragraphStyle 目的不用每次重复创建
+    private static let paragraphStyle: NSMutableParagraphStyle = {
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 8
+        return style
+
+    }()
+
+    // 初始化富文本 paragraphStyle 目的不用每次重复创建
+    private static let normalAttributes: [NSAttributedString.Key: Any] = [
+        .paragraphStyle: paragraphStyle,
+        .font: UIFont.systemFont(ofSize: 14),
+        .foregroundColor: UIColor.black
+    ]
 
 }
 
@@ -315,13 +376,19 @@ private extension FHXLog {
             .deletingPathExtension()
             .lastPathComponent
 
+        let attributed = NSAttributedString(
+            string: message,
+            attributes: Self.normalAttributes
+        )
+
         let model = FHXLogModel(
             message: message,
             level: level,
             time: Date(),
             file: fileName,
             function: function,
-            line: line
+            line: line,
+            messageAttributed: attributed
         )
 
         // 存储

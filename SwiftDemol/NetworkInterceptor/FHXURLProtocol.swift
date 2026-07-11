@@ -147,6 +147,36 @@ extension FHXURLProtocol {
 
         FHXLog.shared.log(log, .network)
         
+        print("""
+
+        =========================
+
+        URLProtocal打印数据：
+
+        Method \(method)
+
+        URL \(url)
+
+        Header \(prettyJSON(headers))
+
+        Parameter \(prettyJSONString(request.httpBody.flatMap {
+            String(data: $0, encoding: .utf8)
+        }))
+
+        Response \(prettyJSONString(responseString))
+
+        StatusCode \(statusCode)
+
+        CostTime \(Int(cost * 1000))ms
+
+        =========================
+
+        """)
+        
+        
+        
+        
+        
 //        FHXLog.shared.log("\(method)  \(url) Header \(headers) Parameter \(request.httpBody.flatMap { String(data: $0, encoding: .utf8) } ?? "") Response \(responseString) StatusCode \(statusCode) CostTime \(Int(cost * 1000))ms  errorMessage \(String(describing: error?.localizedDescription))", .network)
 
 //        let model = FHXNetworkLogModel(
