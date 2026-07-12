@@ -150,10 +150,10 @@ class ViewController: UIViewController {
         
 
         
-//        FHXDebugKit.start()
-//        
-//        requestCityStation_a()
-//        requestCityStation_b()
+        FHXDebugKit.start()
+        
+        requestCityStation_a()
+        requestCityStation_b()
     }
     
     func requestCityStation_a() {

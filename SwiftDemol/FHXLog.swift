@@ -8,36 +8,92 @@ enum FHXLogType: Int, Codable {
     case network   // 网络
     case error     // 错误
     case crash     // 崩溃
+    
+    var color: UIColor {
+        switch self {
+        case .debug:
+            return Self.debugColor
+        case .network:
+            return Self.networkColor
+        case .error:
+            return Self.errorColor
+        case .crash:
+            return Self.crashColor
+        }
+    }
+
+
+    private static let debugColor = UIColor(
+        red: 0,
+        green: 211 / 255,
+        blue: 221 / 255,
+        alpha: 1
+    )
+
+    private static let networkColor = UIColor(
+        red: 0,
+        green: 170 / 255,
+        blue: 0,
+        alpha: 1
+    )
+
+    private static let errorColor = UIColor(
+        red: 255 / 255,
+        green: 204 / 255,
+        blue: 34 / 255,
+        alpha: 1
+    )
+
+    private static let crashColor = UIColor(
+        red: 255 / 255,
+        green: 51 / 255,
+        blue: 51 / 255,
+        alpha: 1
+    )
 }
 
 struct FHXLogModel: Codable {
 
     /// 唯一标识
     let id: String
+    
+    /// Cell高度
+    let cellHeight: CGFloat
+    
+    
 
-    /// 日志内容
+    /// (不用)日志内容
     let message: String
     
     /// 日志内容(富文本)
     let messageAttributed: NSAttributedString
+    
+    
 
-    /// 日志等级
-    let level: FHXLogType
-
-    /// 时间(不用，用timeString代替)
+    /// (不用)时间(不用，用timeString代替)
     let time: Date
     
     /// 时间字符串
     let timeString: String
 
-    /// 文件
+    
+
+    /// (不用)文件
     let file: String
 
-    /// 方法
+    /// (不用)方法
     let function: String
 
-    /// 行数
+    /// (不用)行数
     let line: Int
+    
+    /// 方法名
+    let methodString: String
+    
+   
+    
+    /// (不会用)日志等级
+    let level: FHXLogType
 
     init(
         id: String = UUID().uuidString,
@@ -47,7 +103,6 @@ struct FHXLogModel: Codable {
         file: String,
         function: String,
         line: Int,
-        messageAttributed:NSAttributedString
     ) {
         self.id = id
         self.message = message
@@ -57,7 +112,9 @@ struct FHXLogModel: Codable {
         self.function = function
         self.line = line
         self.timeString = Self.formatter.string(from: time)
-        self.messageAttributed = messageAttributed
+        self.messageAttributed = NSAttributedString(string: message,attributes: Self.normalAttributes)
+        self.cellHeight = Self.calculateCellHeight(message: self.messageAttributed)
+        self.methodString = "\(file)." + "\(function):" + "[\(line)] "
     }
     
     init(from decoder: Decoder) throws {
@@ -71,9 +128,24 @@ struct FHXLogModel: Codable {
         file = try container.decode(String.self, forKey: .file)
         function = try container.decode(String.self, forKey: .function)
         line = try container.decode(Int.self, forKey: .line)
-        
-        // 自己补一个默认值
-        messageAttributed = NSAttributedString(string: message)
+        cellHeight = try container.decode(CGFloat.self, forKey: .cellHeight)
+        methodString = try container.decode(String.self, forKey: .methodString)
+        messageAttributed = NSAttributedString(string: message, attributes: Self.normalAttributes)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(id, forKey: .id)
+        try container.encode(message, forKey: .message)
+        try container.encode(level, forKey: .level)
+        try container.encode(time, forKey: .time)
+        try container.encode(timeString, forKey: .timeString)
+        try container.encode(file, forKey: .file)
+        try container.encode(function, forKey: .function)
+        try container.encode(line, forKey: .line)
+        try container.encode(cellHeight, forKey: .cellHeight)
+        try container.encode(methodString, forKey: .methodString)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -85,7 +157,24 @@ struct FHXLogModel: Codable {
         case file
         case function
         case line
+        case cellHeight
+        case methodString
     }
+    
+    // 初始化富文本 paragraphStyle 目的不用每次重复创建
+    private static let paragraphStyle: NSMutableParagraphStyle = {
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 8
+        return style
+
+    }()
+    
+    // 初始化富文本 paragraphStyle 目的不用每次重复创建
+    private static let normalAttributes: [NSAttributedString.Key: Any] = [
+        .paragraphStyle: paragraphStyle,
+        .font: UIFont.systemFont(ofSize: 14),
+        .foregroundColor: UIColor.black
+    ]
     
     /// DateFormatter（全局只创建一次）
     private static let formatter: DateFormatter = {
@@ -95,6 +184,31 @@ struct FHXLogModel: Codable {
         formatter.timeZone = .current
         return formatter
     }()
+    
+    // 计算Cell的高度
+    private static func calculateCellHeight(message: NSAttributedString) -> CGFloat {
+
+        let width = UIScreen.main.bounds.width - 20
+
+        let rect = message.boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            context: nil
+        )
+
+        return
+            10 +      // top
+            22 +      // level
+            5 +       // 间距
+            20 +      // methodLabel
+            5 +       // 间距
+            ceil(rect.height) +
+            10 +      // bottom
+            1         // line
+    }
     
 }
 
@@ -136,21 +250,6 @@ class FHXLog {
             line: line
         )
     }
-    
-    // 初始化富文本 paragraphStyle 目的不用每次重复创建
-    private static let paragraphStyle: NSMutableParagraphStyle = {
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 8
-        return style
-
-    }()
-
-    // 初始化富文本 paragraphStyle 目的不用每次重复创建
-    private static let normalAttributes: [NSAttributedString.Key: Any] = [
-        .paragraphStyle: paragraphStyle,
-        .font: UIFont.systemFont(ofSize: 14),
-        .foregroundColor: UIColor.black
-    ]
 
 }
 
@@ -372,14 +471,7 @@ private extension FHXLog {
         // 开关
         guard isEnabled else { return }
 
-        let fileName = URL(fileURLWithPath: file)
-            .deletingPathExtension()
-            .lastPathComponent
-
-        let attributed = NSAttributedString(
-            string: message,
-            attributes: Self.normalAttributes
-        )
+        let fileName = URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent
 
         let model = FHXLogModel(
             message: message,
@@ -388,7 +480,6 @@ private extension FHXLog {
             file: fileName,
             function: function,
             line: line,
-            messageAttributed: attributed
         )
 
         // 存储

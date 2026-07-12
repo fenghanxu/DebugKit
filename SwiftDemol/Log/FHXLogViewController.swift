@@ -43,8 +43,9 @@ class FHXLogViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 1000.0
+//        tableView.rowHeight = UITableView.automaticDimension
+//        tableView.estimatedRowHeight = 1000.0
+        tableView.rowHeight = 80
         tableView.keyboardDismissMode = .onDrag
         tableView.register(FHXLogCell.self, forCellReuseIdentifier: FHXLogCell.identifier)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
@@ -66,8 +67,9 @@ class FHXLogViewController: UIViewController {
         tableView.showsHorizontalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 1000.0
-        tableView.keyboardDismissMode = .onDrag
+//        tableView.estimatedRowHeight = 1000.0
+//        tableView.keyboardDismissMode = .onDrag
+        tableView.rowHeight = 80
         tableView.register(FHXLogCell.self, forCellReuseIdentifier: FHXLogCell.identifier)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
@@ -446,6 +448,17 @@ extension FHXLogViewController {
 }
 
 extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch tableView.tag {
+        case 101:
+            return filterCurrentLogs[indexPath.row].cellHeight
+        case 102:
+            return filterHistoryLogs[indexPath.row].cellHeight
+        default:
+            return 0
+        }
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView.tag {
@@ -466,21 +479,13 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             
             cell.timeLabel.text = filterCurrentLogs[indexPath.row].timeString
             
-            if filterCurrentLogs[indexPath.row].level.rawValue == 0 {// debug
-                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-            } else if filterCurrentLogs[indexPath.row].level.rawValue == 1 {// network
-                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-            } else if filterCurrentLogs[indexPath.row].level.rawValue == 2 {// error
-                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
-            } else if filterCurrentLogs[indexPath.row].level.rawValue == 3 {// crash
-                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
-            }
+            cell.levelLabel.backgroundColor = filterCurrentLogs[indexPath.item].level.color
             
-            let messageString = "\(filterCurrentLogs[indexPath.row].file)." + "\(filterCurrentLogs[indexPath.row].function):" + "[\(filterCurrentLogs[indexPath.row].line)] "
+            let messageString = filterCurrentLogs[indexPath.row].methodString
             if messageString.range(of: searchCurrentTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
                 cell.methodNameLabel.attributedText = highlightText(text: messageString, keyword: searchCurrentTerm)
             } else {
-                cell.methodNameLabel.text = "\(filterCurrentLogs[indexPath.row].file)." + "\(filterCurrentLogs[indexPath.row].function):" + "[\(filterCurrentLogs[indexPath.row].line)] "
+                cell.methodNameLabel.text = filterCurrentLogs[indexPath.row].methodString
             }
             
             if searchCurrentTerm != String() && filterCurrentLogs[indexPath.row].message.range(of: searchCurrentTerm, options: .caseInsensitive) != nil {
@@ -494,22 +499,14 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             cell.levelLabel.text = "\(filterHistoryLogs[indexPath.row].level)"
             
             cell.timeLabel.text = filterHistoryLogs[indexPath.row].timeString
+            
+            cell.levelLabel.backgroundColor = filterHistoryLogs[indexPath.row].level.color
     
-            if filterHistoryLogs[indexPath.row].level.rawValue == 0 {// debug
-                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 211.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-            } else if filterHistoryLogs[indexPath.row].level.rawValue == 1 {// network
-                cell.levelLabel.backgroundColor = UIColor(red: 0.0/255.0, green: 170.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-            } else if filterHistoryLogs[indexPath.row].level.rawValue == 2 {// error
-                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 34.0/255.0, alpha: 1.0)
-            } else if filterHistoryLogs[indexPath.row].level.rawValue == 3 {// crash
-                cell.levelLabel.backgroundColor = UIColor(red: 255.0/255.0, green: 51.0/255.0, blue: 51.0/255.0, alpha: 1.0)
-            }
-    
-            let messageString = "\(filterHistoryLogs[indexPath.row].file)." + "\(filterHistoryLogs[indexPath.row].function):" + "[\(filterHistoryLogs[indexPath.row].line)] "
+            let messageString = filterCurrentLogs[indexPath.row].methodString
             if messageString.range(of: searchHistoryTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
                 cell.methodNameLabel.attributedText = highlightText(text: messageString, keyword: searchHistoryTerm)
             } else {
-                cell.methodNameLabel.text = "\(filterHistoryLogs[indexPath.row].file)." + "\(filterHistoryLogs[indexPath.row].function):" + "[\(filterHistoryLogs[indexPath.row].line)] "
+                cell.methodNameLabel.text = filterCurrentLogs[indexPath.row].methodString
             }
     
             if searchHistoryTerm != String() && filterHistoryLogs[indexPath.row].message.range(of: searchHistoryTerm, options: .caseInsensitive) != nil {
