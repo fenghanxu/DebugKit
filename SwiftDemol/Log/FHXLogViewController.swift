@@ -42,10 +42,8 @@ class FHXLogViewController: UIViewController {
         tableView.dataSource = self
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-//        tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 1000.0
-        tableView.rowHeight = 80
         tableView.keyboardDismissMode = .onDrag
         tableView.register(FHXLogCell.self, forCellReuseIdentifier: FHXLogCell.identifier)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
@@ -65,11 +63,9 @@ class FHXLogViewController: UIViewController {
         tableView.dataSource = self
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 1000.0
-//        tableView.keyboardDismissMode = .onDrag
-        tableView.rowHeight = 80
         tableView.register(FHXLogCell.self, forCellReuseIdentifier: FHXLogCell.identifier)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))

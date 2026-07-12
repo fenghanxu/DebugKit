@@ -41,7 +41,8 @@ class FHXLogCell: UITableViewCell {
     
     lazy var contentLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 6
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -103,6 +104,14 @@ class FHXLogCell: UITableViewCell {
             make.bottom.equalToSuperview().inset(10)
         }
         
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        CATransaction.commit()
     }
 
 }

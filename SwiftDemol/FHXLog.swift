@@ -161,6 +161,8 @@ struct FHXLogModel: Codable {
         case methodString
     }
     
+    private static let maxCellHeight: CGFloat = 200
+    
     // 初始化富文本 paragraphStyle 目的不用每次重复创建
     private static let paragraphStyle: NSMutableParagraphStyle = {
         let style = NSMutableParagraphStyle()
@@ -186,28 +188,33 @@ struct FHXLogModel: Codable {
     }()
     
     // 计算Cell的高度
-    private static func calculateCellHeight(message: NSAttributedString) -> CGFloat {
+    private static func calculateCellHeight(
+        message: NSAttributedString
+    ) -> CGFloat {
 
         let width = UIScreen.main.bounds.width - 20
 
         let rect = message.boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [
-                .usesLineFragmentOrigin,
-                .usesFontLeading
-            ],
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
             context: nil
         )
 
-        return
+        let contentHeight = ceil(rect.height)
+
+        let totalHeight =
             10 +      // top
             22 +      // level
-            5 +       // 间距
-            20 +      // methodLabel
-            5 +       // 间距
-            ceil(rect.height) +
+            5 +       // spacing
+            20 +      // method
+            5 +       // spacing
+            contentHeight +
             10 +      // bottom
-            1         // line
+            1
+
+
+        // 最大限制200
+        return min(totalHeight, maxCellHeight)
     }
     
 }
