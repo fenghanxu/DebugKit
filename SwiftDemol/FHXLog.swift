@@ -52,6 +52,15 @@ enum FHXLogType: Int, Codable {
     )
 }
 
+struct FHXLogHeightResult {
+
+    /// 不限制情况下真实高度
+    let normalHeight: CGFloat
+
+    /// UITableView实际高度
+    let cellHeight: CGFloat
+}
+
 struct FHXLogModel: Codable {
 
     /// 唯一标识
@@ -60,7 +69,8 @@ struct FHXLogModel: Codable {
     /// Cell高度
     let cellHeight: CGFloat
     
-    
+    /// 内容真实高度，目的：控制展开按键是否显示
+    let contentFullHeight: CGFloat
 
     /// (不用)日志内容
     let message: String
@@ -113,8 +123,10 @@ struct FHXLogModel: Codable {
         self.line = line
         self.timeString = Self.formatter.string(from: time)
         self.messageAttributed = NSAttributedString(string: message,attributes: Self.normalAttributes)
-        self.cellHeight = Self.calculateCellHeight(message: self.messageAttributed)
         self.methodString = "\(file)." + "\(function):" + "[\(line)] "
+        let result = Self.calculateCellHeight(message: self.messageAttributed)
+        self.contentFullHeight = result.normalHeight
+        self.cellHeight = result.cellHeight
     }
     
     init(from decoder: Decoder) throws {
@@ -131,6 +143,7 @@ struct FHXLogModel: Codable {
         cellHeight = try container.decode(CGFloat.self, forKey: .cellHeight)
         methodString = try container.decode(String.self, forKey: .methodString)
         messageAttributed = NSAttributedString(string: message, attributes: Self.normalAttributes)
+        contentFullHeight = try container.decode(CGFloat.self, forKey: .contentFullHeight)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -146,6 +159,7 @@ struct FHXLogModel: Codable {
         try container.encode(line, forKey: .line)
         try container.encode(cellHeight, forKey: .cellHeight)
         try container.encode(methodString, forKey: .methodString)
+        try container.encode(contentFullHeight, forKey: .contentFullHeight)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -159,6 +173,7 @@ struct FHXLogModel: Codable {
         case line
         case cellHeight
         case methodString
+        case contentFullHeight
     }
     
     private static let maxCellHeight: CGFloat = 200
@@ -188,10 +203,7 @@ struct FHXLogModel: Codable {
     }()
     
     // 计算Cell的高度
-    private static func calculateCellHeight(
-        message: NSAttributedString
-    ) -> CGFloat {
-
+    private static func calculateCellHeight(message: NSAttributedString) -> FHXLogHeightResult {
         let width = UIScreen.main.bounds.width - 20
 
         let rect = message.boundingRect(
@@ -202,7 +214,7 @@ struct FHXLogModel: Codable {
 
         let contentHeight = ceil(rect.height)
 
-        let totalHeight =
+        let normalHeight =
             10 +      // top
             22 +      // level
             5 +       // spacing
@@ -211,10 +223,11 @@ struct FHXLogModel: Codable {
             contentHeight +
             10 +      // bottom
             1
-
-
-        // 最大限制200
-        return min(totalHeight, maxCellHeight)
+        
+        return FHXLogHeightResult(
+            normalHeight: normalHeight, //真实高度
+            cellHeight: min(normalHeight, maxCellHeight) // 最大限制200
+        )
     }
     
 }

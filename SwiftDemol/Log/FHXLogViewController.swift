@@ -471,6 +471,7 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
         let cell:FHXLogCell = FHXLogCell.cell(with: tableView)
         switch tableView.tag {
         case 101:
+            
             cell.levelLabel.text = "\(filterCurrentLogs[indexPath.row].level)"
             
             cell.timeLabel.text = filterCurrentLogs[indexPath.row].timeString
@@ -488,6 +489,18 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.contentLabel.attributedText = highlightText(text: filterCurrentLogs[indexPath.row].message, keyword: searchCurrentTerm)
             } else {
                 cell.contentLabel.attributedText = filterCurrentLogs[indexPath.row].messageAttributed
+            }
+            
+            if filterCurrentLogs[indexPath.row].contentFullHeight > 200 {
+                cell.showExpandButton(true)
+                cell.expandBlock = { [weak self] in
+                    guard let self = self else { return }
+                    let vc = DetailViewController(model:self.filterCurrentLogs[indexPath.row])
+                    self.navigationController?.pushViewController(vc, animated:true)
+                }
+            }else{
+                cell.showExpandButton(false)
+                cell.expandBlock = nil
             }
 
             return cell

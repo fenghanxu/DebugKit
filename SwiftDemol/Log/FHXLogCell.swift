@@ -1,10 +1,14 @@
 
 
 import UIKit
+import SnapKit
 
 class FHXLogCell: UITableViewCell {
 
     static let identifier = "FHXLogCellID"
+    
+    /// 点击展开回调
+    var expandBlock:(()->Void)?
     
     lazy private var line:UIView = {
         var line = UIView()
@@ -41,10 +45,24 @@ class FHXLogCell: UITableViewCell {
     
     lazy var contentLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 6
+        label.numberOfLines = 5
         label.lineBreakMode = .byTruncatingTail
         return label
     }()
+    
+    /// 新增展开按钮
+    lazy var expandButton:UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("展开", for: .normal)
+        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        button.isHidden = true
+        button.addTarget(self, action: #selector(expandClick), for: .touchUpInside)
+        button.backgroundColor = .orange
+        return button
+    }()
+    
+    private var expandButtonHeightConstraint: Constraint?
     
     static func cell(with tableview: UITableView) -> FHXLogCell {
         var cell = tableview.dequeueReusableCell(withIdentifier: identifier) as? FHXLogCell
@@ -101,6 +119,15 @@ class FHXLogCell: UITableViewCell {
             make.top.equalTo(methodNameLabel.snp.bottom).offset(5)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().inset(10)
+//            make.bottom.equalToSuperview().inset(10)
+        }
+        
+        contentView.addSubview(expandButton)
+        expandButton.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.left.equalToSuperview().offset(10)
+            expandButtonHeightConstraint = make.height.equalTo(30).constraint
+//            make.width.equalTo(60)
             make.bottom.equalToSuperview().inset(10)
         }
         
@@ -112,6 +139,17 @@ class FHXLogCell: UITableViewCell {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         CATransaction.commit()
+    }
+    
+    /// 外部调用判断是否显示按钮
+    func showExpandButton(_ show:Bool){
+        expandButton.isHidden = !show
+        expandButtonHeightConstraint?.update(offset: show ? 30 : 0)
+    }
+    
+    @objc
+    private func expandClick(){
+        expandBlock?()
     }
 
 }
