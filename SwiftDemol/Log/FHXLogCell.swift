@@ -119,7 +119,6 @@ class FHXLogCell: UITableViewCell {
             make.top.equalTo(methodNameLabel.snp.bottom).offset(5)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().inset(10)
-//            make.bottom.equalToSuperview().inset(10)
         }
         
         contentView.addSubview(expandButton)
@@ -127,7 +126,6 @@ class FHXLogCell: UITableViewCell {
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
             make.left.equalToSuperview().offset(10)
             expandButtonHeightConstraint = make.height.equalTo(30).constraint
-//            make.width.equalTo(60)
             make.bottom.equalToSuperview().inset(10)
         }
         

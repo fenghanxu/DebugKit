@@ -511,11 +511,11 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             
             cell.levelLabel.backgroundColor = filterHistoryLogs[indexPath.row].level.color
     
-            let messageString = filterCurrentLogs[indexPath.row].methodString
+            let messageString = filterHistoryLogs[indexPath.row].methodString
             if messageString.range(of: searchHistoryTerm, options: .caseInsensitive) != nil { // 判断 关键词忽略大小写
                 cell.methodNameLabel.attributedText = highlightText(text: messageString, keyword: searchHistoryTerm)
             } else {
-                cell.methodNameLabel.text = filterCurrentLogs[indexPath.row].methodString
+                cell.methodNameLabel.text = filterHistoryLogs[indexPath.row].methodString
             }
     
             if searchHistoryTerm != String() && filterHistoryLogs[indexPath.row].message.range(of: searchHistoryTerm, options: .caseInsensitive) != nil {
@@ -527,6 +527,12 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         default:
             return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        FHXDetailView.showCurrentView(model: filterHistoryLogs[indexPath.row], VCView: view) { value in
+            
         }
     }
     

@@ -58,11 +58,7 @@ class FHXSearchView: UIView {
         let button = UIButton()
         let bundle = Bundle.main.url(forResource: "file", withExtension: "bundle")
         let sdkBundle = Bundle(url: bundle!)
-        let image = UIImage(
-            named: "cancel",
-            in: sdkBundle,
-            compatibleWith: nil
-        )
+        let image = UIImage(named: "cancel", in: sdkBundle, compatibleWith: nil)
         button.tag = 2
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)

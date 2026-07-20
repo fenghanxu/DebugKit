@@ -35,6 +35,7 @@
 		889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */; };
 		889FA6D12FDEE0AC000F8865 /* FHXToolCurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */; };
 		88B6BECE300509EB00F3CE72 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B6BECD300509EB00F3CE72 /* DetailViewController.swift */; };
+		88BE65EA300662F60017EBD6 /* FHXDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE65E9300662F60017EBD6 /* FHXDetailView.swift */; };
 		88E55E812FD6E548000C065D /* file.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 88E55E802FD6E548000C065D /* file.bundle */; };
 		88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */; };
 		88E8A1DA2FE78CFF00E35F61 /* FHXToolSubMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E8A1D82FE78CFF00E35F61 /* FHXToolSubMenuView.swift */; };
@@ -76,6 +77,7 @@
 		889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
 		889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolCurrentView.swift; sourceTree = "<group>"; };
 		88B6BECD300509EB00F3CE72 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		88BE65E9300662F60017EBD6 /* FHXDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXDetailView.swift; sourceTree = "<group>"; };
 		88E55E802FD6E548000C065D /* file.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = file.bundle; sourceTree = "<group>"; };
 		88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogNotification.swift; sourceTree = "<group>"; };
 		88E8A1D12FE78CFF00E35F61 /* ToolCurrentPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCurrentPopupView.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */,
 				889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */,
 				88B6BECD300509EB00F3CE72 /* DetailViewController.swift */,
+				88BE65E9300662F60017EBD6 /* FHXDetailView.swift */,
 			);
 			path = Log;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 			files = (
 				889FA6CA2FDEDD51000F8865 /* FHXLogViewController.swift in Sources */,
 				889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */,
+				88BE65EA300662F60017EBD6 /* FHXDetailView.swift in Sources */,
 				3F795DD3284F408C00D585B4 /* ViewController.swift in Sources */,
 				88E8A1DA2FE78CFF00E35F61 /* FHXToolSubMenuView.swift in Sources */,
 				88E8A1DB2FE78CFF00E35F61 /* ToolHistoryPopupView.swift in Sources */,
