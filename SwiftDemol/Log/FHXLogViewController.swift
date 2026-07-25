@@ -743,6 +743,9 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
             UIView.animate(withDuration: 0.25) {
                 self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
             }
+        } else if button.tag == 9 {
+            let vc = FHXSandboxViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     

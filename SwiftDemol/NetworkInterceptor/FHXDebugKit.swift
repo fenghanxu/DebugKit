@@ -7,6 +7,8 @@ public final class FHXDebugKit {
     public static func start() {
 
         FHXNetworkInterceptor.start()
+        
+        FHXSandboxTestImporter.importTestFiles()
 
         print("FHXDebugKit Started")
     }

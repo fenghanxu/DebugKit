@@ -44,6 +44,16 @@ class FHXToolCurrentView: UIView {
         button.addTarget(self, action: #selector(historyButtonClick), for: .touchUpInside)
         return button
     }()
+    
+    lazy private var sandboxButton: UIButton = {
+        let button = UIButton()
+        button.tag = 9
+        button.setTitle("沙盒", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(sandboxButtonClick), for: .touchUpInside)
+        return button
+    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -61,6 +71,7 @@ class FHXToolCurrentView: UIView {
         addSubview(cancelButton)
         addSubview(logButton)
         addSubview(historyButton)
+        addSubview(sandboxButton)
     }
     
     override func layoutSubviews() {
@@ -74,6 +85,9 @@ class FHXToolCurrentView: UIView {
         
         let historyLogButtonRight = CGRectGetMaxX(logButton.frame) + 10
         historyButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
+        
+        let sandboxButtonRight = CGRectGetMaxX(historyButton.frame) + 10
+        sandboxButton.frame = CGRectMake(sandboxButtonRight, 0, 66, 44)
 
     }
 
@@ -94,5 +108,10 @@ extension FHXToolCurrentView {
     @objc
     private func historyButtonClick() {
         delegate?.fhxToolCurrentView(view: self, buttonClick: historyButton)
+    }
+    
+    @objc
+    private func sandboxButtonClick() {
+        delegate?.fhxToolCurrentView(view: self, buttonClick: sandboxButton)
     }
 }
