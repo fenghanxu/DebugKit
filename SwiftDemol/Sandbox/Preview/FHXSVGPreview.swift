@@ -8,21 +8,15 @@
 import UIKit
 import WebKit
 
-final class FHXSVGPreview: UIViewController {
-
+final class FHXSVGPreview: UIView {
 
     // MARK: - Property
 
-
     private let model: FHXSandboxModel
 
-
-    private let webView =
-    WKWebView()
-
+    private let webView = WKWebView()
 
     // MARK: - Init
-
 
     init(
         model: FHXSandboxModel
@@ -30,120 +24,81 @@ final class FHXSVGPreview: UIViewController {
 
         self.model = model
 
-        super.init(
-            nibName: nil,
-            bundle: nil
-        )
-    }
-
-
-    required init?(
-        coder: NSCoder
-    ) {
-
-        fatalError()
-    }
-
-
-    // MARK: - Life
-
-
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-
+        super.init(frame: .zero)
 
         buildUI()
 
-
         loadSVG()
+    }
+
+    required init?(coder: NSCoder) {
+
+        fatalError()
     }
 }
 
-private extension FHXSVGPreview {
+// MARK: - UI
 
+private extension FHXSVGPreview {
 
     func buildUI() {
 
+        backgroundColor = .systemBackground
 
-        view.backgroundColor =
-        .systemBackground
-
-
-        webView.backgroundColor =
-        .clear
-
+        webView.backgroundColor = .clear
 
         webView.isOpaque = false
 
+        addSubview(webView)
 
-        view.addSubview(
-            webView
-        )
-
-
-        webView.translatesAutoresizingMaskIntoConstraints =
-        false
-
+        webView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
 
-
             webView.leadingAnchor.constraint(
-                equalTo:view.leadingAnchor
+                equalTo: leadingAnchor
             ),
-
 
             webView.trailingAnchor.constraint(
-                equalTo:view.trailingAnchor
+                equalTo: trailingAnchor
             ),
-
 
             webView.topAnchor.constraint(
-                equalTo:view.safeAreaLayoutGuide.topAnchor
+                equalTo: safeAreaLayoutGuide.topAnchor
             ),
 
-
             webView.bottomAnchor.constraint(
-                equalTo:view.bottomAnchor
+                equalTo: bottomAnchor
             )
 
         ])
     }
 }
 
-private extension FHXSVGPreview {
+// MARK: - Load
 
+private extension FHXSVGPreview {
 
     func loadSVG() {
 
-
-        let url =
-        URL(
-            fileURLWithPath:model.path
+        let url = URL(
+            fileURLWithPath: model.path
         )
 
-
         guard
-            let data =
-            try? Data(
-                contentsOf:url
+            let data = try? Data(
+                contentsOf: url
             )
-
         else {
 
             return
         }
 
-
-
         webView.load(
             data,
-            mimeType:"image/svg+xml",
-            characterEncodingName:"utf-8",
-            baseURL:url.deletingLastPathComponent()
+            mimeType: "image/svg+xml",
+            characterEncodingName: "utf-8",
+            baseURL: url.deletingLastPathComponent()
         )
-
     }
 }
-

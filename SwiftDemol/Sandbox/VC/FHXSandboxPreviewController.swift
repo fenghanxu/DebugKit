@@ -86,31 +86,36 @@ private extension FHXSandboxPreviewController {
         switch model.fileType {
 
         case .image:
-            show(FHXImagePreview(model: model))
+            let preview = FHXImagePreview(model: model)
+            preview.singleTapHandler = { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            }
+            showView(preview)
         case .gif:
-            show(FHXGIFPreview(model: model))
+            showView(FHXGIFPreview(model: model))
         case .json,
              .text,
              .plist:
-            show(FHXTextPreview(model: model))
+            showView(FHXTextPreview(model: model))
         case .pdf:
-            show(FHXPDFPreview(model: model))
+            showView(FHXPDFPreview(model: model))
         case .video,
              .audio:
-            show(FHXMediaPreview(model: model))
+            showView(FHXMediaPreview(model: model))
         case .word,
              .excel,
              .powerpoint:
-            show(FHXOfficePreview(model: model))
+            showView(FHXOfficePreview(model: model))
         case .svg:
-            show(FHXSVGPreview(model: model))
+            showView(FHXSVGPreview(model: model))
         case .tif:
-            show(FHXTIFPreview(model: model))
+            showView(FHXTIFPreview(model: model))
         default:
             showInfo()
         }
     }
 
+    // 控制器
     func show(
         _ controller: UIViewController
     ) {
@@ -129,6 +134,38 @@ private extension FHXSandboxPreviewController {
         controller.didMove(
             toParent: self
         )
+    }
+    
+    // view
+    func showView(
+        _ view: UIView
+    ) {
+
+        self.view.addSubview(view)
+
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+
+        NSLayoutConstraint.activate([
+
+            view.leadingAnchor.constraint(
+                equalTo: self.view.leadingAnchor
+            ),
+
+            view.trailingAnchor.constraint(
+                equalTo: self.view.trailingAnchor
+            ),
+
+            view.topAnchor.constraint(
+                equalTo: self.view.topAnchor
+            ),
+
+            view.bottomAnchor.constraint(
+                equalTo: self.view.bottomAnchor
+            )
+
+        ])
     }
 
     func showInfo() {

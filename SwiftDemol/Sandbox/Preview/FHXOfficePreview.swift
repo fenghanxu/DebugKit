@@ -8,11 +8,13 @@
 import UIKit
 import QuickLook
 
-final class FHXOfficePreview: QLPreviewController {
+final class FHXOfficePreview: UIView {
 
     // MARK: - Property
 
     private let model: FHXSandboxModel
+
+    private let previewController = QLPreviewController()
 
     // MARK: - Init
 
@@ -20,9 +22,9 @@ final class FHXOfficePreview: QLPreviewController {
 
         self.model = model
 
-        super.init(nibName: nil, bundle: nil)
+        super.init(frame: .zero)
 
-        dataSource = self
+        buildUI()
     }
 
     required init?(coder: NSCoder) {
@@ -30,13 +32,73 @@ final class FHXOfficePreview: QLPreviewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    // MARK: - Layout
 
-        super.viewDidLoad()
+    override func didMoveToWindow() {
 
-        title = model.name
+        super.didMoveToWindow()
 
-        view.backgroundColor = .systemBackground
+        guard
+            window != nil,
+            previewController.parent == nil,
+            let parent = parentViewController
+        else {
+
+            return
+        }
+
+        previewController.dataSource = self
+
+        parent.addChild(previewController)
+
+        addSubview(previewController.view)
+
+        previewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+
+            previewController.view.leadingAnchor.constraint(
+                equalTo: leadingAnchor
+            ),
+
+            previewController.view.trailingAnchor.constraint(
+                equalTo: trailingAnchor
+            ),
+
+            previewController.view.topAnchor.constraint(
+                equalTo: topAnchor
+            ),
+
+            previewController.view.bottomAnchor.constraint(
+                equalTo: bottomAnchor
+            )
+
+        ])
+
+        previewController.didMove(
+            toParent: parent
+        )
+    }
+
+    deinit {
+
+        previewController.willMove(
+            toParent: nil
+        )
+
+        previewController.view.removeFromSuperview()
+
+        previewController.removeFromParent()
+    }
+}
+
+// MARK: - UI
+
+private extension FHXOfficePreview {
+
+    func buildUI() {
+
+        backgroundColor = .systemBackground
     }
 }
 
@@ -59,5 +121,27 @@ extension FHXOfficePreview: QLPreviewControllerDataSource {
         URL(
             fileURLWithPath: model.path
         ) as NSURL
+    }
+}
+
+// MARK: - UIView
+
+private extension UIView {
+
+    var parentViewController: UIViewController? {
+
+        var responder: UIResponder? = self
+
+        while let next = responder?.next {
+
+            if let controller = next as? UIViewController {
+
+                return controller
+            }
+
+            responder = next
+        }
+
+        return nil
     }
 }

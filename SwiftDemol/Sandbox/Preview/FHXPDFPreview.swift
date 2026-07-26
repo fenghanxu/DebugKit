@@ -17,7 +17,7 @@
 import UIKit
 import PDFKit
 
-final class FHXPDFPreview: UIViewController {
+final class FHXPDFPreview: UIView {
 
     // MARK: - Property
 
@@ -31,26 +31,16 @@ final class FHXPDFPreview: UIViewController {
 
         self.model = model
 
-        super.init(
-            nibName: nil,
-            bundle: nil
-        )
+        super.init(frame: .zero)
+
+        buildUI()
+
+        loadPDF()
     }
 
     required init?(coder: NSCoder) {
 
         fatalError()
-    }
-
-    // MARK: - Life
-
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-
-        buildUI()
-
-        loadPDF()
     }
 }
 
@@ -60,7 +50,7 @@ private extension FHXPDFPreview {
 
     func buildUI() {
 
-        view.backgroundColor = .systemBackground
+        backgroundColor = .systemBackground
 
         pdfView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -74,24 +64,24 @@ private extension FHXPDFPreview {
 
         pdfView.usePageViewController(false)
 
-        view.addSubview(pdfView)
+        addSubview(pdfView)
 
         NSLayoutConstraint.activate([
 
             pdfView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor
+                equalTo: leadingAnchor
             ),
 
             pdfView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor
+                equalTo: trailingAnchor
             ),
 
             pdfView.topAnchor.constraint(
-                equalTo: view.topAnchor
+                equalTo: topAnchor
             ),
 
             pdfView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor
+                equalTo: bottomAnchor
             )
 
         ])
@@ -104,7 +94,10 @@ private extension FHXPDFPreview {
 
     func loadPDF() {
 
-        guard let document = PDFDocument(url: URL(fileURLWithPath: model.path))
+        guard
+            let document = PDFDocument(
+                url: URL(fileURLWithPath: model.path)
+            )
         else {
 
             let label = UILabel()
@@ -115,9 +108,21 @@ private extension FHXPDFPreview {
 
             label.textColor = .secondaryLabel
 
-            label.frame = view.bounds
+            addSubview(label)
 
-            view.addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+
+                label.centerXAnchor.constraint(
+                    equalTo: centerXAnchor
+                ),
+
+                label.centerYAnchor.constraint(
+                    equalTo: centerYAnchor
+                )
+
+            ])
 
             return
         }

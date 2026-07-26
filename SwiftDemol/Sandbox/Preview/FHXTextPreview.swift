@@ -1,25 +1,6 @@
-//
-//  FHXTextPreview.swift
-//  SwiftDemol
-//
-//  Created by imac on 2026/7/25.
-//
-
-/**
- ✅ txt
- ✅ log
- ✅ json（Pretty Print）
- ✅ plist（NSDictionary / NSArray 自动格式化）
- ✅ 自动等宽字体
- ✅ 自动可复制
- ✅ 自动滚动
- ✅ 深色模式支持
- ✅ 后面做搜索也不用改
- */
-
 import UIKit
 
-final class FHXTextPreview: UIViewController {
+final class FHXTextPreview: UIView {
 
     // MARK: - Property
 
@@ -29,32 +10,26 @@ final class FHXTextPreview: UIViewController {
 
     // MARK: - Init
 
-    init(model: FHXSandboxModel) {
+    init(
+        model: FHXSandboxModel
+    ) {
 
         self.model = model
 
-        super.init(
-            nibName: nil,
-            bundle: nil
-        )
-    }
-
-    required init?(coder: NSCoder) {
-
-        fatalError()
-    }
-
-    // MARK: - Life
-
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
+        super.init(frame: .zero)
 
         buildUI()
 
         loadContent()
     }
+
+
+    required init?(coder: NSCoder) {
+
+        fatalError()
+    }
 }
+
 
 // MARK: - UI
 
@@ -62,7 +37,7 @@ private extension FHXTextPreview {
 
     func buildUI() {
 
-        view.backgroundColor = .systemBackground
+        backgroundColor = .systemBackground
 
         textView.backgroundColor = .systemBackground
 
@@ -88,6 +63,7 @@ private extension FHXTextPreview {
 
         textView.smartInsertDeleteType = .no
 
+
         textView.textContainerInset =
         UIEdgeInsets(
             top: 16,
@@ -96,33 +72,35 @@ private extension FHXTextPreview {
             right: 16
         )
 
-        view.addSubview(
-            textView
-        )
+
+        addSubview(textView)
+
 
         textView.translatesAutoresizingMaskIntoConstraints = false
+
 
         NSLayoutConstraint.activate([
 
             textView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor
+                equalTo: leadingAnchor
             ),
 
             textView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor
+                equalTo: trailingAnchor
             ),
 
             textView.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor
+                equalTo: topAnchor
             ),
 
             textView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor
+                equalTo: bottomAnchor
             )
 
         ])
     }
 }
+
 
 // MARK: - Load
 
@@ -137,10 +115,12 @@ private extension FHXTextPreview {
             textView.text =
             prettyJSON()
 
+
         case .plist:
 
             textView.text =
             prettyPlist()
+
 
         default:
 
@@ -149,6 +129,7 @@ private extension FHXTextPreview {
         }
     }
 }
+
 
 // MARK: - TXT
 
@@ -170,11 +151,13 @@ private extension FHXTextPreview {
     }
 }
 
+
 // MARK: - JSON
 
 private extension FHXTextPreview {
 
     func prettyJSON() -> String {
+
 
         guard
             let data =
@@ -186,6 +169,7 @@ private extension FHXTextPreview {
             return "JSON Read Failed"
         }
 
+
         do {
 
             let object =
@@ -193,16 +177,21 @@ private extension FHXTextPreview {
                 with: data
             )
 
+
             let pretty =
             try JSONSerialization.data(
                 withJSONObject: object,
-                options: [.prettyPrinted]
+                options: [
+                    .prettyPrinted
+                ]
             )
+
 
             return String(
                 data: pretty,
                 encoding: .utf8
             ) ?? ""
+
 
         } catch {
 
@@ -211,11 +200,13 @@ private extension FHXTextPreview {
     }
 }
 
+
 // MARK: - Plist
 
 private extension FHXTextPreview {
 
     func prettyPlist() -> String {
+
 
         if let dict =
             NSDictionary(
@@ -225,6 +216,7 @@ private extension FHXTextPreview {
             return dict.description
         }
 
+
         if let array =
             NSArray(
                 contentsOfFile: model.path
@@ -232,6 +224,7 @@ private extension FHXTextPreview {
 
             return array.description
         }
+
 
         return plainText()
     }
