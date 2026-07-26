@@ -71,7 +71,6 @@
 		889FA6CA2FDEDD51000F8865 /* FHXLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */; };
 		889FA6CB2FDEDD51000F8865 /* FHXLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */; };
 		889FA6D12FDEE0AC000F8865 /* FHXToolCurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */; };
-		88B6BECE300509EB00F3CE72 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B6BECD300509EB00F3CE72 /* DetailViewController.swift */; };
 		88BE65EA300662F60017EBD6 /* FHXDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE65E9300662F60017EBD6 /* FHXDetailView.swift */; };
 		88E55E812FD6E548000C065D /* file.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 88E55E802FD6E548000C065D /* file.bundle */; };
 		88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */; };
@@ -150,7 +149,6 @@
 		889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogCell.swift; sourceTree = "<group>"; };
 		889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogViewController.swift; sourceTree = "<group>"; };
 		889FA6D02FDEE0AC000F8865 /* FHXToolCurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolCurrentView.swift; sourceTree = "<group>"; };
-		88B6BECD300509EB00F3CE72 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		88BE65E9300662F60017EBD6 /* FHXDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXDetailView.swift; sourceTree = "<group>"; };
 		88E55E802FD6E548000C065D /* file.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = file.bundle; sourceTree = "<group>"; };
 		88E55E822FD6FB9A000C065D /* FHXLogNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLogNotification.swift; sourceTree = "<group>"; };
@@ -347,7 +345,6 @@
 			children = (
 				889FA6C72FDEDD51000F8865 /* FHXLogCell.swift */,
 				889FA6C82FDEDD51000F8865 /* FHXLogViewController.swift */,
-				88B6BECD300509EB00F3CE72 /* DetailViewController.swift */,
 				88BE65E9300662F60017EBD6 /* FHXDetailView.swift */,
 			);
 			path = Log;
@@ -551,7 +548,6 @@
 				88E8A1DB2FE78CFF00E35F61 /* ToolHistoryPopupView.swift in Sources */,
 				88E8A1DC2FE78CFF00E35F61 /* ToolCurrentPopupView.swift in Sources */,
 				88E8A1DD2FE78CFF00E35F61 /* FHXToolMenuView.swift in Sources */,
-				88B6BECE300509EB00F3CE72 /* DetailViewController.swift in Sources */,
 				88999D8F301471C60097C96F /* FHXSandboxPreviewController.swift in Sources */,
 				8890CE5A2FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift in Sources */,
 				8890CE5B2FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift in Sources */,

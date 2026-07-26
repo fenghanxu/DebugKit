@@ -82,7 +82,6 @@ class FHXToolCurrentView: UIView {
         let logButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
         logButton.frame = CGRectMake(logButtonRight, 0, 44, 44)
         
-        
         let historyLogButtonRight = CGRectGetMaxX(logButton.frame) + 10
         historyButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
         

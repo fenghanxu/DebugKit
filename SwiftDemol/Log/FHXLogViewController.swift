@@ -493,11 +493,6 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             
             if filterCurrentLogs[indexPath.row].contentFullHeight > 200 {
                 cell.showExpandButton(true)
-                cell.expandBlock = { [weak self] in
-                    guard let self = self else { return }
-                    let vc = DetailViewController(model:self.filterCurrentLogs[indexPath.row])
-                    self.navigationController?.pushViewController(vc, animated:true)
-                }
             }else{
                 cell.showExpandButton(false)
                 cell.expandBlock = nil
@@ -523,6 +518,13 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
             } else {
                 cell.contentLabel.attributedText = filterHistoryLogs[indexPath.row].messageAttributed
             }
+            
+            if filterHistoryLogs[indexPath.row].contentFullHeight > 200 {
+                cell.showExpandButton(true)
+            }else{
+                cell.showExpandButton(false)
+                cell.expandBlock = nil
+            }
 
             return cell
         default:
@@ -531,18 +533,38 @@ extension FHXLogViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        FHXDetailView.showCurrentView(model: filterHistoryLogs[indexPath.row], VCView: view) { value in
-            
+        switch tableView.tag {
+        case 101:
+            FHXDetailView.showCurrentView(model: filterCurrentLogs[indexPath.row], VCView: view) { value in
+    
+            }
+        case 102:
+            FHXDetailView.showCurrentView(model: filterHistoryLogs[indexPath.row], VCView: view) { value in
+    
+            }
+        default:
+            break
         }
     }
-    
+
     func tableView(
         _ tableView: UITableView,
         contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
 
-        let model = filterCurrentLogs[indexPath.row]
+        var model: FHXLogModel?
+        
+        switch tableView.tag {
+        case 101:
+            model = filterCurrentLogs[indexPath.row]
+        case 102:
+            model = filterHistoryLogs[indexPath.row]
+        default:
+            break
+        }
+        
+        guard let model = model else { return nil }
 
         return UIContextMenuConfiguration(
             identifier: nil,

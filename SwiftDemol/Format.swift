@@ -7,12 +7,6 @@
 
 import UIKit
 
-//class Format: NSObject {
-//    
-//
-//
-//}
-
  func prettyJSONString(_ string: String?) -> String {
 
     guard

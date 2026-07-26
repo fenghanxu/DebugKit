@@ -94,9 +94,9 @@ class FHXNavigationView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let screenWidth = screenWidth else { return }
-        toolCurrentView.frame = CGRectMake(0, 0, screenWidth, 44)
-        toolHistoryView.frame = CGRectMake(screenWidth, 0, screenWidth, 44)
+        guard let screenWidth   = screenWidth else { return }
+        toolCurrentView.frame   = CGRectMake(0, 0, screenWidth, 44)
+        toolHistoryView.frame   = CGRectMake(screenWidth, 0, screenWidth, 44)
         searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, screenWidth - 5 - 44 - 10, 44)
         searchHistoryView.frame = CGRectMake(5 + 44 + 10, 0, screenWidth - 5 - 44 - 10, 44)
     }

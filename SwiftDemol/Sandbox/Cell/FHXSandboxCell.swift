@@ -74,34 +74,84 @@ private extension FHXSandboxCell {
         arrowImageView.tintColor =
         .systemGray3
 
-        iconView.snp.makeConstraints {
 
-            $0.left.equalToSuperview().offset(16)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(30)
-        }
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        arrowImageView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        detailLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        arrowImageView.snp.makeConstraints {
 
-            $0.right.equalToSuperview().offset(-16)
-            $0.centerY.equalToSuperview()
-            $0.width.equalTo(8)
-        }
+        NSLayoutConstraint.activate([
 
-        titleLabel.snp.makeConstraints {
+            iconView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: 16
+            ),
 
-            $0.left.equalTo(iconView.snp.right).offset(12)
-            $0.right.lessThanOrEqualTo(arrowImageView.snp.left).offset(-10)
-            $0.top.equalToSuperview().offset(10)
-        }
+            iconView.centerYAnchor.constraint(
+                equalTo: contentView.centerYAnchor
+            ),
 
-        detailLabel.snp.makeConstraints {
+            iconView.widthAnchor.constraint(
+                equalToConstant: 30
+            ),
 
-            $0.left.equalTo(titleLabel)
-            $0.right.equalTo(titleLabel)
-            $0.top.equalTo(titleLabel.snp.bottom).offset(4)
-            $0.bottom.equalToSuperview().offset(-10)
-        }
+            iconView.heightAnchor.constraint(
+                equalToConstant: 30
+            ),
+
+
+
+            arrowImageView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -16
+            ),
+
+            arrowImageView.centerYAnchor.constraint(
+                equalTo: contentView.centerYAnchor
+            ),
+
+            arrowImageView.widthAnchor.constraint(
+                equalToConstant: 8
+            ),
+
+
+
+            titleLabel.leadingAnchor.constraint(
+                equalTo: iconView.trailingAnchor,
+                constant: 12
+            ),
+
+            titleLabel.trailingAnchor.constraint(
+                lessThanOrEqualTo: arrowImageView.leadingAnchor,
+                constant: -10
+            ),
+
+            titleLabel.topAnchor.constraint(
+                equalTo: contentView.topAnchor,
+                constant: 10
+            ),
+
+
+
+            detailLabel.leadingAnchor.constraint(
+                equalTo: titleLabel.leadingAnchor
+            ),
+
+            detailLabel.trailingAnchor.constraint(
+                equalTo: titleLabel.trailingAnchor
+            ),
+
+            detailLabel.topAnchor.constraint(
+                equalTo: titleLabel.bottomAnchor,
+                constant: 4
+            ),
+
+            detailLabel.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -10
+            )
+        ])
     }
 }
 

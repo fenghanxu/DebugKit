@@ -148,18 +148,18 @@ class FHXExportView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let width: CGFloat = 280
+        let width: CGFloat  = 280
         let height: CGFloat = 213
-        bottomButton.frame = bounds
-        shadowView.frame   = CGRect(x: (bounds.width - width) * 0.5, y: (bounds.height - height) * 0.5, width: width, height: height)
-        bgView.frame       = shadowView.bounds
-        titleLabel.frame   = CGRect(x: 0, y: 0, width: width, height: 60)
-        line1.frame        = CGRect(x: 0, y: 60, width: width, height: 1)
-        txtButton.frame    = CGRect(x: 0, y: 61, width: width, height: 50)
-        line2.frame        = CGRect(x: 0, y: 111, width: width, height: 1)
-        jsonButton.frame   = CGRect(x: 0, y: 112, width: width, height: 50)
-        line3.frame        = CGRect(x: 0, y: 162, width: width, height: 1)
-        cancelButton.frame = CGRect(x: 0, y: 163, width: width, height: 50)
+        bottomButton.frame  = bounds
+        shadowView.frame    = CGRect(x: (bounds.width - width) * 0.5, y: (bounds.height - height) * 0.5, width: width, height: height)
+        bgView.frame        = shadowView.bounds
+        titleLabel.frame    = CGRect(x: 0, y: 0, width: width, height: 60)
+        line1.frame         = CGRect(x: 0, y: 60, width: width, height: 1)
+        txtButton.frame     = CGRect(x: 0, y: 61, width: width, height: 50)
+        line2.frame         = CGRect(x: 0, y: 111, width: width, height: 1)
+        jsonButton.frame    = CGRect(x: 0, y: 112, width: width, height: 50)
+        line3.frame         = CGRect(x: 0, y: 162, width: width, height: 1)
+        cancelButton.frame  = CGRect(x: 0, y: 163, width: width, height: 50)
     }
 
     // MARK: - Show
