@@ -21,9 +21,10 @@
  */
 
 import UIKit
+import AVKit
 import AVFoundation
 
-final class FHXMediaPreview: UIView {
+final class FHXMediaPreview: UIViewController {
 
     // MARK: - Property
 
@@ -31,7 +32,7 @@ final class FHXMediaPreview: UIView {
 
     private var player: AVPlayer?
 
-    private let playerLayer = AVPlayerLayer()
+    private var playerController: AVPlayerViewController?
 
     // MARK: - Init
 
@@ -39,48 +40,38 @@ final class FHXMediaPreview: UIView {
 
         self.model = model
 
-        super.init(frame: .zero)
+        super.init(nibName: nil, bundle: nil)
+    }
 
-        buildUI()
+    required init?(coder: NSCoder) {
+
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Life Cycle
+
+    override func viewDidLoad() {
+
+        super.viewDidLoad()
+
+        title = model.name
+
+        view.backgroundColor = .black
 
         setupAudioSession()
 
         setupPlayer()
     }
 
-    required init?(coder: NSCoder) {
+    override func viewDidDisappear(_ animated: Bool) {
 
-        fatalError()
-    }
-
-    deinit {
+        super.viewDidDisappear(animated)
 
         player?.pause()
     }
-
-    // MARK: - Layout
-
-    override func layoutSubviews() {
-
-        super.layoutSubviews()
-
-        playerLayer.frame = bounds
-    }
 }
 
-// MARK: - UI
-
-private extension FHXMediaPreview {
-
-    func buildUI() {
-
-        backgroundColor = .black
-
-        layer.addSublayer(playerLayer)
-    }
-}
-
-// MARK: - Player
+// MARK: - Private
 
 private extension FHXMediaPreview {
 
@@ -110,9 +101,26 @@ private extension FHXMediaPreview {
 
         self.player = player
 
-        playerLayer.player = player
+        let controller = AVPlayerViewController()
 
-        playerLayer.videoGravity = .resizeAspect
+        controller.player = player
+        controller.showsPlaybackControls = true
+        controller.entersFullScreenWhenPlaybackBegins = true
+        controller.exitsFullScreenWhenPlaybackEnds = false
+
+        addChild(controller)
+
+        view.addSubview(controller.view)
+
+        controller.view.frame = view.bounds
+        controller.view.autoresizingMask = [
+            .flexibleWidth,
+            .flexibleHeight
+        ]
+
+        controller.didMove(toParent: self)
+
+        playerController = controller
 
         player.play()
     }

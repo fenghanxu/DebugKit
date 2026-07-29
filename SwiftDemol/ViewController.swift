@@ -1,6 +1,7 @@
 
 
 import UIKit
+import SnapKit
 import Alamofire
 
 class ViewController: UIViewController {
@@ -18,14 +19,9 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         
         view.addSubview(imageView)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+        imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
  
 
         
@@ -144,8 +140,7 @@ class ViewController: UIViewController {
 
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now()+1.0) {
             DispatchQueue.main.async {
-                guard let win = keyWindowApp else { return }
-                let vc = FHXLogViewController(keyWindowApp: win, screenWidth: screenWidth, screenHeight: screenHeight, totalTopHeight: totalTopHeight(self), safeAreaTop: safeAreaTop)
+                let vc = FHXLogViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }

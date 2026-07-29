@@ -1,3 +1,5 @@
+
+
 import UIKit
 
 class FHXToolSubMenuCell: UITableViewCell {
@@ -36,25 +38,21 @@ class FHXToolSubMenuCell: UITableViewCell {
 
     private func buildUI(){
         selectionStyle = .none
-        backgroundColor = .clear
+        backgroundColor = .clear;
         
         contentView.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
+        titleLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+        }
         
         contentView.addSubview(line)
-        line.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            line.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
-            line.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            line.heightAnchor.constraint(equalToConstant: 1),
-            line.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        line.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview()
+            make.height.equalTo(1)
+            make.bottom.equalToSuperview()
+        }
     }
     
 }

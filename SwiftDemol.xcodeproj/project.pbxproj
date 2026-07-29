@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D52BB122FD96193003E34FA /* SPMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D52BB112FD96193003E34FA /* SPMacro.swift */; };
 		2D6B1D812FDBA59C00B9B9B2 /* FHXNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1D7D2FDBA59C00B9B9B2 /* FHXNavigationView.swift */; };
 		2D6B1FD02FDBF97C00B9B9B2 /* Documentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B1FCF2FDBF97C00B9B9B2 /* Documentation.swift */; };
 		2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7DA8F62FD129E600E83F11 /* FHXLog.swift */; };
@@ -34,7 +33,6 @@
 		88999D8B30146D680097C96F /* FHXSandboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D8830146D680097C96F /* FHXSandboxViewController.swift */; };
 		88999D8C30146D680097C96F /* FHXSandboxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D8330146D680097C96F /* FHXSandboxManager.swift */; };
 		88999D8D30146D680097C96F /* FHXSandboxModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D8530146D680097C96F /* FHXSandboxModel.swift */; };
-		88999D8F301471C60097C96F /* FHXSandboxPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D8E301471C60097C96F /* FHXSandboxPreviewController.swift */; };
 		88999D91301473A70097C96F /* FHXTextPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D90301473A70097C96F /* FHXTextPreview.swift */; };
 		88999D93301477BD0097C96F /* FHXImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D92301477BD0097C96F /* FHXImagePreview.swift */; };
 		88999D973014784C0097C96F /* FHXPDFPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88999D963014784C0097C96F /* FHXPDFPreview.swift */; };
@@ -81,10 +79,11 @@
 		88E8A1DE2FE78CFF00E35F61 /* FHXToolSubMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E8A1D72FE78CFF00E35F61 /* FHXToolSubMenuCell.swift */; };
 		88E8A1DF2FE78CFF00E35F61 /* FHXToolMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E8A1D52FE78CFF00E35F61 /* FHXToolMenuCell.swift */; };
 		88E8A1E12FE79EC900E35F61 /* FHXSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E8A1E02FE79EC900E35F61 /* FHXSearchView.swift */; };
+		88FB0ADA301A31070078D4FC /* FHXSandboxPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB0AD9301A31070078D4FC /* FHXSandboxPreviewController.swift */; };
+		88FB0ADC301A32220078D4FC /* FHXMacro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB0ADB301A32220078D4FC /* FHXMacro.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2D52BB112FD96193003E34FA /* SPMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPMacro.swift; sourceTree = "<group>"; };
 		2D6B1D7D2FDBA59C00B9B9B2 /* FHXNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXNavigationView.swift; sourceTree = "<group>"; };
 		2D6B1FCF2FDBF97C00B9B9B2 /* Documentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Documentation.swift; sourceTree = "<group>"; };
 		2D7DA8F62FD129E600E83F11 /* FHXLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXLog.swift; sourceTree = "<group>"; };
@@ -112,7 +111,6 @@
 		88999D8330146D680097C96F /* FHXSandboxManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSandboxManager.swift; sourceTree = "<group>"; };
 		88999D8530146D680097C96F /* FHXSandboxModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSandboxModel.swift; sourceTree = "<group>"; };
 		88999D8830146D680097C96F /* FHXSandboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSandboxViewController.swift; sourceTree = "<group>"; };
-		88999D8E301471C60097C96F /* FHXSandboxPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSandboxPreviewController.swift; sourceTree = "<group>"; };
 		88999D90301473A70097C96F /* FHXTextPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXTextPreview.swift; sourceTree = "<group>"; };
 		88999D92301477BD0097C96F /* FHXImagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXImagePreview.swift; sourceTree = "<group>"; };
 		88999D963014784C0097C96F /* FHXPDFPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXPDFPreview.swift; sourceTree = "<group>"; };
@@ -159,6 +157,8 @@
 		88E8A1D72FE78CFF00E35F61 /* FHXToolSubMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolSubMenuCell.swift; sourceTree = "<group>"; };
 		88E8A1D82FE78CFF00E35F61 /* FHXToolSubMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXToolSubMenuView.swift; sourceTree = "<group>"; };
 		88E8A1E02FE79EC900E35F61 /* FHXSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSearchView.swift; sourceTree = "<group>"; };
+		88FB0AD9301A31070078D4FC /* FHXSandboxPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXSandboxPreviewController.swift; sourceTree = "<group>"; };
+		88FB0ADB301A32220078D4FC /* FHXMacro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHXMacro.swift; sourceTree = "<group>"; };
 		D353D6D9F689423FACD14AE9 /* Pods_SwiftDemol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftDemol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4E88744082327E7CB68A8E6 /* Pods-SwiftDemol.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftDemol.release.xcconfig"; path = "Target Support Files/Pods-SwiftDemol/Pods-SwiftDemol.release.xcconfig"; sourceTree = "<group>"; };
 		DC0004C1C6A6C906BE0C0574 /* Pods-SwiftDemol.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftDemol.debug.xcconfig"; path = "Target Support Files/Pods-SwiftDemol/Pods-SwiftDemol.debug.xcconfig"; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 		3F795DCD284F408C00D585B4 /* SwiftDemol */ = {
 			isa = PBXGroup;
 			children = (
-				2D52BB112FD96193003E34FA /* SPMacro.swift */,
+				88FB0ADB301A32220078D4FC /* FHXMacro.swift */,
 				3F795DCE284F408C00D585B4 /* AppDelegate.swift */,
 				3F795DD0284F408C00D585B4 /* SceneDelegate.swift */,
 				3F795DD2284F408C00D585B4 /* ViewController.swift */,
@@ -305,7 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				88999D8830146D680097C96F /* FHXSandboxViewController.swift */,
-				88999D8E301471C60097C96F /* FHXSandboxPreviewController.swift */,
+				88FB0AD9301A31070078D4FC /* FHXSandboxPreviewController.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -548,7 +548,6 @@
 				88E8A1DB2FE78CFF00E35F61 /* ToolHistoryPopupView.swift in Sources */,
 				88E8A1DC2FE78CFF00E35F61 /* ToolCurrentPopupView.swift in Sources */,
 				88E8A1DD2FE78CFF00E35F61 /* FHXToolMenuView.swift in Sources */,
-				88999D8F301471C60097C96F /* FHXSandboxPreviewController.swift in Sources */,
 				8890CE5A2FEF5D1E003D76E4 /* FHXURLSessionSwizzle.swift in Sources */,
 				8890CE5B2FEF5D1E003D76E4 /* URLSession+FHXCompletion.swift in Sources */,
 				8890CE5C2FEF5D1E003D76E4 /* URLSessionTask+FHX.swift in Sources */,
@@ -561,6 +560,7 @@
 				88999DD03015083B0097C96F /* FHXTIFPreview.swift in Sources */,
 				889519952FED56B100E43CF0 /* FHXNetworkInterceptor.swift in Sources */,
 				3F795DCF284F408C00D585B4 /* AppDelegate.swift in Sources */,
+				88FB0ADC301A32220078D4FC /* FHXMacro.swift in Sources */,
 				88999DB43014EBE80097C96F /* FHXOfficePreview.swift in Sources */,
 				8894E5A12FE2C62C00382BB0 /* FHXToolHistoryView.swift in Sources */,
 				2D6B1D812FDBA59C00B9B9B2 /* FHXNavigationView.swift in Sources */,
@@ -576,11 +576,11 @@
 				88E8A1E12FE79EC900E35F61 /* FHXSearchView.swift in Sources */,
 				88E55E832FD6FB9A000C065D /* FHXLogNotification.swift in Sources */,
 				889519932FED569E00E43CF0 /* FHXDebugKit.swift in Sources */,
-				2D52BB122FD96193003E34FA /* SPMacro.swift in Sources */,
 				2D7DA8F92FD12A6700E83F11 /* FHXLogStore.swift in Sources */,
 				8895198F2FED553B00E43CF0 /* FHXNetworkLogModel.swift in Sources */,
 				88999DCE301503230097C96F /* FHXSVGPreview.swift in Sources */,
 				88999D93301477BD0097C96F /* FHXImagePreview.swift in Sources */,
+				88FB0ADA301A31070078D4FC /* FHXSandboxPreviewController.swift in Sources */,
 				3F795DD1284F408C00D585B4 /* SceneDelegate.swift in Sources */,
 				8878B49C2FFFE304005C6907 /* Format.swift in Sources */,
 				2D7DA8F72FD129E600E83F11 /* FHXLog.swift in Sources */,

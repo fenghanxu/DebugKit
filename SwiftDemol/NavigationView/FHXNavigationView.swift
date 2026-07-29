@@ -11,14 +11,6 @@ class FHXNavigationView: UIView {
     
     weak var delegate:FHXNavigationViewDelegate?
     
-    private var keyWindowApp: UIWindow?
-    
-    private var screenWidth: CGFloat?
-    
-    private var screenHeight: CGFloat?
-    
-    private var totalTopHeight: CGFloat?
-    
     lazy private var toolCurrentView: FHXToolCurrentView = {
         let view = FHXToolCurrentView()
         view.delegate = self
@@ -58,18 +50,6 @@ class FHXNavigationView: UIView {
             self.searchHistoryView.isShowSearchView = isShowSearchHistoryView
         }
     }
-    
-    init(frame: CGRect, keyWindowApp: UIWindow?, screenWidth: CGFloat?, screenHeight: CGFloat?, totalTopHeight: CGFloat?) {
-        
-        self.keyWindowApp = keyWindowApp
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
-        self.totalTopHeight = totalTopHeight
-        
-        super.init(frame: frame)
-        
-        buildUI()
-    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -94,11 +74,11 @@ class FHXNavigationView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let screenWidth   = screenWidth else { return }
-        toolCurrentView.frame   = CGRectMake(0, 0, screenWidth, 44)
-        toolHistoryView.frame   = CGRectMake(screenWidth, 0, screenWidth, 44)
-        searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, screenWidth - 5 - 44 - 10, 44)
-        searchHistoryView.frame = CGRectMake(5 + 44 + 10, 0, screenWidth - 5 - 44 - 10, 44)
+//        guard let screenWidth   = screenWidth else { return }
+        toolCurrentView.frame   = CGRectMake(0, 0, screenWidthSDK, 44)
+        toolHistoryView.frame   = CGRectMake(screenWidthSDK, 0, screenWidthSDK, 44)
+        searchCurrentView.frame = CGRectMake(5 + 44 + 10, 0, screenWidthSDK - 5 - 44 - 10, 44)
+        searchHistoryView.frame = CGRectMake(5 + 44 + 10, 0, screenWidthSDK - 5 - 44 - 10, 44)
     }
 
 }

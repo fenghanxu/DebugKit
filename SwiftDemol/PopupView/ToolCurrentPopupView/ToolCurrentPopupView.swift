@@ -7,19 +7,11 @@ class ToolCurrentPopupView: UIView {
     // MARK: - Show
     static func showCurrentView(
         vc: UIViewController,
-        winApp: UIWindow,
-        screenWidth: CGFloat,
-        screenHeight: CGFloat,
-        totalTopHeight: CGFloat,
         menuList: [String],
         subMenuList: [String],
         valueBlock:((String)->())?
     ) {
         let selfView = ToolCurrentPopupView(
-            winApp: winApp,
-            screenWidth: screenWidth,
-            screenHeight: screenHeight,
-            totalTopHeight: totalTopHeight,
             menuList: menuList,
             subMenuList: subMenuList
         )
@@ -29,10 +21,6 @@ class ToolCurrentPopupView: UIView {
     }
     
     init(
-        winApp: UIWindow,
-         screenWidth: CGFloat,
-         screenHeight: CGFloat,
-         totalTopHeight: CGFloat,
          menuList: [String],
          subMenuList: [String]
     ) {
@@ -46,10 +34,6 @@ class ToolCurrentPopupView: UIView {
         
         super.init(frame: targetRect)
         
-        self.winApp         = winApp
-        self.screenWidth    = screenWidth
-        self.screenHeight   = screenHeight
-        self.totalTopHeight = totalTopHeight
         self.menuList       = menuList
         self.subMenuList    = subMenuList
         buildUI()

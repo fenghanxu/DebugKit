@@ -88,11 +88,11 @@ class FHXToolHistoryView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        cancelButton.frame = CGRectMake(0, 0, screenWidth * 0.2, 44)
-        filterButton.frame = CGRectMake(CGRectGetMaxX(cancelButton.frame), 0, screenWidth * 0.2, 44)
-        searchButton.frame = CGRectMake(CGRectGetMaxX(filterButton.frame), 0, screenWidth * 0.2, 44)
-        exportButton.frame = CGRectMake(CGRectGetMaxX(searchButton.frame), 0, screenWidth * 0.2, 44)
-        clearnButton.frame = CGRectMake(CGRectGetMaxX(exportButton.frame), 0, screenWidth * 0.2, 44)
+        cancelButton.frame = CGRectMake(0, 0, screenWidthSDK * 0.2, 44)
+        filterButton.frame = CGRectMake(CGRectGetMaxX(cancelButton.frame), 0, screenWidthSDK * 0.2, 44)
+        searchButton.frame = CGRectMake(CGRectGetMaxX(filterButton.frame), 0, screenWidthSDK * 0.2, 44)
+        exportButton.frame = CGRectMake(CGRectGetMaxX(searchButton.frame), 0, screenWidthSDK * 0.2, 44)
+        clearnButton.frame = CGRectMake(CGRectGetMaxX(exportButton.frame), 0, screenWidthSDK * 0.2, 44)
 
     }
 

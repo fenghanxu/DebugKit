@@ -16,7 +16,7 @@ class FHXDetailView: UIView {
     init(with model: FHXLogModel) {
         self.model = model
         
-        let targetRect = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+        let targetRect = CGRect(x: 0, y: 0, width: screenWidthSDK, height: screenHeightSDK)
         
         super.init(frame: targetRect)
         
@@ -27,7 +27,6 @@ class FHXDetailView: UIView {
     private lazy var navigationView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -38,7 +37,6 @@ class FHXDetailView: UIView {
         let image = UIImage(named: "cancel", in: sdkBundle, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(cancelButtonClick), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
@@ -49,7 +47,6 @@ class FHXDetailView: UIView {
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentSize = CGSize(width: bounds.size.width, height: 70)
         scrollView.bounces = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
     
@@ -68,7 +65,6 @@ class FHXDetailView: UIView {
         label.textAlignment = .center
         label.layer.cornerRadius = 4.0
         label.clipsToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -79,7 +75,6 @@ class FHXDetailView: UIView {
         label.textAlignment = .left
         label.text = "URLSession"
         label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -88,7 +83,6 @@ class FHXDetailView: UIView {
         label.textColor = .black
         label.text = "2026-07-20 22:03:23"
         label.font = UIFont.systemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -97,7 +91,6 @@ class FHXDetailView: UIView {
         label.numberOfLines = 0
         label.lineBreakMode = .byTruncatingTail
         label.text = "fenghanxu"
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -111,66 +104,60 @@ class FHXDetailView: UIView {
         selfView.showView()
     }
     
-    private func buildUI() {
+    private func buildUI(){
         backgroundColor = .clear
 
         addSubview(navigationView)
-        NSLayoutConstraint.activate([
-            navigationView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            navigationView.topAnchor.constraint(equalTo: topAnchor),
-            navigationView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            navigationView.heightAnchor.constraint(equalToConstant: safeAreaTop + 44)
-        ])
+        navigationView.snp.makeConstraints { make in
+            make.left.top.right.equalToSuperview()
+            make.height.equalTo(safeAreaTopSDK + 44)
+        }
         
         navigationView.addSubview(cancelButton)
-        NSLayoutConstraint.activate([
-            cancelButton.leadingAnchor.constraint(equalTo: navigationView.leadingAnchor, constant: 15),
-            cancelButton.bottomAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: -5),
-            cancelButton.widthAnchor.constraint(equalToConstant: 30),
-            cancelButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
+        cancelButton.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(15)
+            make.bottom.equalToSuperview().offset(-5)
+            make.width.height.equalTo(30)
+        }
         
         addSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: navigationView.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(navigationView.snp.bottom)
+            make.left.right.bottom.equalToSuperview()
+        }
         
         container.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: 70)
         scrollView.addSubview(container)
         
         container.addSubview(levelLabel)
-        NSLayoutConstraint.activate([
-            levelLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
-            levelLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
-            levelLabel.widthAnchor.constraint(equalToConstant: 60),
-            levelLabel.heightAnchor.constraint(equalToConstant: 22)
-        ])
+        levelLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.left.equalToSuperview().offset(10)
+            make.width.equalTo(60)
+            make.height.equalTo(22)
+        }
         
         container.addSubview(timeLabel)
-        NSLayoutConstraint.activate([
-            timeLabel.centerYAnchor.constraint(equalTo: levelLabel.centerYAnchor),
-            timeLabel.leadingAnchor.constraint(equalTo: levelLabel.trailingAnchor, constant: 10),
-            timeLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10)
-        ])
+        timeLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(levelLabel)
+            make.left.equalTo(levelLabel.snp.right).offset(10)
+            make.right.equalToSuperview().offset(-10)
+        }
         
         container.addSubview(methodNameLabel)
-        NSLayoutConstraint.activate([
-            methodNameLabel.topAnchor.constraint(equalTo: levelLabel.bottomAnchor, constant: 5),
-            methodNameLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
-            methodNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
-            methodNameLabel.heightAnchor.constraint(equalToConstant: 18)
-        ])
+        methodNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(levelLabel.snp.bottom).offset(5)
+            make.left.right.equalToSuperview().inset(10)
+            make.height.equalTo(18)
+        }
         
         container.addSubview(contentLabel)
-        NSLayoutConstraint.activate([
-            contentLabel.topAnchor.constraint(equalTo: methodNameLabel.bottomAnchor, constant: 5),
-            contentLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
-            contentLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
-            contentLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)
-        ])
+        contentLabel.snp.makeConstraints { make in
+            make.top.equalTo(methodNameLabel.snp.bottom).offset(5)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview()
+        }
     }
     
     private func setModel(_ model: FHXLogModel) {
@@ -185,13 +172,13 @@ class FHXDetailView: UIView {
         container.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: height)
     }
     
-    private func showView() {
+    private func showView(){
         UIView.animate(withDuration: 0.5, animations: {
             self.backgroundColor = .black.withAlphaComponent(0.5)
         })
     }
     
-    private func dismissView() {
+    private func dismissView(){
         self.removeFromSuperview()
         backgroundColor = .clear
     }
@@ -201,6 +188,7 @@ class FHXDetailView: UIView {
     }
 
 }
+
 
 
 

@@ -1,3 +1,5 @@
+
+
 import UIKit
 
 class FHXToolMenuCell: UITableViewCell {
@@ -8,14 +10,12 @@ class FHXToolMenuCell: UITableViewCell {
         let lable = UILabel()
         lable.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         lable.textColor = .black
-        lable.translatesAutoresizingMaskIntoConstraints = false
         return lable
     }()
     
     lazy var line: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(red: 211.0/255.0, green: 211.0/255.0, blue: 211.0/255.0, alpha: 1.0)
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -29,7 +29,6 @@ class FHXToolMenuCell: UITableViewCell {
             compatibleWith: nil
         )
         imageView.image = image
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
@@ -51,31 +50,30 @@ class FHXToolMenuCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func buildUI() {
+    private func buildUI(){
         selectionStyle = .none
-        backgroundColor = .clear
+        backgroundColor = .clear;
         
         contentView.addSubview(titleLabel)
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
+        titleLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+        }
         
         contentView.addSubview(line)
-        NSLayoutConstraint.activate([
-            line.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            line.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            line.heightAnchor.constraint(equalToConstant: 1),
-            line.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        line.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview()
+            make.height.equalTo(1)
+            make.bottom.equalToSuperview()
+        }
         
         contentView.addSubview(rightArrow)
-        NSLayoutConstraint.activate([
-            rightArrow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            rightArrow.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            rightArrow.widthAnchor.constraint(equalToConstant: 20),
-            rightArrow.heightAnchor.constraint(equalToConstant: 20)
-        ])
+        rightArrow.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(20)
+        }
     }
 
 }

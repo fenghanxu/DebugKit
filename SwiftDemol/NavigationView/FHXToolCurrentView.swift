@@ -77,16 +77,16 @@ class FHXToolCurrentView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        cancelButton.frame = CGRectMake(5, 0, 44, 44)
+        cancelButton.frame        = CGRectMake(5, 0, 44, 44)
         
-        let logButtonRight = CGRectGetMaxX(cancelButton.frame) + 10
-        logButton.frame = CGRectMake(logButtonRight, 0, 44, 44)
+        let logButtonRight        = CGRectGetMaxX(cancelButton.frame) + 10
+        logButton.frame           = CGRectMake(logButtonRight, 0, 44, 44)
         
         let historyLogButtonRight = CGRectGetMaxX(logButton.frame) + 10
-        historyButton.frame = CGRectMake(historyLogButtonRight, 0, 66, 44)
+        historyButton.frame       = CGRectMake(historyLogButtonRight, 0, 66, 44)
         
-        let sandboxButtonRight = CGRectGetMaxX(historyButton.frame) + 10
-        sandboxButton.frame = CGRectMake(sandboxButtonRight, 0, 66, 44)
+        let sandboxButtonRight    = CGRectGetMaxX(historyButton.frame) + 10
+        sandboxButton.frame       = CGRectMake(sandboxButtonRight, 0, 66, 44)
 
     }
 

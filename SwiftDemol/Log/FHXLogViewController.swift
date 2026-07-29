@@ -5,22 +5,12 @@ import SnapKit
 
 class FHXLogViewController: UIViewController {
     
-    private var keyWindowApp: UIWindow?
-    
-    private var screenWidth: CGFloat?
-     
-    private var screenHeight: CGFloat?
-    
-    private var totalTopHeight: CGFloat?
-    
-    private var safeAreaTop: CGFloat?
-    
     lazy private var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.contentSize = CGSize(width: view.bounds.size.width * 2, height: (screenHeight ?? 0) - (totalTopHeight ?? 0))
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.contentSize = CGSize(width: view.bounds.size.width * 2, height: (screenHeightSDK - totalTopHeightSDK(self)))
         scrollView.bounces = false
         scrollView.isPagingEnabled = true
         scrollView.backgroundColor = .red
@@ -28,7 +18,7 @@ class FHXLogViewController: UIViewController {
     }()
     
     lazy private var navigatonView : FHXNavigationView = {
-        let navigationView = FHXNavigationView(frame: view.frame, keyWindowApp: keyWindowApp, screenWidth: screenWidth, screenHeight: screenHeight, totalTopHeight: totalTopHeight)
+        let navigationView = FHXNavigationView(frame: view.frame)
         navigationView.delegate = self
         navigationView.backgroundColor = .green
         return navigationView
@@ -126,20 +116,6 @@ class FHXLogViewController: UIViewController {
         .foregroundColor: UIColor.black
     ]
     
-    init(keyWindowApp: UIWindow, screenWidth: CGFloat, screenHeight: CGFloat, totalTopHeight: CGFloat, safeAreaTop: CGFloat) {
-        self.keyWindowApp = keyWindowApp
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
-        self.totalTopHeight = totalTopHeight
-        self.safeAreaTop = safeAreaTop
-        
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -154,12 +130,10 @@ class FHXLogViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if let screenWidth = screenWidth, let screenHeight = screenHeight, let safeAreaTop = safeAreaTop {
-            scrollView.frame = CGRectMake(0, safeAreaTop, screenWidth, screenHeight - safeAreaTop)
-            navigatonView.frame = CGRectMake(0, 0, screenWidth * 2, 44)
-            currentTableView.frame = CGRectMake(0, CGRectGetMaxY(navigatonView.frame), screenWidth, screenHeight - safeAreaTop - 44)
-            historyTableView.frame = CGRectMake(screenWidth, CGRectGetMaxY(navigatonView.frame), screenWidth, screenHeight - safeAreaTop - 44)
-        }
+        scrollView.frame       = CGRectMake(0, safeAreaTopSDK, screenWidthSDK, screenHeightSDK - safeAreaTopSDK)
+        navigatonView.frame    = CGRectMake(0, 0, screenWidthSDK * 2, 44)
+        currentTableView.frame = CGRectMake(0, CGRectGetMaxY(navigatonView.frame), screenWidthSDK, screenHeightSDK - safeAreaTopSDK - 44)
+        historyTableView.frame = CGRectMake(screenWidthSDK, CGRectGetMaxY(navigatonView.frame), screenWidthSDK, screenHeightSDK - safeAreaTopSDK - 44)
         
     }
     
@@ -602,21 +576,9 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
         if button.tag == 0 { // pop
             navigationController?.popViewController(animated: true)
         } else if button.tag == 1 {// 当前日志
-
-            guard let keyWindowAppPartial = self.keyWindowApp,
-                  let screenWidthPartial = self.screenWidth,
-                  let screenHeightPartial = self.screenHeight,
-                  let totalTopHeightPartial = self.totalTopHeight
-            else {
-                return
-            }
             
             ToolCurrentPopupView.showCurrentView(
                 vc: self,
-                winApp: keyWindowAppPartial,
-                screenWidth: screenWidthPartial,
-                screenHeight: screenHeightPartial,
-                totalTopHeight: totalTopHeightPartial,
                 menuList: ["筛选", "搜索", "导出", "清空日志"],
                 subMenuList: ["All","Debug", "Network", "Error", "Crash"]
             ) {[weak self] value in
@@ -687,7 +649,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
         } else if button.tag == 8 { // 历史日志
             UIView.animate(withDuration: 0.25) {
                 self.scrollView.contentOffset = CGPoint(
-                    x: self.screenWidth ?? 0,
+                    x: screenWidthSDK,
                     y: 0
                 )
             }
@@ -698,7 +660,7 @@ extension FHXLogViewController:FHXNavigationViewDelegate{
         } else if button.tag == 3 { // 筛选
             ToolHistoryPopupView.showCurrentView(
                 vc: self,
-                totalTopHeight: totalTopHeight ?? 0,
+                totalTopHeight: totalTopHeightSDK(self),
                 menuList: ["All", "Debug", "Network", "Error", "Crash"]
             ) { [weak self] value in
                 guard let self = self else { return }

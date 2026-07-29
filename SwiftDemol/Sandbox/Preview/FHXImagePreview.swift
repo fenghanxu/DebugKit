@@ -23,7 +23,7 @@
 
 import UIKit
 
-final class FHXImagePreview: UIView {
+final class FHXImagePreview: UIViewController {
 
     // MARK: - Property
 
@@ -35,18 +35,16 @@ final class FHXImagePreview: UIView {
 
     private var didLoadImage = false
 
-    /// 单击回调，由外部决定如何处理（例如返回上一页）
-    var singleTapHandler: (() -> Void)?
-
     // MARK: - Init
 
     init(model: FHXSandboxModel) {
 
         self.model = model
 
-        super.init(frame: .zero)
-
-        buildUI()
+        super.init(
+            nibName: nil,
+            bundle: nil
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -54,11 +52,18 @@ final class FHXImagePreview: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Layout
+    // MARK: - Life Cycle
 
-    override func layoutSubviews() {
+    override func viewDidLoad() {
 
-        super.layoutSubviews()
+        super.viewDidLoad()
+
+        buildUI()
+    }
+
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
 
         guard !didLoadImage else {
 
@@ -79,7 +84,7 @@ private extension FHXImagePreview {
 
     func buildUI() {
 
-        backgroundColor = .black
+        view.backgroundColor = .black
 
         scrollView.backgroundColor = .black
 
@@ -97,19 +102,19 @@ private extension FHXImagePreview {
 
         scrollView.decelerationRate = .fast
 
-        addSubview(scrollView)
+        view.addSubview(scrollView)
 
         scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
 
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
 
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 
         ])
 
@@ -139,7 +144,7 @@ private extension FHXImagePreview {
 
         singleTap.require(toFail: doubleTap)
 
-        addGestureRecognizer(singleTap)
+        view.addGestureRecognizer(singleTap)
     }
 }
 
@@ -152,8 +157,11 @@ private extension FHXImagePreview {
         let url = URL(fileURLWithPath: model.path)
 
         guard
+
             let data = try? Data(contentsOf: url),
+
             let image = UIImage(data: data)
+
         else {
 
             print("图片加载失败：")
@@ -168,7 +176,9 @@ private extension FHXImagePreview {
         imageView.image = image
 
         imageView.frame = CGRect(
+
             origin: .zero,
+
             size: image.size
         )
 
@@ -196,14 +206,18 @@ private extension FHXImagePreview {
         let heightScale = bounds.height / image.size.height
 
         let minScale = min(
+
             widthScale,
+
             heightScale
         )
 
         scrollView.minimumZoomScale = minScale
 
         scrollView.maximumZoomScale = max(
+
             5,
+
             minScale * 5
         )
 
@@ -247,7 +261,9 @@ private extension FHXImagePreview {
     @objc
     func singleTap() {
 
-        singleTapHandler?()
+        navigationController?.popViewController(
+            animated: true
+        )
     }
 
     @objc
@@ -258,7 +274,9 @@ private extension FHXImagePreview {
         if scrollView.zoomScale > scrollView.minimumZoomScale {
 
             scrollView.setZoomScale(
+
                 scrollView.minimumZoomScale,
+
                 animated: true
             )
 
@@ -266,6 +284,7 @@ private extension FHXImagePreview {
         }
 
         let point = gesture.location(
+
             in: imageView
         )
 
@@ -287,7 +306,9 @@ private extension FHXImagePreview {
         )
 
         scrollView.zoom(
+
             to: rect,
+
             animated: true
         )
     }

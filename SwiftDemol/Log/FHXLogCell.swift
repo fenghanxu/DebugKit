@@ -1,21 +1,21 @@
 
 
 import UIKit
+import SnapKit
 
 class FHXLogCell: UITableViewCell {
 
     static let identifier = "FHXLogCellID"
-
+    
     /// 点击展开回调
     var expandBlock:(()->Void)?
-
+    
     lazy private var line:UIView = {
         var line = UIView()
         line.backgroundColor = UIColor(red: 229.0/255.0, green: 229.0/255.0, blue: 229.0/255.0, alpha: 1.0)
-        line.translatesAutoresizingMaskIntoConstraints = false
         return line
     }()
-
+    
     lazy var levelLabel: UILabel = {
         let label = UILabel()
         label.text = "error"
@@ -25,35 +25,31 @@ class FHXLogCell: UITableViewCell {
         label.textAlignment = .center
         label.layer.cornerRadius = 4.0
         label.clipsToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     lazy var methodNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 14)
         label.textAlignment = .left
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     lazy var timeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     lazy var contentLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 5
         label.lineBreakMode = .byTruncatingTail
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     lazy var expandButton:UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("展开", for: .normal)
@@ -65,12 +61,11 @@ class FHXLogCell: UITableViewCell {
         button.layer.borderColor = UIColor(red: 18.0/255.0, green: 150.0/255.0, blue: 219.0/255.0, alpha: 1.0).cgColor
         button.clipsToBounds = true
         button.isEnabled = false
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
-    private var expandButtonHeightConstraint: NSLayoutConstraint?
-
+    
+    private var expandButtonHeightConstraint: Constraint?
+    
     static func cell(with tableview: UITableView) -> FHXLogCell {
         var cell = tableview.dequeueReusableCell(withIdentifier: identifier) as? FHXLogCell
         if cell == nil {
@@ -78,69 +73,67 @@ class FHXLogCell: UITableViewCell {
         }
         return cell!
     }
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         buildUI()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func buildUI(){
-
         selectionStyle = .none
         backgroundColor = .white
-
+        
         contentView.addSubview(line)
+        line.snp.makeConstraints { make in
+            make.height.equalTo(1)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
         contentView.addSubview(levelLabel)
+        levelLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.left.equalToSuperview().offset(10)
+            make.width.equalTo(60)
+            make.height.equalTo(22)
+        }
+        
         contentView.addSubview(timeLabel)
+        timeLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(levelLabel)
+            make.left.equalTo(levelLabel.snp.right).offset(10)
+            make.right.equalToSuperview().offset(-10)
+        }
+        
         contentView.addSubview(methodNameLabel)
+        methodNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(levelLabel.snp.bottom).offset(5)
+            make.left.right.equalToSuperview().inset(10)
+        }
+        
         contentView.addSubview(contentLabel)
+        contentLabel.snp.makeConstraints { make in
+            make.top.equalTo(methodNameLabel.snp.bottom).offset(5)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().inset(10)
+        }
+        
         contentView.addSubview(expandButton)
-
-        expandButtonHeightConstraint = expandButton.heightAnchor.constraint(equalToConstant: 30)
-
-        NSLayoutConstraint.activate([
-
-            // line
-            line.heightAnchor.constraint(equalToConstant: 1),
-            line.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            line.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            line.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-
-            // levelLabel
-            levelLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            levelLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            levelLabel.widthAnchor.constraint(equalToConstant: 60),
-            levelLabel.heightAnchor.constraint(equalToConstant: 22),
-
-            // timeLabel
-            timeLabel.centerYAnchor.constraint(equalTo: levelLabel.centerYAnchor),
-            timeLabel.leadingAnchor.constraint(equalTo: levelLabel.trailingAnchor, constant: 10),
-            timeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-
-            // methodNameLabel
-            methodNameLabel.topAnchor.constraint(equalTo: levelLabel.bottomAnchor, constant: 5),
-            methodNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            methodNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-
-            // contentLabel
-            contentLabel.topAnchor.constraint(equalTo: methodNameLabel.bottomAnchor, constant: 5),
-            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-
-            // expandButton
-            expandButton.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 5),
-            expandButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            expandButton.widthAnchor.constraint(equalToConstant: 50),
-            expandButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-
-            expandButtonHeightConstraint!
-        ])
+        expandButton.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.left.equalToSuperview().offset(10)
+            expandButtonHeightConstraint = make.height.equalTo(30).constraint
+            make.width.equalTo(50)
+            make.bottom.equalToSuperview().inset(10)
+        }
+        
     }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -148,11 +141,11 @@ class FHXLogCell: UITableViewCell {
         CATransaction.setDisableActions(true)
         CATransaction.commit()
     }
-
+    
     /// 外部调用判断是否显示按钮
     func showExpandButton(_ show:Bool){
         expandButton.isHidden = !show
-        expandButtonHeightConstraint?.constant = show ? 30 : 0
+        expandButtonHeightConstraint?.update(offset: show ? 30 : 0)
         layoutIfNeeded()
     }
 

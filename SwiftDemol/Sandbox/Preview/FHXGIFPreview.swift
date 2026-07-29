@@ -9,7 +9,7 @@ import UIKit
 import ImageIO
 import MobileCoreServices
 
-final class FHXGIFPreview: UIView {
+final class FHXGIFPreview: UIViewController {
 
     // MARK: - Property
 
@@ -23,56 +23,41 @@ final class FHXGIFPreview: UIView {
 
         self.model = model
 
-        super.init(frame: .zero)
-
-        buildUI()
-
-        loadGIF()
+        super.init(
+            nibName: nil,
+            bundle: nil
+        )
     }
 
     required init?(coder: NSCoder) {
 
         fatalError()
     }
-}
 
-// MARK: - UI
+    // MARK: - Life
 
-private extension FHXGIFPreview {
+    override func viewDidLoad() {
 
-    func buildUI() {
+        super.viewDidLoad()
 
-        backgroundColor = .black
+        view.backgroundColor = .black
+
+        imageView.frame = view.bounds
+
+        imageView.autoresizingMask = [
+
+            .flexibleWidth,
+
+            .flexibleHeight
+        ]
 
         imageView.contentMode = .scaleAspectFit
 
-        addSubview(imageView)
+        view.addSubview(imageView)
 
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-
-            imageView.leadingAnchor.constraint(
-                equalTo: leadingAnchor
-            ),
-
-            imageView.trailingAnchor.constraint(
-                equalTo: trailingAnchor
-            ),
-
-            imageView.topAnchor.constraint(
-                equalTo: topAnchor
-            ),
-
-            imageView.bottomAnchor.constraint(
-                equalTo: bottomAnchor
-            )
-
-        ])
+        loadGIF()
     }
 }
-
-// MARK: - Load
 
 private extension FHXGIFPreview {
 
@@ -145,8 +130,6 @@ private extension FHXGIFPreview {
         imageView.startAnimating()
     }
 }
-
-// MARK: - GIF
 
 private extension FHXGIFPreview {
 
